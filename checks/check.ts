@@ -6,6 +6,7 @@ import { simulatorAbi, simulatorCode } from "./simulator.generated.js";
 import { atlasEnabled, atlasPrices } from "./atlas.js";
 import { atlasFeedFor } from "./atlas-feeds.js";
 import { marketRisk, underlyingFor, type CournotAssessment } from "./cournot.js";
+import { memoryEnabled, recall, type Recall } from "./memory.js";
 import { cmcEnabled, dexProfile, identify, type CmcListing, type DexProfile } from "./cmc.js";
 
 export type Level = "ok" | "caution" | "avoid";
@@ -39,6 +40,8 @@ export type CheckResult = {
     // Cournot market risk: its probability of a ~10% drop in the asset this buy depends on, and the order-size
     // factor CoinGraph applies (the signed answer's maxAmountIn is scaled by it, so the guard enforces it on chain).
     cournot?: (CournotAssessment & { asset: string; sizeFactor: number }) | { error: string } | null;
+    // Living Brain memory: what CoinGraph already knew about this token before this check.
+    memory?: Recall | { error: string } | null;
   };
   checkedAt: string;
   block: string;
@@ -99,8 +102,23 @@ const within = <T>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<nu
 
 const pctOf = (x: number) => `${Math.round(x * 100)}%`;
 
-/** The full CoinGraph check: the on-chain and data-partner checks, then Cournot market risk. */
-export async function checkToken(tokenIn: string, orderUsd = 500, opts: { cmc?: boolean; listing?: CmcListing; cournot?: boolean } = {}): Promise<CheckResult> {
+/** The full CoinGraph check, then Living Brain memory: what the brain already knows about this token. */
+export async function checkToken(tokenIn: string, orderUsd = 500, opts: { cmc?: boolean; listing?: CmcListing; cournot?: boolean; memory?: boolean } = {}): Promise<CheckResult> {
+  const r = await checkWithRisk(tokenIn, orderUsd, opts);
+  if (opts.memory === false || opts.cmc === false || !memoryEnabled()) return r;
+  const m = await within(recall(r.token, r.symbol).catch((e) => ({ error: String(e?.message ?? e).slice(0, 160) })), Number(process.env.MEMORY_WAIT_MS ?? 6000));
+  r.numbers.memory = m ?? { error: "Living Brain did not answer in time" };
+  if (m && !("error" in m) && m.hits.length) {
+    const top = m.hits[0];
+    r.findings.push({ level: "ok", check: "memory", text: `Living Brain recalls ${m.hits.length === 1 ? "a related memory" : `${m.hits.length} related memories`}: "${top.title}". ${top.summary}`.slice(0, 420) });
+  } else if (m && !("error" in m)) {
+    r.findings.push({ level: "ok", check: "memory", text: "Living Brain has no earlier memory of this token; this check is now remembered." });
+  }
+  return r;
+}
+
+/** The on-chain and data-partner checks, then Cournot market risk. */
+async function checkWithRisk(tokenIn: string, orderUsd = 500, opts: { cmc?: boolean; listing?: CmcListing; cournot?: boolean } = {}): Promise<CheckResult> {
   const r = await checkTokenCore(tokenIn, orderUsd, opts);
   const useCournot = opts.cournot ?? (opts.cmc !== false && process.env.COURNOT_ENABLED !== "0");
   if (!useCournot || r.verdict === "avoid") return r;

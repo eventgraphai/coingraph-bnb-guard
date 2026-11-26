@@ -13,6 +13,13 @@ import { checkToken } from "../checks/check.js";
 import { loadChainTotals, proofEnabled, proofStats, recordProof } from "./proof.js";
 import { getBoard, refreshBoard } from "./board.js";
 import { getEvidence, readRecord, saveEvidence } from "./evidence.js";
+import { memoryEnabled, recall, remember } from "../checks/memory.js";
+
+// After a check is recorded, Living Brain remembers it (in the background; never slows the answer).
+function rememberCheck(r: Awaited<ReturnType<typeof checkToken>>, proof: { evidenceHash: string; txHash?: string }) {
+  if (!memoryEnabled()) return;
+  remember({ token: r.token, symbol: r.symbol, name: r.name, verdict: r.verdict, orderUsd: r.orderUsd, findings: r.findings, evidenceHash: proof.evidenceHash, txHash: proof.txHash, checkedAt: r.checkedAt }).catch((e) => console.error("[memory] remember", (e as Error).message));
+}
 import { marketOverview } from "../checks/cmc.js";
 
 const CG = "https://coingraph.ai/api/v1";
@@ -50,6 +57,7 @@ app.get("/api/check", async (c) => {
     // Every answer is recorded on BNB Smart Chain. Its evidence hash is keccak256 of this JSON without the "proof" field.
     const proof = withPage(await recordProof(r));
     lastBnbPrice = r.numbers.bnbPriceUsd;
+    rememberCheck(r, proof);
     return c.json({ ...r, proof });
   } catch (e) {
     return c.json({ error: (e as Error).message }, 422);
@@ -110,7 +118,7 @@ app.get("/api/market-risk", async (c) => {
   return c.json((await marketRisk("BNB", lastBnbPrice || 0).catch((e) => ({ error: String(e) }))) ?? { error: "no matching market" });
 });
 
-app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY, atlas: !!process.env.ATLAS_API_KEY, cournot: process.env.COURNOT_ENABLED !== "0", cournotKey: !!process.env.COURNOT_API_KEY, ask: !!process.env.COINGRAPH_API_KEY, proofs: proofEnabled() }));
+app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY, atlas: !!process.env.ATLAS_API_KEY, cournot: process.env.COURNOT_ENABLED !== "0", memory: memoryEnabled(), cournotKey: !!process.env.COURNOT_API_KEY, ask: !!process.env.COINGRAPH_API_KEY, proofs: proofEnabled() }));
 
 // How many answers have been recorded on chain, and what that cost.
 app.get("/api/proofs", (c) => c.json(proofStats(lastBnbPrice)));
@@ -121,6 +129,8 @@ const MCP_TOOLS = [
   { name: "check_token", description: "Check a BNB Smart Chain token before buying it. Simulates the buy and sell on PancakeSwap, reads CoinMarketCap data, compares the price with Atlas Oracle, weighs Cournot market risk, and records the signed answer on BNB Smart Chain. Returns proceed, caution or avoid with every reason.",
     inputSchema: { type: "object", properties: { token: { type: "string", description: "The token's BNB Smart Chain contract address (0x...)." }, usd: { type: "number", description: "Order size in US dollars, 1 to 100000. Default 1000." } }, required: ["token"] } },
   { name: "bnb_top50", description: "The 50 largest assets on BNB Chain by market cap, each with a CoinGraph verdict for a $500 buy and its contract address.", inputSchema: { type: "object", properties: {} } },
+  { name: "token_memory", description: "What CoinGraph Guard remembers about a BNB Smart Chain token from earlier checks (Living Brain memory): past verdicts, reasons and their on-chain records.",
+    inputSchema: { type: "object", properties: { token: { type: "string", description: "The token's BNB Smart Chain contract address (0x...)." }, symbol: { type: "string", description: "Optional symbol, e.g. CAKE." } }, required: ["token"] } },
   { name: "market_risk", description: "Cournot Intelligence Oracle's current probability of a sharp BNB drop, with its evidence. CoinGraph uses it to size orders.", inputSchema: { type: "object", properties: {} } },
 ];
 const mcpText = (obj: unknown, lead: string) => ({ content: [{ type: "text", text: `${lead}\n\n${JSON.stringify(obj, null, 2)}` }] });
@@ -134,6 +144,7 @@ async function mcpCall(name: string, args: Record<string, unknown>, ip: string) 
     saveEvidence(r);
     const proof = withPage(await recordProof(r));
     lastBnbPrice = r.numbers.bnbPriceUsd;
+    rememberCheck(r, proof);
     const issues = r.findings.filter((f) => f.level !== "ok").map((f) => f.text).slice(0, 3).join(" ");
     const lead = `${r.symbol ?? "Token"} for $${usd.toLocaleString("en-US")}: ${r.verdict.toUpperCase()}. ${issues || "All checks passed."}${proof?.recorded ? ` Recorded on BNB Smart Chain: ${proof.explorer} · raw data and hash check: ${proof.page}` : ""}`;
     return mcpText({ ...r, proof }, lead);
@@ -142,6 +153,13 @@ async function mcpCall(name: string, args: Record<string, unknown>, ip: string) 
     const b = getBoard() as { rows?: { rank: number; name: string; symbol: string; address: string; verdict?: string; reason?: string; priceUsd?: number }[] };
     const rows = (b.rows ?? []).map((x) => ({ rank: x.rank, name: x.name, symbol: x.symbol, address: x.address, verdict: x.verdict ?? "checking", reason: x.reason, priceUsd: x.priceUsd }));
     return mcpText(rows, `BNB Chain top ${rows.length}, each checked for a $500 buy.`);
+  }
+  if (name === "token_memory") {
+    const token = String(args.token ?? "");
+    if (!isAddress(token)) return { content: [{ type: "text", text: "Give a BNB Smart Chain token contract address (0x...)." }], isError: true };
+    if (!memoryEnabled()) return { content: [{ type: "text", text: "Memory is not configured on this server." }], isError: true };
+    const m = await recall(token, args.symbol ? String(args.symbol) : null);
+    return mcpText(m, m?.hits.length ? `Living Brain remembers ${m.hits.length} earlier check(s) of this token.` : "No earlier memory of this token.");
   }
   if (name === "market_risk") {
     const m = await marketRisk("BNB", lastBnbPrice || 0).catch((e) => ({ error: String(e) }));
