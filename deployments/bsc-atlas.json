@@ -1,0 +1,9 @@
+{
+  "chainId": 56,
+  "guardAtlas": "0xf86e3867cee19d56cacfb704dabb1b138af8b0ed",
+  "proofLog": "0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d",
+  "signer": "0x00B3988637d31378d4620a2C702F6104c4329bBb",
+  "deployer": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+  "tx": "0x4e709af274cdc43271f3b8f3796298c7c798f59d5f640502b53afa955835a7c9",
+  "deployedAt": "2026-11-26T17:09:57.604Z"
+}

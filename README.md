@@ -12,7 +12,8 @@ Built for BNB Hack at BNB Bangkok (25 to 27 Nov 2026). This repository was start
 | --- | --- |
 | CoinGraphGuard (refuses any buy without a recent signed "proceed") | [0x7f914975c2af57253a707fb2c2e44776dc45000b](https://bscscan.com/address/0x7f914975c2af57253a707fb2c2e44776dc45000b) |
 | ProofLog (every answer recorded before the trade) | [0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d](https://bscscan.com/address/0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d) |
-| CoinGraph answer signer | 0x5c514443a2e40F74960822851aF3fab75C44F4C6 |
+| CoinGraphGuardAtlas (also verifies Atlas Oracle's signed price on chain) | [0xf86e3867cee19d56cacfb704dabb1b138af8b0ed](https://bscscan.com/address/0xf86e3867cee19d56cacfb704dabb1b138af8b0ed) |
+| CoinGraph answer signer | 0x5c514443a2e40F74960822851aF3fab75C44F4C6 (CoinGraphGuard); 0x00B3988637d31378d4620a2C702F6104c4329bBb (CoinGraphGuardAtlas) |
 
 Live site: https://guard.coingraph.ai
 
@@ -55,6 +56,15 @@ Tested against live mainnet state and a live Atlas payload without spending anyt
 | Copycat "BTCB", even with a signed proceed | reverts `OracleDeviation` (pays $0.000012 vs Atlas BTC $60,722) |
 | Feed missing from the payload | reverts `UnmatchedFeedID` |
 | TRX, caution | reverts `NotProceed` |
+
+**Live on mainnet (27 Nov 2026)** at [0xf86e…b0ed](https://bscscan.com/address/0xf86e3867cee19d56cacfb704dabb1b138af8b0ed), $0.50 buys:
+
+| Token | Verdict | Answer recorded | What the guard did |
+| --- | --- | --- | --- |
+| TRX (Atlas TRX/USD attached) | proceed | [record](https://bscscan.com/tx/0x00d28a53c6b7711eb01e0abcb12b0deb23a99f64628bbf572b703af3404f6723) | [bought](https://bscscan.com/tx/0xc1278e5ba8389cc7de019765394d8aa3e5d649e1c77b89f2bdf100caa2331cf8): pool $0.303 vs Atlas $0.302, checked on chain |
+| Copycat "BTCB" (Atlas BTC/USD attached) | avoid | [record](https://bscscan.com/tx/0x47172a1b27c76a1ebf3a2b5b02d8eac83e82b35b87963472d68f6f92503978ab) | [refused](https://bscscan.com/tx/0x56a8e669729405756850de65d83af8dc3efab9f918f884ab169370d1a901b64e) with `OracleDeviation`: pays $0.0000097 vs Atlas $60,520 (99.99% gap), before the verdict is even applied |
+
+Decode any refused buy: `npx tsx scripts/revert-reason.ts <txHash>`.
 
 Deploy: `npx tsx scripts/deploy-atlas.ts` (dry run, then `--yes`). Demo: `npx tsx scripts/demo-atlas.ts <token> <usd> [feedId] --yes`.
 

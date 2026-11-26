@@ -391,15 +391,27 @@ document.querySelectorAll(".chip").forEach((c) => c.onclick = () => { $("#q").va
 
 fetch("/api/demo").then((r) => r.json()).then((d) => {
   const box = $("#runs"); if (!box || !d.runs) return;
-  for (const r of d.runs) {
+  const card = (r, box) => {
     const kind = r.verdict === "proceed" ? "ok" : r.verdict === "avoid" ? "no" : "hold";
     const c = el("div", "run " + kind);
     c.append(el("div", "big", kind === "ok" ? "✓" : kind === "no" ? "✕" : "‖"), verdictPill(r.verdict), el("h3", null, r.token), el("p", "out", r.outcome));
     const tx = el("div", "tx"); tx.append(link(`https://bscscan.com/tx/${r.proofTx}`, "Answer recorded"), link(`https://bscscan.com/tx/${r.buyTx}`, r.verdict === "proceed" ? "The buy" : "The refused buy"));
     c.append(tx); box.append(c);
-  }
+  };
+  for (const r of d.runs) card(r, box);
   const c = $("#contracts"); c.textContent = "Contracts: ";
   c.append(link(`https://bscscan.com/address/${d.contracts.guard}`, "CoinGraphGuard"), document.createTextNode(" · "), link(`https://bscscan.com/address/${d.contracts.proofLog}`, "ProofLog"));
+  if (d.atlasRuns?.length) {
+    const head = el("h3", "serif", "Atlas Oracle price, checked inside the contract");
+    head.style.marginTop = "40px";
+    const lead = el("p", "lead", "CoinGraphGuardAtlas verifies Atlas's signed price on chain in the same transaction as the buy. Even a signed \"proceed\" cannot buy a token whose pool price is far from the real asset.");
+    const ab = el("div", "runs");
+    c.after(head, lead, ab);
+    for (const r of d.atlasRuns) card(r, ab);
+    const c2 = el("p", "contracts"); c2.textContent = "Contract: ";
+    c2.append(link(`https://bscscan.com/address/${d.contracts.guardAtlas}`, "CoinGraphGuardAtlas"));
+    ab.after(c2);
+  }
 }).catch(() => {});
 
 fetch("/api/top10").then((r) => r.json()).then((d) => {

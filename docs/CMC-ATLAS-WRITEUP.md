@@ -50,6 +50,13 @@ Each answer record costs about 26,000 gas, roughly $0.0007. The evidence for eve
 
 `CoinGraphGuardAtlas` inherits Atlas's own `PullOracleConsumerStandard`. The agent appends Atlas's signed payload to the buy; in the same transaction the guard verifies Atlas's signature and freshness (under 180 seconds) on chain, compares the price the agent would pay on PancakeSwap with Atlas's price, and reverts with `OracleDeviation` when the gap exceeds the answer's limit (3% by default), before the verdict is applied. A signed "proceed" for the copycat BTCB still reverts: it would pay $0.000012 against Atlas's BTC price of $60,722. Tested 7/7 against live mainnet state and a live Atlas payload (`contracts/test-guard-atlas.ts`): pass with TRX/USD, and reverts for missing data, a tampered price byte, the wrong feed, the copycat and a missing feed.
 
+Live on BNB Smart Chain mainnet at [0xf86e…b0ed](https://bscscan.com/address/0xf86e3867cee19d56cacfb704dabb1b138af8b0ed):
+
+| Run | Transaction |
+| --- | --- |
+| TRX, proceed, Atlas TRX/USD attached: bought (pool $0.303 vs Atlas $0.302) | [0xc127…31cf8](https://bscscan.com/tx/0xc1278e5ba8389cc7de019765394d8aa3e5d649e1c77b89f2bdf100caa2331cf8) |
+| Copycat BTCB, Atlas BTC/USD attached: refused on chain with `OracleDeviation` ($0.0000097 vs $60,520) | [0x56a8…b64e](https://bscscan.com/tx/0x56a8e669729405756850de65d83af8dc3efab9f918f884ab169370d1a901b64e) |
+
 ## What we would build next
 
 1. **Atlas push feeds on BNB Smart Chain** and paid feeds for BNB-native tokens (BNB, CAKE, ASTER), so the on-chain price check covers every token on the board.
