@@ -36,7 +36,8 @@ const isBsc = (slug?: string, name?: string) => slug === "bnb" || slug === "bina
 
 /** Is this exact BNB Chain contract listed on CoinMarketCap? Returns the listing with live market data. */
 export async function listingByAddress(address: string): Promise<CmcListing | null> {
-  const info = await cmc<Record<string, InfoEntry>>("/v2/cryptocurrency/info", { address });
+  // CMC only matches lowercase addresses; a checksummed one comes back as "Invalid value for 'slug'".
+  const info = await cmc<Record<string, InfoEntry>>("/v2/cryptocurrency/info", { address: address.toLowerCase() });
   const entry = info ? Object.values(info)[0] : undefined;
   if (!entry) return null;
   const quotes = await cmc<Record<string, Quote>>("/v2/cryptocurrency/quotes/latest", { id: String(entry.id) });
@@ -51,7 +52,9 @@ export async function topAssetForSymbol(symbol: string): Promise<{ name: string;
   const ranked = (map ?? []).filter((m) => m.is_active && m.rank).sort((a, b) => a.rank! - b.rank!);
   const top = ranked[0];
   if (!top) return null;
-  // The asset itself may live on BNB Chain, or be a native coin whose BNB Chain version is a separate listing.
-  const bsc = ranked.find((m) => isBsc(m.platform?.slug, m.platform?.name) && m.rank! <= (top.rank! + 500));
-  return { name: top.name, symbol: top.symbol, rank: top.rank!, bscAddress: bsc?.platform?.token_address ?? (isBsc(top.platform?.slug, top.platform?.name) ? top.platform!.token_address : null), chain: top.platform?.name ?? "its own chain" };
+  // A native coin (ADA, DOGE) lists its official BNB Chain version among its own contract addresses.
+  const info = await cmc<Record<string, InfoEntry>>("/v2/cryptocurrency/info", { id: String(top.id) });
+  const contracts = info?.[String(top.id)]?.contract_address ?? [];
+  const bsc = contracts.find((c) => isBsc(c.platform?.coin?.slug, c.platform?.name))?.contract_address ?? (isBsc(top.platform?.slug, top.platform?.name) ? top.platform!.token_address : null);
+  return { name: top.name, symbol: top.symbol, rank: top.rank!, bscAddress: bsc, chain: top.platform?.name ?? "its own chain" };
 }

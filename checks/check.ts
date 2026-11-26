@@ -3,6 +3,8 @@
 import { encodeFunctionData, decodeFunctionResult, formatUnits, getAddress, isAddress, parseAbi, parseEther, toFunctionSelector, type Address, type Hex } from "viem";
 import { ADDR, KNOWN, QUOTES, STABLES, client } from "./chain.js";
 import { simulatorAbi, simulatorCode } from "./simulator.generated.js";
+import { atlasEnabled, atlasPrices } from "./atlas.js";
+import { atlasFeedFor } from "./atlas-feeds.js";
 import { cmcEnabled, listingByAddress, topAssetForSymbol, type CmcListing } from "./cmc.js";
 
 export type Level = "ok" | "caution" | "avoid";
@@ -30,6 +32,7 @@ export type CheckResult = {
     isProxy: boolean;
     poolPriceUsd: number | null;
     cmc: CmcListing | null;
+    atlas: { feedId: string; label: string; priceUsd: number; timestamp: number; signature: string } | null;
   };
   checkedAt: string;
   block: string;
@@ -111,7 +114,8 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
       add("ok", "identity", `Listed on CoinMarketCap as ${listing.name} (${listing.symbol})${listing.rank ? `, rank #${listing.rank}` : ""}${vol}.`);
     } else {
       const top = symbol ? await safe(topAssetForSymbol(symbol)) : null;
-      if (top && top.rank <= 1000) {
+      // Copycat when CMC lists a well-known asset under this symbol, or any asset whose BNB Chain contract is a different address.
+      if (top && (top.rank <= 1000 || (top.bscAddress && top.bscAddress.toLowerCase() !== token.toLowerCase()))) {
         const where = top.bscAddress ? `its BNB Chain contract is ${top.bscAddress}` : `it lives on ${top.chain}`;
         add("avoid", "copycat", `This is not the real ${top.symbol}. On CoinMarketCap, ${top.symbol} is ${top.name} (rank #${top.rank}) and ${where}. This contract only copies the name.`);
       } else add("caution", "identity", "Not listed on CoinMarketCap, so there is no independent record of who is behind it (common for new launches).");
@@ -159,7 +163,7 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
     if (!best || liquidityUsd > best.liquidityUsd) best = { pool, quote, liquidityUsd };
   }
 
-  const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: null, sellTaxPct: null, priceImpactPct: null, lpBurnedPct: null, owner: owner ?? null, isProxy, poolPriceUsd: null, cmc: listing };
+  const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: null, sellTaxPct: null, priceImpactPct: null, lpBurnedPct: null, owner: owner ?? null, isProxy, poolPriceUsd: null, cmc: listing, atlas: null };
 
   const established = !!best && best.liquidityUsd >= ESTABLISHED_USD;
   ownerFindings(established);
@@ -220,6 +224,19 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
       const gap = Math.abs(poolPrice - listing.priceUsd) / listing.priceUsd;
       const text = `PancakeSwap price ${fmtPrice(poolPrice)} vs CoinMarketCap ${fmtPrice(listing.priceUsd)}: ${pct(gap)}% apart.`;
       add(gap > 0.1 ? "avoid" : gap > 0.03 ? "caution" : "ok", "market_price", text);
+    }
+
+    // Pool price vs the Atlas Oracle reference price (signed). For tokenized stocks and wrapped assets this is the
+    // question that matters: does the token trade at the price of the thing it claims to represent?
+    const feed = atlasFeedFor(symbol);
+    if (feed && atlasEnabled()) {
+      const a = (await safe(atlasPrices([feed.feedId])))?.[0];
+      if (a && a.price > 0) {
+        numbers.atlas = { feedId: feed.feedId, label: feed.label, priceUsd: a.price, timestamp: a.timestamp, signature: a.signature };
+        const gap = Math.abs(poolPrice - a.price) / a.price;
+        const text = `PancakeSwap price ${fmtPrice(poolPrice)} vs Atlas Oracle ${feed.label} ${fmtPrice(a.price)}: ${pct(gap)}% apart.`;
+        add(gap > 0.1 ? "avoid" : gap > 0.03 ? "caution" : "ok", "oracle_price", gap > 0.1 ? `${text} It does not trade like the asset it represents.` : text);
+      }
     }
   }
 
