@@ -67,6 +67,9 @@ ul.findings{list-style:none;margin:0;padding:0}ul.findings li{display:flex;gap:1
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}.stat{background:var(--cream);border-radius:12px;padding:12px 14px}.stat b{display:block;font-size:18px}.stat span{color:var(--grey);font-size:13px}
 .links{margin-top:14px;font-size:14px;display:flex;flex-wrap:wrap;gap:16px}.muted{color:var(--grey)}.err{color:var(--bad)}.small{font-size:12px;margin-top:6px}
 .proofbox{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--forest);color:#e9efe9;font-size:14px;word-break:break-all}.proofbox a{color:var(--lime)}.proofbox .muted{color:#a9b8ad}
+.mstrip{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:13px;color:var(--grey);margin:-4px 0 14px}.mstrip b{color:var(--ink);font-weight:600}.mstrip a{font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.tags span{background:var(--cream);border:1px solid var(--line);border-radius:99px;padding:2px 9px;font-size:12px;color:var(--grey)}
+.pools{margin-top:16px}.pool{display:grid;grid-template-columns:150px 1fr 90px;gap:10px;align-items:center;font-size:13px;margin-top:6px}.pool .b{height:10px;border-radius:99px;background:var(--lime)}.pool .t{background:var(--cream);border-radius:99px}
 .ask{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}.ask input{flex:1 1 260px;min-width:0;background:var(--cream);border:1px solid var(--line);border-radius:10px;font:inherit;padding:10px 12px}
 .results-list button{display:block;width:100%;text-align:left;margin-top:8px}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--forest);border-radius:99px;animation:r .8s linear infinite;vertical-align:-2px;margin-right:8px}@keyframes r{to{transform:rotate(360deg)}}
@@ -108,9 +111,10 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:26px 0 44px;colo
 <div class="wrap">
 <header>
   <div class="mark"><i></i></div><div class="brand">CoinGraph <span>Guard</span></div>
-  <nav><a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="#top10">Top 10</a><a href="#agents">For agents</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></nav>
+  <nav><a href="/bnb">BNB Chain top 50</a><a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="#top10">Top 10</a><a href="#agents">For agents</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></nav>
 </header>
 
+<div class="mstrip" id="mstrip"></div>
 <div class="hero">
   <div class="hero-l">
     <div class="eyebrow">The trust layer for AI agents · BNB Chain</div>
@@ -226,6 +230,7 @@ function renderGuard(r, into) {
   const h = el("div", "rhead");
   const t = el("div"); t.append(el("div", "rtitle", `${r.symbol ?? "?"} · ${r.name ?? "unknown"}`), el("div", "addr", r.token));
   h.append(t, verdictPill(r.verdict)); c.append(h);
+  if (r.numbers.tags?.length) { const tg = el("div", "tags"); for (const x of r.numbers.tags) tg.append(el("span", null, x)); c.append(tg); }
   const ul = el("ul", "findings");
   for (const f of r.findings) { const li = el("li"); li.append(el("span", "dot d-" + f.level), el("span", null, f.text)); ul.append(li); }
   c.append(ul);
@@ -236,7 +241,20 @@ function renderGuard(r, into) {
   stat("PancakeSwap price", money(n.poolPriceUsd));
   if (n.cmc?.priceUsd) stat("CoinMarketCap price", money(n.cmc.priceUsd));
   if (n.atlas) stat(`Atlas ${n.atlas.label}`, money(n.atlas.priceUsd));
+  if (n.dex?.holders) stat("Holders", n.dex.holders.toLocaleString("en-US"));
+  if (n.dex?.liquidityUsd) stat("Liquidity, all DEX pools", money(n.dex.liquidityUsd));
   c.append(g);
+  // Where it trades: liquidity per DEX pool (CoinMarketCap DEX data).
+  if (n.dex?.pools?.length) {
+    const box = el("div", "pools"); box.append(el("div", "layer", "Where it trades · CoinMarketCap DEX data"));
+    const max = Math.max(...n.dex.pools.map((p) => p.liquidityUsd));
+    for (const p of n.dex.pools) {
+      const row = el("div", "pool"), tr = el("div", "t"), bar = el("div", "b");
+      bar.style.width = Math.max(2, (p.liquidityUsd / max) * 100) + "%"; tr.append(bar);
+      row.append(el("span", null, p.dex), tr, el("span", "muted", money(p.liquidityUsd))); box.append(row);
+    }
+    c.append(box);
+  }
   const links = el("div", "links");
   links.append(link(`https://bscscan.com/token/${r.token}`, "Token on BscScan"));
   if (n.pool) links.append(link(`https://bscscan.com/address/${n.pool}`, "Pool on BscScan"));
@@ -349,6 +367,14 @@ fetch("/api/top10").then((r) => r.json()).then((d) => {
     tb.append(tr);
   }
 });
+
+fetch("/api/market").then((r) => r.json()).then((m) => {
+  if (!m.totalMarketCapUsd) return;
+  const box = $("#mstrip"), add = (label, value) => { const s = el("span"); s.append(label + " ", el("b", null, value)); box.append(s); };
+  add("Crypto market cap", money(m.totalMarketCapUsd)); add("24h", (m.marketCapChange24hPct >= 0 ? "+" : "") + (m.marketCapChange24hPct ?? 0).toFixed(2) + "%");
+  add("BTC dominance", (m.btcDominance ?? 0).toFixed(1) + "%"); if (m.fearGreed) add("Fear & Greed", `${m.fearGreed.value} · ${m.fearGreed.label}`);
+  const a = link("/bnb", "BNB Chain top 50 →"); a.target = "_self"; box.append(a);
+}).catch(() => {});
 
 function loadStats() {
   fetch("/api/proofs").then((r) => r.json()).then((p) => { if (p.enabled) $("#n-recorded").textContent = p.recorded.toLocaleString("en-US"); }).catch(() => {});

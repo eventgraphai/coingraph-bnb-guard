@@ -1,0 +1,12 @@
+import "../checks/env.js";
+const key = process.env.CMC_API_KEY!;
+const NIGHT = process.argv[2] ?? "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82";
+const g = async (p: string) => ((await (await fetch("https://pro-api.coinmarketcap.com" + p, { headers: { "X-CMC_PRO_API_KEY": key } })).json()) as { data: unknown }).data;
+const t = (await g(`/v1/dex/token?platform=bsc&address=${NIGHT}`)) as Record<string, unknown>;
+console.log("TOKEN", JSON.stringify(Object.fromEntries(Object.entries(t).filter(([k]) => ["n", "sym", "liqUsd", "liq", "hld", "mcap", "fdv", "p", "v24h", "pc24h", "crt", "own"].includes(k)))));
+const pools = (await g(`/v1/dex/token/pools?platform=bsc&address=${NIGHT}&size=5`)) as Record<string, unknown>[];
+for (const p of pools) console.log("POOL", p.exn, "liqUsd", p.liqUsd, "v24", p.v24, String(p.addr).slice(0, 10));
+console.log("HOLDERS", JSON.stringify(await g(`/v1/dex/holders/count?platform=bsc&tokenAddress=${NIGHT}`)));
+const sec = (await g(`/v1/dex/security/detail?platformName=bsc&address=${NIGHT}`)) as Record<string, unknown>[];
+console.log("SECURITY keys", Object.keys(sec[0] ?? {}).join(","));
+console.log("SECURITY sample", JSON.stringify(sec[0]).slice(0, 700));

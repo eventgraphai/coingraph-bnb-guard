@@ -9,6 +9,8 @@ import { isAddress } from "viem";
 import "../checks/env.js";
 import { checkToken } from "../checks/check.js";
 import { loadChainTotals, proofEnabled, proofStats, recordProof } from "./proof.js";
+import { getBoard, refreshBoard } from "./board.js";
+import { marketOverview } from "../checks/cmc.js";
 
 const CG = "https://coingraph.ai/api/v1";
 const app = new Hono();
@@ -83,6 +85,12 @@ app.get("/api/demo", (c) => {
   return existsSync(f) ? c.json(JSON.parse(readFileSync(f, "utf8"))) : c.json({ runs: [] });
 });
 
+// BNB Chain top 50 by market cap with CoinGraph verdicts (cached; refreshed in the background).
+app.get("/api/board", (c) => { refreshBoard().catch(() => {}); return c.json(getBoard()); });
+
+// Market mood for the banner: total market cap, BTC dominance, Fear & Greed, altcoin season (CoinMarketCap, cached 10 min).
+app.get("/api/market", async (c) => c.json((await marketOverview().catch(() => null)) ?? {}));
+
 app.get("/api/top10", (c) => {
   const f = new URL("data/top10.json", root);
   return existsSync(f) ? c.json(JSON.parse(readFileSync(f, "utf8"))) : c.json({ results: [] });
@@ -94,8 +102,10 @@ app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY,
 app.get("/api/proofs", (c) => c.json(proofStats(lastBnbPrice)));
 
 app.get("/", (c) => c.html(readFileSync(new URL("public/index.html", root), "utf8")));
+app.get("/bnb", (c) => c.html(readFileSync(new URL("public/bnb.html", root), "utf8")));
 app.get("/poster", (c) => c.html(readFileSync(new URL("public/poster.html", root), "utf8")));
 
 const port = Number(process.env.PORT ?? 8787);
 loadChainTotals();
+refreshBoard(true).catch(() => {});
 serve({ fetch: app.fetch, port }, () => console.log(`guard listening on http://localhost:${port}`));

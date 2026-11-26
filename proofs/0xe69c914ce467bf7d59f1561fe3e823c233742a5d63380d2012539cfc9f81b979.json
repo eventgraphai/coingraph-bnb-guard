@@ -1,0 +1,86 @@
+{
+  "answerHash": "0xe69c914ce467bf7d59f1561fe3e823c233742a5d63380d2012539cfc9f81b979",
+  "evidenceHash": "0x559592016e588e76a3cc860d8f4fee2bda14069e9ef191128bf9cbf8541eaf45",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD",
+    "maxAmountIn": "1816202105087068",
+    "verdict": 2,
+    "issuedAt": "1795697706",
+    "evidenceHash": "0x559592016e588e76a3cc860d8f4fee2bda14069e9ef191128bf9cbf8541eaf45"
+  },
+  "signature": "0x6a2eb6ca036e6d831260cb5e2ce1f3b1df18d8bd8053a5e879af1f2893016fd13be162de3d29ad75f93f79a429b31187eab4886a5ecd8eadf2f24c8a6361bdfd1b",
+  "check": {
+    "chain": "bsc",
+    "token": "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD",
+    "name": "ChainLink Token",
+    "symbol": "LINK",
+    "orderUsd": 1,
+    "verdict": "caution",
+    "findings": [
+      {
+        "level": "caution",
+        "check": "owner_powers",
+        "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens. This is the issuer of an official bridged token: you are trusting the issuer to hold the backing."
+      },
+      {
+        "level": "ok",
+        "check": "identity",
+        "text": "Listed on CoinMarketCap as Chainlink (LINK), rank #14, $305,528,633 traded in 24h."
+      },
+      {
+        "level": "ok",
+        "check": "liquidity",
+        "text": "$616,917 of liquidity in its PancakeSwap BNB pool."
+      },
+      {
+        "level": "ok",
+        "check": "lp_burned",
+        "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+      },
+      {
+        "level": "ok",
+        "check": "price_impact",
+        "text": "A $1.00 buy moves the price 0%."
+      },
+      {
+        "level": "ok",
+        "check": "market_price",
+        "text": "PancakeSwap price $9.23 vs CoinMarketCap $9.23: 0.01% apart."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 550.599515989472,
+      "liquidityUsd": 616917,
+      "pool": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+      "poolQuote": "BNB",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 0,
+      "lpBurnedPct": 0,
+      "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+      "isProxy": false,
+      "poolPriceUsd": 9.231440891018424,
+      "cmc": {
+        "id": 1975,
+        "name": "Chainlink",
+        "symbol": "LINK",
+        "slug": "chainlink",
+        "rank": 14,
+        "priceUsd": 9.230480706718566,
+        "volume24hUsd": 305528633.0735108,
+        "marketCapUsd": 7078393856.954595,
+        "change24hPct": 7.276143081034,
+        "dateAdded": "2017-09-20T00:00:00.000Z"
+      },
+      "atlas": null
+    },
+    "checkedAt": "2026-11-26T12:55:07.151Z",
+    "block": "135850264"
+  }
+}

@@ -5,7 +5,7 @@ import { ADDR, KNOWN, QUOTES, STABLES, client } from "./chain.js";
 import { simulatorAbi, simulatorCode } from "./simulator.generated.js";
 import { atlasEnabled, atlasPrices } from "./atlas.js";
 import { atlasFeedFor } from "./atlas-feeds.js";
-import { cmcEnabled, identify, type CmcListing } from "./cmc.js";
+import { cmcEnabled, dexProfile, identify, type CmcListing, type DexProfile } from "./cmc.js";
 
 export type Level = "ok" | "caution" | "avoid";
 export type Verdict = "proceed" | "caution" | "avoid";
@@ -33,6 +33,8 @@ export type CheckResult = {
     poolPriceUsd: number | null;
     cmc: CmcListing | null;
     atlas: { feedId: string; label: string; priceUsd: number; timestamp: number; signature: string } | null;
+    dex: DexProfile | null;
+    tags: string[];
   };
   checkedAt: string;
   block: string;
@@ -87,7 +89,9 @@ function selectorsIn(code: Hex): Set<string> {
   return out;
 }
 
-export async function checkToken(tokenIn: string, orderUsd = 500): Promise<CheckResult> {
+// opts.cmc=false skips CoinMarketCap calls (used by the cached top-50 board, whose identities already come from CoinMarketCap).
+export async function checkToken(tokenIn: string, orderUsd = 500, opts: { cmc?: boolean; listing?: CmcListing } = {}): Promise<CheckResult> {
+  const useCmc = opts.cmc !== false && cmcEnabled();
   if (!isAddress(tokenIn)) throw new Error("Not a valid token address.");
   const token = getAddress(tokenIn);
   const findings: Finding[] = [];
@@ -106,9 +110,10 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
 
   // Identity. With a CoinMarketCap key: is this contract listed (directly, or as the official BNB Chain version of a
   // listed asset such as Binance-Peg ADA), or does it copy the symbol of one? Without a key: a built-in list.
-  let listing: CmcListing | null = null;
-  let official = false; // CoinMarketCap confirms this is the official contract of a top-200 asset
-  if (cmcEnabled()) {
+  let listing: CmcListing | null = opts.listing ?? null;
+  if (opts.listing) add("ok", "identity", `Listed on CoinMarketCap as ${opts.listing.name} (${opts.listing.symbol})${opts.listing.rank ? `, rank #${opts.listing.rank}` : ""}.`);
+  let official = !!opts.listing?.rank && opts.listing.rank <= 200; // CoinMarketCap confirms this is the official contract of a top-200 asset
+  if (useCmc) {
     const id = await safe(identify(token, symbol));
     if (id?.kind === "listed") {
       listing = id.listing;
@@ -125,6 +130,8 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
     const real = symbol ? KNOWN[symbol.trim().toUpperCase()] : undefined;
     if (real && getAddress(real) !== token) add("avoid", "copycat", `This is not the real ${symbol}. It copies the name of ${symbol} (real contract ${real}) at a different address.`);
   }
+
+  const dexP: Promise<DexProfile | null> = useCmc ? safe(dexProfile(token)) : Promise.resolve(null);
 
   // BNB price from the deepest pool on BNB Chain.
   const bnbOut = await client.readContract({ address: ADDR.pancakeRouterV2, abi: routerAbi, functionName: "getAmountsOut", args: [parseEther("1"), [ADDR.WBNB, ADDR.USDT]] });
@@ -152,7 +159,7 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
 
   // BNB itself (as WBNB): the chain's native asset, 1:1 with BNB. There is nothing to buy it with but itself.
   if (token === ADDR.WBNB) {
-    const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: 0, sellTaxPct: 0, priceImpactPct: 0, lpBurnedPct: null, owner: null, isProxy: false, poolPriceUsd: bnbPriceUsd, cmc: listing, atlas: null };
+    const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: 0, sellTaxPct: 0, priceImpactPct: 0, lpBurnedPct: null, owner: null, isProxy: false, poolPriceUsd: bnbPriceUsd, cmc: listing, atlas: null, dex: null, tags: listing?.tags ?? [] };
     findings.length = 0;
     add("ok", "native", `This is BNB itself (wrapped 1:1 as WBNB), the native asset of BNB Chain, priced at ${usd(bnbPriceUsd)}. No token risk to check.`);
     if (listing) add("ok", "identity", `Listed on CoinMarketCap as ${listing.name} (${listing.symbol}), rank #${listing.rank}.`);
@@ -175,7 +182,15 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
     if (!best || liquidityUsd > best.liquidityUsd) best = { pool, quote, liquidityUsd };
   }
 
-  const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: null, sellTaxPct: null, priceImpactPct: null, lpBurnedPct: null, owner: owner ?? null, isProxy, poolPriceUsd: null, cmc: listing, atlas: null };
+  const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: null, sellTaxPct: null, priceImpactPct: null, lpBurnedPct: null, owner: owner ?? null, isProxy, poolPriceUsd: null, cmc: listing, atlas: null, dex: null, tags: listing?.tags ?? [] };
+  const dex = await dexP;
+  numbers.dex = dex;
+  if (dex?.holders != null) {
+    const h = dex.holders.toLocaleString("en-US");
+    if (dex.holders < 50) add("avoid", "holders", `Only ${h} wallets hold it (CoinMarketCap DEX data), so a handful of people control the market.`);
+    else if (dex.holders < 500) add("caution", "holders", `Only ${h} wallets hold it (CoinMarketCap DEX data).`);
+    else add("ok", "holders", `${h} wallets hold it (CoinMarketCap DEX data).`);
+  }
 
   const established = (!!best && best.liquidityUsd >= ESTABLISHED_USD) || official;
   ownerFindings(established);
@@ -186,7 +201,11 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
   // A large listed token with little or no PancakeSwap v2 liquidity usually trades on PancakeSwap v3 or another DEX,
   // which this check does not read yet. Say so plainly and use caution (the guard still blocks anything but proceed).
   const listedBig = (listing?.marketCapUsd ?? 0) >= 10_000_000;
-  const v3note = listedBig && listing ? ` ${listing.name} has a ${usd(listing.marketCapUsd!)} market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.` : "";
+  const v3note = listedBig && listing
+    ? dex?.liquidityUsd && dex.pools.length
+      ? ` Across all DEX pools it has ${usd(dex.liquidityUsd)} of liquidity (largest: ${dex.pools[0].dex}), but not on the PancakeSwap v2 route this guard trades through.`
+      : ` ${listing.name} has a ${usd(listing.marketCapUsd!)} market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX.`
+    : "";
   if (!best) {
     add(listedBig ? "caution" : "avoid", "liquidity", `No PancakeSwap v2 pool against BNB, USDT or FDUSD was found, so the guard's route cannot trade it.${v3note || onCurve}`);
     return finish();
@@ -214,6 +233,7 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
   ]);
   const burned = lpSupply > 0n ? Number(((lpDead + lpZero) * 10000n) / lpSupply) / 10000 : 0;
   numbers.lpBurnedPct = pct(burned);
+  if (dex?.liquidityUsd && dex.pools.length > 1) add("ok", "dex_liquidity", `${usd(dex.liquidityUsd)} of liquidity across ${dex.pools.length}+ DEX pools (largest: ${dex.pools[0].dex}), per CoinMarketCap DEX data.`);
   if (established) add("ok", "lp_burned", `Liquidity is spread across many providers (${pct(burned)}% burned), as usual for an established token.`);
   else if (burned >= 0.9) add("ok", "lp_burned", `${pct(burned)}% of the pool's liquidity tokens are burned, so that liquidity cannot be pulled.`);
   else add("caution", "lp_burned", `Only ${pct(burned)}% of the pool's liquidity tokens are burned; the rest could be withdrawn (it may be locked elsewhere, which this check does not see).`);

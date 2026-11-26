@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BNB Chain Top 50 · CoinGraph Guard</title>
+<meta name="description" content="The 50 largest assets on BNB Chain by market cap, each with a CoinGraph verdict for a $500 buy.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#f4f1ea;--paper:#fff;--forest:#1b2e22;--forest2:#24392c;--forest3:#2f4a39;--lime:#c3e07a;--ink:#16191d;--grey:#6b6f73;--line:#e3ded2;--ok:#2f7d4f;--warn:#a86512;--bad:#b3392f;--okbg:#e4f1e7;--warnbg:#f8ecd9;--badbg:#f7e3e0}
+*{box-sizing:border-box}html,body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.5 Inter,-apple-system,system-ui,sans-serif}
+a{color:var(--forest);text-underline-offset:3px}.serif{font-family:"Source Serif 4",Georgia,serif;letter-spacing:-.015em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header{display:flex;align-items:center;gap:12px;padding:20px 0}
+.mark{width:34px;height:34px;border-radius:9px;background:var(--forest);display:grid;place-items:center}.mark i{width:14px;height:14px;border-radius:99px;border:3px solid var(--lime)}
+.brand{font-weight:700;font-size:19px;color:var(--ink);text-decoration:none}.brand span{color:var(--forest3);font-weight:600}
+header nav{margin-left:auto;display:flex;gap:22px;font-size:14px}header nav a{color:var(--grey);text-decoration:none}header nav a.on,header nav a:hover{color:var(--ink)}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--forest3)}
+h1{font-size:clamp(32px,4.4vw,48px);line-height:1.05;margin:10px 0 8px}.lead{color:var(--grey);margin:0 0 22px;font-size:16px}
+.market{display:grid;grid-template-columns:repeat(4,1fr) 1.3fr;gap:14px;margin:6px 0 26px}
+.m{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px}.m b{font-family:"Source Serif 4",serif;font-size:24px;display:block;line-height:1.1}.m span{color:var(--grey);font-size:12.5px}
+.up{color:var(--ok)}.down{color:var(--bad)}
+.fg{background:var(--forest);color:#e9efe9;border-color:var(--forest);display:flex;align-items:center;gap:14px}.fg span{color:#a9b8ad}
+.top{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-bottom:16px}
+.dist{display:flex;align-items:center;gap:16px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.legend{display:flex;flex-direction:column;gap:4px;font-size:13px}.legend i{display:inline-block;width:9px;height:9px;border-radius:99px;margin-right:6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{text-align:right;padding:12px 12px;border-top:1px solid var(--line);white-space:nowrap}th{color:var(--grey);font-weight:600;font-size:12.5px;border-top:0;background:#faf8f3;position:sticky;top:0}
+th:nth-child(2),td:nth-child(2),th:last-child,td:last-child,th:nth-child(8),td:nth-child(8){text-align:left}
+td.name{display:flex;flex-direction:column}td.name b{font-weight:600}td.name small{color:var(--grey);font-size:12px}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--cream)}
+.pill{display:inline-flex;align-items:center;border-radius:99px;padding:3px 10px;font-weight:700;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+.p-proceed{background:var(--okbg);color:var(--ok)}.p-caution{background:var(--warnbg);color:var(--warn)}.p-avoid{background:var(--badbg);color:var(--bad)}.p-none{background:var(--cream);color:var(--grey)}
+.reason{color:var(--grey);font-size:13px;max-width:330px;white-space:normal;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.kind{font-size:11px;color:var(--grey);border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin-left:6px}
+.check{border:1px solid var(--forest);color:var(--forest);background:var(--paper);border-radius:8px;padding:5px 10px;font-weight:600;font-size:13px;cursor:pointer}
+.tablewrap{overflow-x:auto}.muted{color:var(--grey)}
+footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 40px;color:var(--grey);font-size:13px}
+@media (max-width:900px){.market{grid-template-columns:1fr 1fr}.top{grid-template-columns:1fr}header nav{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="mark"><i></i></div><a class="brand" href="/">CoinGraph <span>Guard</span></a>
+  <nav><a href="/">Check a token</a><a class="on" href="/bnb">BNB Chain top 50</a><a href="/#proof">Mainnet proof</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></nav>
+</header>
+
+<div class="market" id="market">
+  <div class="m"><b id="mc">–</b><span>Crypto market cap</span></div>
+  <div class="m"><b id="mcc">–</b><span>Market cap, 24h</span></div>
+  <div class="m"><b id="dom">–</b><span>Bitcoin dominance</span></div>
+  <div class="m"><b id="alt">–</b><span>Altcoin season index</span></div>
+  <div class="m fg"><svg id="gauge" width="92" height="54" viewBox="0 0 92 54" aria-hidden="true"></svg><div><b id="fgv">–</b><span id="fgl">Fear &amp; Greed</span></div></div>
+</div>
+
+<div class="top">
+  <div><div class="eyebrow">Live · CoinMarketCap data + CoinGraph verdicts</div><h1 class="serif">BNB Chain top 50</h1><p class="lead">The largest assets you can trade on BNB Chain, each checked for a $500 buy. Click any row for a full check, recorded on chain.</p></div>
+  <div class="dist"><svg id="donut" width="74" height="74" viewBox="0 0 42 42" aria-hidden="true"></svg><div class="legend" id="legend"></div></div>
+</div>
+
+<div class="card tablewrap"><table>
+  <thead><tr><th>#</th><th>Name</th><th>Price</th><th>24h</th><th>7d</th><th>Market cap</th><th>Volume (24h)</th><th>CoinGraph</th><th></th></tr></thead>
+  <tbody id="rows"><tr><td colspan="9" class="muted" style="text-align:center;padding:30px">Loading the board…</td></tr></tbody>
+</table></div>
+<p class="muted" id="updated" style="font-size:13px;margin-top:10px"></p>
+
+<footer>Market data: CoinMarketCap. On-chain checks: BNB Smart Chain and PancakeSwap, with Atlas Oracle reference prices. Official BNB Chain versions of coins like ETH, XRP and DOGE are "bridged": the issuer holds the backing.
+CoinGraph is not affiliated with Binance or BNB Chain. A check is evidence, not a guarantee and not financial advice.</footer>
+</div>
+<script>
+const $ = (s) => document.querySelector(s);
+const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+const big = (x) => x == null ? "–" : x >= 1e12 ? "$" + (x / 1e12).toFixed(2) + "T" : x >= 1e9 ? "$" + (x / 1e9).toFixed(2) + "B" : x >= 1e6 ? "$" + (x / 1e6).toFixed(1) + "M" : "$" + Math.round(x).toLocaleString("en-US");
+const price = (x) => x >= 1000 ? "$" + Math.round(x).toLocaleString("en-US") : x >= 1 ? "$" + x.toFixed(2) : "$" + Number(x).toPrecision(3);
+const chg = (x) => { const s = el("span", x >= 0 ? "up" : "down", (x >= 0 ? "▲ " : "▼ ") + Math.abs(x).toFixed(2) + "%"); return s; };
+
+fetch("/api/market").then((r) => r.json()).then((m) => {
+  if (!m.totalMarketCapUsd) { $("#market").style.display = "none"; return; }
+  $("#mc").textContent = big(m.totalMarketCapUsd);
+  $("#mcc").textContent = ""; $("#mcc").append(chg(m.marketCapChange24hPct ?? 0));
+  $("#dom").textContent = (m.btcDominance ?? 0).toFixed(1) + "%";
+  $("#alt").textContent = m.altcoinSeason != null ? m.altcoinSeason + " / 100" : "–";
+  if (m.fearGreed) {
+    $("#fgv").textContent = m.fearGreed.value; $("#fgl").textContent = "Fear & Greed · " + m.fearGreed.label;
+    // Half-circle gauge, needle at the value.
+    const v = Math.max(0, Math.min(100, m.fearGreed.value)), a = Math.PI * (1 - v / 100), cx = 46, cy = 48, r = 38;
+    $("#gauge").innerHTML = `<path d="M8 48 A38 38 0 0 1 84 48" fill="none" stroke="#2f4a39" stroke-width="8" stroke-linecap="round"/>` +
+      `<path d="M8 48 A38 38 0 0 1 ${cx + r * Math.cos(a)} ${cy - r * Math.sin(a)}" fill="none" stroke="#c3e07a" stroke-width="8" stroke-linecap="round"/>` +
+      `<circle cx="${cx + r * Math.cos(a)}" cy="${cy - r * Math.sin(a)}" r="5" fill="#f4f1ea"/>`;
+  }
+}).catch(() => { $("#market").style.display = "none"; });
+
+function draw(b) {
+  const tb = $("#rows"); tb.innerHTML = "";
+  if (!b.rows?.length) { tb.innerHTML = '<tr><td colspan="9" class="muted" style="text-align:center;padding:30px">Building the board, check back in a minute.</td></tr>'; return; }
+  const n = { proceed: 0, caution: 0, avoid: 0, none: 0 };
+  for (const r of b.rows) {
+    n[r.verdict ?? "none"]++;
+    const tr = el("tr");
+    const name = el("td", "name"); const nb = el("b", null, r.name); if (r.kind === "bridged") nb.append(el("span", "kind", "bridged")); name.append(nb, el("small", null, r.symbol + (r.tags?.length ? " · " + r.tags.slice(0, 2).join(", ") : "")));
+    const v = el("td"); v.append(el("span", "pill p-" + (r.verdict ?? "none"), r.verdict ?? "checking"), el("div", "reason", r.reason ?? ""));
+    const go = el("td"); const btn = el("button", "check", "Check"); go.append(btn);
+    const c24 = el("td"); c24.append(chg(r.change24hPct)); const c7 = el("td"); c7.append(chg(r.change7dPct));
+    tr.append(el("td", "muted", r.rank), name, el("td", null, price(r.priceUsd)), c24, c7, el("td", null, big(r.marketCapUsd)), el("td", null, big(r.volume24hUsd)), v, go);
+    tr.onclick = () => { location.href = `/?q=${r.address}&usd=500`; };
+    tb.append(tr);
+  }
+  // Donut of verdicts.
+  const total = b.rows.length, seg = [["proceed", "#2f7d4f"], ["caution", "#a86512"], ["avoid", "#b3392f"], ["none", "#d8d2c4"]];
+  let off = 25, svg = '<circle cx="21" cy="21" r="15.9" fill="none" stroke="#efeae0" stroke-width="6"/>';
+  for (const [k, col] of seg) { const p = (n[k] / total) * 100; if (!p) continue; svg += `<circle cx="21" cy="21" r="15.9" fill="none" stroke="${col}" stroke-width="6" stroke-dasharray="${p} ${100 - p}" stroke-dashoffset="${off}"/>`; off -= p; }
+  $("#donut").innerHTML = svg;
+  const lg = $("#legend"); lg.innerHTML = "";
+  for (const [k, col] of seg.slice(0, 3)) { const d = el("div"); const i = el("i"); i.style.background = col; d.append(i, `${n[k]} ${k}`); lg.append(d); }
+  if (n.none) { const d = el("div", "muted", `${n.none} being checked`); lg.append(d); }
+  $("#updated").textContent = b.builtAt ? `Market data updated ${new Date(b.builtAt).toLocaleString()}. Verdicts refresh every 12 hours; click a row for a live check.` : "";
+}
+const load = () => fetch("/api/board").then((r) => r.json()).then((b) => { draw(b); if (b.rows?.some((r) => !r.verdict)) setTimeout(load, 15000); });
+load();
+</script>
+</body>
+</html>
