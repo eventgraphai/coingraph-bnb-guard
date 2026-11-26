@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoinGraph Guard on BNB Chain</title>
+<meta name="description" content="Check the token before your AI agent trades it. On-chain checks for BNB Smart Chain tokens, with CoinMarketCap and Atlas Oracle data, enforced by a guard contract.">
+<style>
+:root{--bg:#0b0f14;--panel:#121821;--panel2:#18202b;--ink:#e8eef5;--muted:#93a1b1;--line:#243040;--lime:#c6f432;--limeink:#0b0f14;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--okbg:rgba(74,222,128,.12);--warnbg:rgba(251,191,36,.12);--badbg:rgba(248,113,113,.12)}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#f6f8f4;--panel:#fff;--panel2:#f1f4ee;--ink:#121820;--muted:#5b6672;--line:#dfe5da;--lime:#5f8f1f;--limeink:#fff;--ok:#15803d;--warn:#b45309;--bad:#b91c1c;--okbg:#e9f7ee;--warnbg:#fdf3e2;--badbg:#fdeaea}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,-apple-system,system-ui,sans-serif}
+a{color:var(--lime)}.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header{display:flex;align-items:center;gap:12px;padding:18px 0}.logo{font-weight:800;letter-spacing:-.02em;font-size:18px}.logo span{color:var(--lime)}
+header nav{margin-left:auto;display:flex;gap:16px;font-size:14px}header nav a{color:var(--muted);text-decoration:none}header nav a:hover{color:var(--ink)}
+.hero{padding:40px 0 24px}.eyebrow{color:var(--lime);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.1;letter-spacing:-.03em;margin:8px 0 10px}.sub{font-size:19px;color:var(--ink);margin:0 0 6px}.vision{color:var(--muted);margin:0}
+.search{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}
+.search input{flex:1 1 320px;min-width:0;background:transparent;border:0;color:var(--ink);font:inherit;font-size:17px;padding:10px 8px;outline:none}
+.size{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:14px;padding:0 6px;border-left:1px solid var(--line)}
+.size input{width:90px;flex:0 0 auto;font-size:16px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:10px 16px;font-weight:600}
+button.primary{background:var(--lime);border-color:var(--lime);color:var(--limeink)}button:disabled{opacity:.5;cursor:wait}
+.hints{color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.chip{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:3px 10px;font-size:13px;cursor:pointer;color:var(--ink)}
+section{margin:36px 0}h2{font-size:22px;letter-spacing:-.02em;margin:0 0 6px}.lead{color:var(--muted);margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+.verdict{display:inline-flex;align-items:center;gap:8px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;border-radius:99px;padding:6px 14px;font-size:14px}
+.v-proceed{background:var(--okbg);color:var(--ok)}.v-caution{background:var(--warnbg);color:var(--warn)}.v-avoid{background:var(--badbg);color:var(--bad)}
+.rhead{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}.rtitle{font-size:20px;font-weight:700}.addr{color:var(--muted);font-size:13px;word-break:break-all}
+.layer{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+ul.findings{list-style:none;margin:0;padding:0}ul.findings li{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line)}ul.findings li:first-child{border-top:0}
+.dot{flex:0 0 auto;margin-top:7px;width:9px;height:9px;border-radius:99px}.d-ok{background:var(--ok)}.d-caution{background:var(--warn)}.d-avoid{background:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:14px}.stat{background:var(--panel2);border-radius:10px;padding:10px 12px}.stat b{display:block;font-size:17px}.stat span{color:var(--muted);font-size:13px}
+.links{margin-top:12px;font-size:14px;display:flex;flex-wrap:wrap;gap:14px}.muted{color:var(--muted)}.err{color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:10px 8px;border-top:1px solid var(--line)}th{color:var(--muted);font-weight:600;font-size:13px;border-top:0}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--panel2)}.tablewrap{overflow-x:auto}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+pre{background:var(--panel2);border-radius:10px;padding:12px;overflow-x:auto;font-size:13px;margin:10px 0 0}code{font-family:ui-monospace,Menlo,monospace}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}.step{counter-increment:s}.step:before{content:counter(s);display:inline-grid;place-items:center;width:28px;height:28px;border-radius:99px;background:var(--lime);color:var(--limeink);font-weight:800;margin-bottom:8px}
+.ask{display:flex;flex-wrap:wrap;gap:10px}.ask input{flex:1 1 260px;min-width:0;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit;padding:10px 12px}
+.results-list button{display:block;width:100%;text-align:left;margin-top:8px}
+footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 40px;color:var(--muted);font-size:14px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--lime);border-radius:99px;animation:r .8s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes r{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">CoinGraph <span>Guard</span></div>
+  <nav><a href="#top10">Top 10</a><a href="#agents">For agents</a><a href="#how">How it works</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></nav>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">On BNB Chain</div>
+  <h1>Check the token before your AI agent trades it.</h1>
+  <p class="sub">Proceed, caution or avoid, sized to your order, with every reason shown.</p>
+  <p class="vision">Part of <a href="https://coingraph.ai" target="_blank" rel="noopener">CoinGraph</a>, the trust layer for AI agents in crypto.</p>
+
+  <form class="search" id="searchForm">
+    <input id="q" placeholder="Token contract (0x…), name or symbol" autocomplete="off" aria-label="Token contract, name or symbol">
+    <label class="size">Order $<input id="usd" type="number" min="1" max="100000" value="500" aria-label="Order size in US dollars"></label>
+    <button class="primary" id="go">Check</button>
+  </form>
+  <div class="hints">Try:
+    <span class="chip" data-q="0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82">CAKE</span>
+    <span class="chip" data-q="0x6583a27d7c7C0d755414b9471BD55EF9a39afd26">a copycat "BTCB"</span>
+    <span class="chip" data-q="0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47">ADA on BNB Chain</span>
+    <span class="chip" data-q="solana">search "solana"</span>
+  </div>
+</div>
+
+<div id="out"></div>
+
+<section id="top10">
+  <h2>Top 10 by market cap, on BNB Chain</h2>
+  <p class="lead" id="top10lead">The largest assets that have an official BNB Smart Chain contract, each checked for a <span id="t10usd">$500</span> buy. Click a row to check it live.</p>
+  <div class="card tablewrap"><table><thead><tr><th>Rank</th><th>Asset</th><th>Verdict</th><th>Main reason</th></tr></thead><tbody id="t10"></tbody></table></div>
+</section>
+
+<section id="agents">
+  <h2>For agents and developers</h2>
+  <p class="lead">The same check, wherever your agent runs.</p>
+  <div class="cols">
+    <div class="card"><div class="layer">API · new on BNB Chain</div><b>Check a BNB Chain token</b>
+      <pre><code>curl "https://guard.coingraph.ai/api/check?token=0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82&amp;usd=500"</code></pre>
+      <p class="muted">Returns the verdict, findings and numbers as JSON.</p></div>
+    <div class="card"><div class="layer">MCP · CoinGraph</div><b>Connect Claude or any MCP agent</b>
+      <pre><code>{ "mcpServers": { "coingraph": {
+  "url": "https://coingraph.ai/mcp" } } }</code></pre>
+      <p class="muted">Sign in once with your CoinGraph account. Calls spend credits at the same prices as the API. <a href="https://coingraph.ai/docs/mcp" target="_blank" rel="noopener">Setup guide</a></p></div>
+    <div class="card"><div class="layer">Contract · new on BNB Chain</div><b>Enforce it on chain</b>
+      <p class="muted">Route the buy through the CoinGraph Guard contract. It checks CoinGraph's signed answer and reverts unless the answer is proceed, recent, for this token, this agent and at most this amount.</p>
+      <pre><code>guard.buy(answer, signature, minOut, path, deadline)</code></pre></div>
+  </div>
+  <div class="card"><div class="layer">Ready-made CoinGraph agents</div><div id="agentsList" class="muted">Loading…</div></div>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="card step"><b>Ask before the trade</b><p class="muted">The agent sends the token and the order size.</p></div>
+    <div class="card step"><b>Check on BNB Chain</b><p class="muted">A real buy and sell is simulated on PancakeSwap, plus liquidity, owner powers and price impact.</p></div>
+    <div class="card step"><b>Cross-check the data</b><p class="muted">CoinMarketCap confirms the token's identity and market price. Atlas Oracle gives a signed reference price.</p></div>
+    <div class="card step"><b>Sign, record, enforce</b><p class="muted">The answer is signed and its hash recorded on opBNB. The guard contract only lets a "proceed" trade through.</p></div>
+  </div>
+</section>
+
+<footer>
+  Built on BNB Smart Chain, opBNB and PancakeSwap, with data from CoinMarketCap and Atlas Oracle. CoinGraph is not affiliated with Binance or BNB Chain.
+  A check is evidence, not a guarantee and not financial advice. Built for BNB Hack Bangkok 2026 · <a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">source code</a>.
+</footer>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const money = (x) => x == null ? "–" : x >= 1e9 ? "$" + (x / 1e9).toFixed(1) + "B" : x >= 1e6 ? "$" + (x / 1e6).toFixed(1) + "M" : x >= 1e3 ? "$" + Math.round(x).toLocaleString("en-US") : x >= 100 ? "$" + Math.round(x).toLocaleString("en-US") : x >= 1 ? "$" + x.toFixed(2) : "$" + Number(x).toPrecision(3);
+const pctx = (x) => x == null ? "–" : x + "%";
+const out = $("#out");
+let lastToken = null; // CoinGraph token id for Ask
+
+function busy(text) { out.innerHTML = ""; const c = el("div", "card"); c.innerHTML = '<span class="spin"></span>'; c.append(text); out.append(c); }
+function fail(msg) { out.innerHTML = ""; out.append(el("div", "card err", msg)); }
+
+function verdictPill(v) { return el("span", "verdict v-" + v, v); }
+
+function renderGuard(r, into) {
+  const c = el("div", "card");
+  c.append(el("div", "layer", "BNB Guard · on-chain check on PancakeSwap (new)"));
+  const h = el("div", "rhead");
+  const t = el("div"); t.append(el("div", "rtitle", `${r.symbol ?? "?"} · ${r.name ?? "unknown"}`), el("div", "addr", r.token));
+  h.append(t, verdictPill(r.verdict)); c.append(h);
+  const ul = el("ul", "findings");
+  for (const f of r.findings) { const li = el("li"); li.append(el("span", "dot d-" + f.level), el("span", null, f.text)); ul.append(li); }
+  c.append(ul);
+  const n = r.numbers, g = el("div", "grid");
+  const stat = (label, value) => { const s = el("div", "stat"); s.append(el("b", null, value), el("span", null, label)); g.append(s); };
+  stat("Order size", money(r.orderUsd));
+  stat("Pool liquidity", money(n.liquidityUsd));
+  stat("Buy / sell tax", n.buyTaxPct == null ? "–" : `${n.buyTaxPct}% / ${n.sellTaxPct}%`);
+  stat("Price impact", pctx(n.priceImpactPct));
+  stat("PancakeSwap price", money(n.poolPriceUsd));
+  if (n.cmc?.priceUsd) stat("CoinMarketCap price", money(n.cmc.priceUsd));
+  if (n.atlas) stat(`Atlas ${n.atlas.label}`, money(n.atlas.priceUsd));
+  c.append(g);
+  const links = el("div", "links");
+  const a = (href, text) => { const x = el("a", null, text); x.href = href; x.target = "_blank"; x.rel = "noopener"; links.append(x); };
+  a(`https://bscscan.com/token/${r.token}`, "Token on BscScan");
+  if (n.pool) a(`https://bscscan.com/address/${n.pool}`, "Pool on BscScan");
+  links.append(el("span", "muted", `Checked at block ${r.block}`));
+  c.append(links);
+  into.append(c);
+}
+
+function renderMarket(e, into) {
+  const d = e.data; if (!d) return;
+  const c = el("div", "card");
+  c.append(el("div", "layer", "CoinGraph market check · across exchanges"));
+  const h = el("div", "rhead");
+  const t = el("div"); t.append(el("div", "rtitle", `${d.token.symbol} · ${d.token.name}`), el("div", "addr", d.token.rank ? `Rank #${d.token.rank}` : ""));
+  h.append(t, verdictPill(d.verdict)); c.append(h);
+  const ul = el("ul", "findings");
+  for (const [dim, v] of Object.entries(d.dimensions ?? {})) {
+    for (const reason of (v.reasons ?? []).filter((x) => !x.info).slice(0, 1)) {
+      const li = el("li"); const lvl = v.rating === "ok" ? "ok" : v.rating === "avoid" ? "avoid" : "caution";
+      li.append(el("span", "dot d-" + lvl), el("span", null, `${dim[0].toUpperCase() + dim.slice(1)}: ${reason.text}`)); ul.append(li);
+    }
+  }
+  c.append(ul);
+  const links = el("div", "links");
+  const x = el("a", null, "Proof of this answer"); x.href = `https://coingraph.ai/api/v1/verify/${e.id}`; x.target = "_blank"; x.rel = "noopener"; links.append(x);
+  c.append(links);
+  into.append(c);
+}
+
+function renderAsk(into) {
+  const c = el("div", "card");
+  c.append(el("div", "layer", "Ask CoinGraph anything about this token"));
+  const f = el("form", "ask"); const i = el("input"); i.placeholder = "e.g. Why did it move today? Is the team selling?"; const b = el("button", "primary", "Ask");
+  f.append(i, b); c.append(f); const ans = el("div"); ans.style.marginTop = "12px"; c.append(ans);
+  f.onsubmit = async (ev) => {
+    ev.preventDefault(); if (!i.value.trim() || !lastToken) return; b.disabled = true; ans.innerHTML = '<span class="spin"></span>Thinking…';
+    try {
+      const r = await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: lastToken, question: i.value }) });
+      const j = await r.json(); ans.textContent = "";
+      if (!r.ok) ans.append(el("span", "err", j.error ?? j.message ?? "Could not answer.")); else ans.append(el("div", null, j.data?.answer ?? j.data?.summary ?? JSON.stringify(j.data ?? j).slice(0, 1200)));
+    } catch { ans.textContent = "Could not reach CoinGraph."; } finally { b.disabled = false; }
+  };
+  into.append(c);
+}
+
+async function checkAddress(addr) {
+  const usd = Number($("#usd").value) || 500;
+  busy("Simulating a buy and sell on PancakeSwap, reading CoinMarketCap and Atlas…");
+  const r = await fetch(`/api/check?token=${addr}&usd=${usd}`); const j = await r.json();
+  if (!r.ok) return fail(j.error ?? "Check failed.");
+  out.innerHTML = ""; renderGuard(j, out);
+  // Layer two: CoinGraph's market check, when CoinGraph tracks this token.
+  const s = await fetch(`/api/search?q=${encodeURIComponent(j.symbol ?? "")}`).then((x) => x.json()).catch(() => ({ results: [] }));
+  const hit = (s.results ?? []).find((t) => t.coverage?.evaluate && (t.symbol ?? "").toUpperCase() === (j.numbers.cmc?.symbol ?? j.symbol ?? "").toUpperCase());
+  if (hit && j.verdict !== "avoid") { lastToken = hit.id; const e = await fetch(`/api/evaluate/${hit.id}`).then((x) => x.json()).catch(() => null); if (e) renderMarket(e, out); renderAsk(out); }
+}
+
+async function searchName(q) {
+  busy(`Searching CoinGraph for "${q}"…`);
+  const s = await fetch(`/api/search?q=${encodeURIComponent(q)}`).then((x) => x.json());
+  out.innerHTML = "";
+  const list = (s.results ?? []).filter((t) => t.coverage?.evaluate).slice(0, 6);
+  if (!list.length) return fail(`CoinGraph does not track "${q}" yet. Paste its BNB Chain contract address to run the on-chain check.`);
+  const c = el("div", "card results-list"); c.append(el("div", "layer", "CoinGraph covers the top 1,000 tokens"));
+  for (const t of list) { const b = el("button", null, `${t.symbol} · ${t.name}${t.rank ? " · #" + t.rank : ""}`); b.onclick = () => openMarket(t.id); c.append(b); }
+  out.append(c);
+}
+
+async function openMarket(id) {
+  busy("Running CoinGraph's market check…");
+  const e = await fetch(`/api/evaluate/${id}`).then((x) => x.json());
+  out.innerHTML = ""; if (!e.data) return fail(e.error?.message ?? "No check available.");
+  lastToken = id; renderMarket(e, out);
+  out.append(el("div", "card muted", "For the on-chain check on BNB Chain, paste the token's BNB Smart Chain contract address above."));
+  renderAsk(out);
+}
+
+$("#searchForm").onsubmit = (ev) => { ev.preventDefault(); const q = $("#q").value.trim(); if (!q) return; /^0x[0-9a-fA-F]{40}$/.test(q) ? checkAddress(q) : searchName(q); out.scrollIntoView({ behavior: "smooth", block: "start" }); };
+document.querySelectorAll(".chip").forEach((c) => c.onclick = () => { $("#q").value = c.dataset.q; $("#searchForm").requestSubmit(); });
+
+fetch("/api/top10").then((r) => r.json()).then((d) => {
+  if (d.orderUsd) $("#t10usd").textContent = money(d.orderUsd);
+  const tb = $("#t10");
+  for (const r of d.results ?? []) {
+    const tr = el("tr"); const main = r.findings.find((f) => f.level !== "ok")?.text ?? "All checks passed.";
+    const v = el("td"); v.append(verdictPill(r.verdict));
+    tr.append(el("td", null, "#" + r.cmcRank), el("td", null, r.asset), v, el("td", "muted", main));
+    tr.onclick = () => { $("#q").value = r.token; $("#searchForm").requestSubmit(); };
+    tb.append(tr);
+  }
+});
+
+fetch("/api/agents").then((r) => r.json()).then((d) => {
+  const box = $("#agentsList"); box.textContent = "";
+  const items = d.data?.agents ?? d.data ?? [];
+  if (!Array.isArray(items) || !items.length) { box.textContent = "See coingraph.ai/agents"; return; }
+  for (const a of items) { const p = el("p", null); const b = el("b", null, a.name ?? a.id); p.append(b, document.createTextNode(" · " + (a.tagline ?? a.description ?? ""))); box.append(p); }
+}).catch(() => { $("#agentsList").textContent = "See coingraph.ai/agents"; });
+</script>
+</body>
+</html>

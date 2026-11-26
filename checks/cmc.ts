@@ -58,7 +58,7 @@ async function assetsForSymbol(symbol: string): Promise<SymbolAsset[]> {
   const info = await cmc<Record<string, InfoEntry>>("/v2/cryptocurrency/info", { id: few.map((m) => m.id).join(",") });
   return few.map((m) => {
     const listed = (info?.[String(m.id)]?.contract_address ?? []).filter((c) => /^0x[0-9a-fA-F]{40}$/.test(c.contract_address) && isBsc(c.platform?.coin?.slug, c.platform?.name)).map((c) => c.contract_address.toLowerCase());
-    const own = isBsc(m.platform?.slug, m.platform?.name) && m.platform?.token_address ? [m.platform.token_address.toLowerCase()] : [];
+    const own = isBsc(m.platform?.slug, m.platform?.name) && /^0x[0-9a-fA-F]{40}$/.test(m.platform?.token_address ?? "") ? [m.platform!.token_address.toLowerCase()] : [];
     return { id: m.id, name: m.name, symbol: m.symbol, rank: m.rank!, bscAddresses: [...new Set([...own, ...listed])], chain: m.platform?.name ?? "its own chain" };
   });
 }
