@@ -3,6 +3,7 @@
 // API: token search, the market check (/evaluate), Ask, and the agents list.
 // Run: pnpm tsx web/server.ts   (PORT, default 8787)
 import { marketRisk } from "../checks/cournot.js";
+import { ADDR, client } from "../checks/chain.js";
 import { readFileSync, existsSync } from "node:fs";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
@@ -98,7 +99,14 @@ app.get("/api/top10", (c) => {
 });
 
 // Market risk for BNB (Cournot Intelligence Oracle), cached; the same assessment every BNB-paired check uses.
-app.get("/api/market-risk", async (c) => c.json((await marketRisk("BNB", lastBnbPrice || 0).catch((e) => ({ error: String(e) }))) ?? { error: "no matching market" }));
+app.get("/api/market-risk", async (c) => {
+  if (!lastBnbPrice) {
+    // Fresh server with no check yet: read the BNB price from the deepest PancakeSwap pool.
+    const outs = await client.readContract({ address: ADDR.pancakeRouterV2, abi: [{ type: "function", name: "getAmountsOut", stateMutability: "view", inputs: [{ type: "uint256" }, { type: "address[]" }], outputs: [{ type: "uint256[]" }] }], functionName: "getAmountsOut", args: [10n ** 18n, [ADDR.WBNB, ADDR.USDT]] }).catch(() => null);
+    if (outs) lastBnbPrice = Number(outs[1]) / 1e18;
+  }
+  return c.json((await marketRisk("BNB", lastBnbPrice || 0).catch((e) => ({ error: String(e) }))) ?? { error: "no matching market" });
+});
 
 app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY, atlas: !!process.env.ATLAS_API_KEY, cournot: process.env.COURNOT_ENABLED !== "0", cournotKey: !!process.env.COURNOT_API_KEY, ask: !!process.env.COINGRAPH_API_KEY, proofs: proofEnabled() }));
 

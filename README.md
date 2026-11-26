@@ -77,6 +77,8 @@ The scaled amount goes into the signed answer's `maxAmountIn`, so **the guard co
 
 5. **Shown to the user.** Each check on guard.coingraph.ai shows the exact claim, Cournot's probability, the prediction-market price, the order size CoinGraph signs for, and every field of Cournot's assessment and evidence, links unchanged. `GET /api/market-risk` returns the current BNB assessment.
 
+**Live call (27 Nov 2026, guard.coingraph.ai).** A CAKE check for a $50 buy asked Cournot *"Will BNB price fall below $500 before 2027-01-01?"*. It resolved to market 1572 ("BNB price below $500.00 at any time before 2027-01-01"), and Cournot returned a 55% probability with evidence from Polymarket (55.6%), Kalshi (50%), Binance futures (76-day drawdown −17.8%) and cross-venue volatility. CoinGraph signed for 45% of the order ($22.50) and recorded the answer, Cournot assessment included, on BNB Smart Chain: [tx 0x905d…261e](https://bscscan.com/tx/0x905d50f9a2b331170ada9109330a5713ae35a0b9b066d95b81b3048a44d6261e). Full response: [`proofs/cournot/live-check-CAKE-20261127.json`](proofs/cournot/live-check-CAKE-20261127.json).
+
 Setup: works without a key on Cournot's free allowance (3 calls per IP); set `COURNOT_API_KEY` for a prepaid pack. `COURNOT_CACHE_HOURS` (default 6) and `COURNOT_ENABLED=0` (off) are optional. Run one live call: `npx tsx scripts/cournot-probe.ts BNB`.
 
 ## How it works
