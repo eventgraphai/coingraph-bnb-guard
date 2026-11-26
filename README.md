@@ -40,6 +40,12 @@ Each answer record costs about 26,000 gas (about $0.0007 at 0.05 gwei). Every ch
 3. CoinGraph signs the answer and records its hash on BNB Smart Chain.
 4. The guard contract wraps the PancakeSwap swap: a valid recent "proceed" lets it through; "avoid" makes the transaction revert.
 
+## Known limits
+
+- **Trades go through PancakeSwap v2.** The honeypot simulation and the guarded buy use the PancakeSwap v2 router (largest BNB Chain DEX, handles taxed tokens). Liquidity is read across every DEX pool (PancakeSwap v2/v3, Uniswap v3 and others) through CoinMarketCap DEX data, so a token that mainly trades on v3 is judged on its real liquidity, but the guard still routes through v2. Next: PancakeSwap v3 and an aggregator route.
+- **Atlas is verified off-chain today.** Every Atlas price is signature-checked against Atlas's published signer (0x59eD…C600) before it is used, and the signed price is part of each answer's on-chain record. Verifying it inside the guard contract (Atlas pull mode) is next; Atlas's consumer library is BUSL-1.1 licensed, so we are confirming production use with the Atlas team first.
+- **Free Atlas feeds** cover BTC, ADA, DOGE, TRX, AVAX, NEAR, SUI, HYPE, stablecoins and tokenized stocks, not BNB-native tokens like CAKE or ASTER.
+
 ## CoinMarketCap × Atlas
 
 See the one-page integration write-up: [docs/CMC-ATLAS-WRITEUP.md](docs/CMC-ATLAS-WRITEUP.md).

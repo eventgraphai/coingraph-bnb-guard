@@ -3,7 +3,11 @@
 // Payload layout follows Atlas's official SDK (@atlas-oracle/pull-oracle-consumer-sdk): packages, count, signature, marker.
 // Every call is logged to logs/atlas-calls.jsonl as proof of live usage.
 import { appendFileSync, mkdirSync } from "node:fs";
+import { keccak256, recoverAddress, type Hex } from "viem";
 import "./env.js";
+
+// Atlas Oracle's official signing key, as published in its pull-oracle consumer SDK.
+export const ATLAS_SIGNER = "0x59eD4701224fD9e2a85Ef2946c2ab828C1dDC600";
 
 const BASE = "https://api.atlasoracle.io";
 const LOG_DIR = new URL("../logs/", import.meta.url);
@@ -14,7 +18,7 @@ const PKG = 20; // feedId 4 bytes, value 10 bytes (18 decimals), timestamp 6 byt
 export const atlasEnabled = () => !!process.env.ATLAS_API_KEY;
 
 export type AtlasQuality = { consensusScore: number; consensusStatus: string; twapUsd: number; medianUsd: number; volatility: number; changePct: number };
-export type AtlasPrice = { feedId: string; price: number; timestamp: number; signature: string; quality?: AtlasQuality };
+export type AtlasPrice = { feedId: string; price: number; timestamp: number; signature: string; signer?: string; signatureValid?: boolean; quality?: AtlasQuality };
 
 function hexBytes(hex: string): Uint8Array {
   const h = hex.startsWith("0x") ? hex.slice(2) : hex;
@@ -58,7 +62,12 @@ export async function atlasPrices(feedIds: string[]): Promise<AtlasPrice[]> {
   } catch {}
   if (!res.ok || !json.data) throw new Error(`Atlas API ${res.status}: ${json.status?.error_message ?? "no data"}`);
   const strip = (s: string) => (s.startsWith("0x") ? s.slice(2) : s);
-  const prices = decodeAtlas("0x" + strip(json.data.payload) + strip(json.data.signature) + strip(json.data.magicMarker));
+  const extra = "0x" + strip(json.data.payload) + strip(json.data.signature) + strip(json.data.magicMarker);
+  const prices = decodeAtlas(extra);
+  // Verify the signature the way Atlas's on-chain consumer does: keccak256(packages + count byte), no EIP-191 prefix,
+  // signature laid out as r, s, v. The recovered address must be Atlas's official signer.
+  const signer = await recoverAtlasSigner(extra).catch(() => null);
+  for (const p of prices) { p.signer = signer ?? undefined; p.signatureValid = !!signer && signer.toLowerCase() === ATLAS_SIGNER.toLowerCase(); }
   // Data quality (only in the unsigned response): how strongly sources agree, TWAP, median, short-term volatility.
   const q = await atlasQuality(feedIds).catch(() => new Map<string, AtlasQuality>());
   for (const p of prices) p.quality = q.get(p.feedId);
@@ -73,4 +82,13 @@ export async function atlasQuality(feedIds: string[]): Promise<Map<string, Atlas
   const json = (await res.json().catch(() => ({}))) as { data?: { consensusScores?: { feedId: string; consensusScore: number; consensusStatus: string; twapPrice: string; medianPrice: string; priceVolatility: number; priceChangePct: number }[] } };
   for (const c of json.data?.consensusScores ?? []) out.set(String(c.feedId), { consensusScore: c.consensusScore, consensusStatus: c.consensusStatus, twapUsd: Number(c.twapPrice), medianUsd: Number(c.medianPrice), volatility: c.priceVolatility, changePct: c.priceChangePct });
   return out;
+}
+
+/** Recovers the address that signed an Atlas payload (packages + count byte + 65-byte signature + 2-byte marker). */
+export async function recoverAtlasSigner(extraData: string): Promise<string> {
+  const h = extraData.startsWith("0x") ? extraData.slice(2) : extraData;
+  const end = h.length - 4; // drop the 2-byte magic marker
+  const sig = ("0x" + h.slice(end - 130, end)) as Hex; // 65 bytes: r, s, v
+  const signed = ("0x" + h.slice(0, end - 130)) as Hex; // packages + count byte
+  return recoverAddress({ hash: keccak256(signed), signature: sig });
 }

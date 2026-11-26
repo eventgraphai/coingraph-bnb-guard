@@ -32,7 +32,7 @@ export type CheckResult = {
     isProxy: boolean;
     poolPriceUsd: number | null;
     cmc: CmcListing | null;
-    atlas: { feedId: string; label: string; priceUsd: number; timestamp: number; signature: string; consensusScore?: number; consensusStatus?: string; twapUsd?: number; volatility?: number } | null;
+    atlas: { feedId: string; label: string; priceUsd: number; timestamp: number; signature: string; signatureValid?: boolean; consensusScore?: number; consensusStatus?: string; twapUsd?: number; volatility?: number } | null;
     dex: DexProfile | null;
     tags: string[];
   };
@@ -269,13 +269,13 @@ export async function checkToken(tokenIn: string, orderUsd = 500, opts: { cmc?: 
     const feed = atlasFeedFor(symbol);
     if (feed && atlasEnabled()) {
       const a = (await safe(atlasPrices([feed.feedId])))?.[0];
-      if (a && a.price > 0) {
-        numbers.atlas = { feedId: feed.feedId, label: feed.label, priceUsd: a.price, timestamp: a.timestamp, signature: a.signature, consensusScore: a.quality?.consensusScore, consensusStatus: a.quality?.consensusStatus, twapUsd: a.quality?.twapUsd, volatility: a.quality?.volatility };
+      if (a && a.price > 0 && a.signatureValid) {
+        numbers.atlas = { feedId: feed.feedId, label: feed.label, priceUsd: a.price, timestamp: a.timestamp, signature: a.signature, signatureValid: true, consensusScore: a.quality?.consensusScore, consensusStatus: a.quality?.consensusStatus, twapUsd: a.quality?.twapUsd, volatility: a.quality?.volatility };
         // Atlas data quality: do its sources agree, and is the pool far from the time-weighted price (a pump in progress)?
         if (a.quality) {
           const qs = a.quality;
           if (qs.consensusStatus !== "HEALTHY" || qs.consensusScore < 0.8) add("caution", "oracle_quality", `Atlas Oracle's sources disagree right now (consensus ${qs.consensusScore.toFixed(2)}, ${qs.consensusStatus.toLowerCase()}), so the reference price is less reliable.`);
-          else add("ok", "oracle_quality", `Atlas Oracle sources agree: consensus ${qs.consensusScore.toFixed(2)}, healthy. The signed price is part of this answer's on-chain record.`);
+          else add("ok", "oracle_quality", `Atlas Oracle sources agree: consensus ${qs.consensusScore.toFixed(2)}, healthy. Signature verified against Atlas's official signer; the signed price is part of this answer's on-chain record.`);
           if (["U", "USDG", "VAI"].includes((symbol ?? "").trim().toUpperCase())) {
             const off = Math.abs(qs.twapUsd - 1);
             add(off > 0.02 ? "avoid" : off > 0.005 ? "caution" : "ok", "peg", off > 0.005 ? `Off its $1 peg: Atlas time-weighted price ${fmtPrice(qs.twapUsd)} (${pct(off)}% away).` : `Holding its $1 peg: Atlas time-weighted price ${fmtPrice(qs.twapUsd)}.`);
