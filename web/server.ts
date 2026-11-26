@@ -12,6 +12,7 @@ import "../checks/env.js";
 import { checkToken } from "../checks/check.js";
 import { loadChainTotals, proofEnabled, proofStats, recordProof } from "./proof.js";
 import { getBoard, refreshBoard } from "./board.js";
+import { getEvidence, readRecord, saveEvidence } from "./evidence.js";
 import { marketOverview } from "../checks/cmc.js";
 
 const CG = "https://coingraph.ai/api/v1";
@@ -45,8 +46,9 @@ app.get("/api/check", async (c) => {
   if (!isAddress(token)) return c.json({ error: "Paste a BNB Smart Chain token contract address (0x...)." }, 400);
   try {
     const r = await checkToken(token, usd);
+    saveEvidence(r);
     // Every answer is recorded on BNB Smart Chain. Its evidence hash is keccak256 of this JSON without the "proof" field.
-    const proof = await recordProof(r);
+    const proof = withPage(await recordProof(r));
     lastBnbPrice = r.numbers.bnbPriceUsd;
     return c.json({ ...r, proof });
   } catch (e) {
@@ -129,10 +131,11 @@ async function mcpCall(name: string, args: Record<string, unknown>, ip: string) 
     if (limited(ip, 12)) return { content: [{ type: "text", text: "Too many checks from this connection. Wait a minute." }], isError: true };
     const usd = Math.min(Math.max(Number(args.usd ?? 1000) || 1000, 1), 100_000);
     const r = await checkToken(token, usd);
-    const proof = await recordProof(r);
+    saveEvidence(r);
+    const proof = withPage(await recordProof(r));
     lastBnbPrice = r.numbers.bnbPriceUsd;
     const issues = r.findings.filter((f) => f.level !== "ok").map((f) => f.text).slice(0, 3).join(" ");
-    const lead = `${r.symbol ?? "Token"} for $${usd.toLocaleString("en-US")}: ${r.verdict.toUpperCase()}. ${issues || "All checks passed."}${proof?.recorded ? ` Recorded on BNB Smart Chain: ${proof.explorer}` : ""}`;
+    const lead = `${r.symbol ?? "Token"} for $${usd.toLocaleString("en-US")}: ${r.verdict.toUpperCase()}. ${issues || "All checks passed."}${proof?.recorded ? ` Recorded on BNB Smart Chain: ${proof.explorer} · raw data and hash check: ${proof.page}` : ""}`;
     return mcpText({ ...r, proof }, lead);
   }
   if (name === "bnb_top50") {
@@ -164,6 +167,32 @@ app.post("/mcp", async (c) => {
   }
 });
 app.get("/mcp", (c) => c.json({ name: "coingraph-guard", transport: "streamable-http", tools: MCP_TOOLS.map((t) => t.name), auth: "none", docs: "https://guard.coingraph.ai/docs#mcp" }, 405, { Allow: "POST" }));
+// Raw evidence and on-chain records: the exact JSON behind every recorded answer, and the ProofLog record that holds its hash.
+function withPage<T extends { recorded: boolean; txHash?: string; evidenceHash: string }>(p: T): T & { page?: string; raw: string } {
+  return p.recorded ? { ...p, page: `https://guard.coingraph.ai/proof?tx=${p.txHash}`, raw: `https://guard.coingraph.ai/api/evidence/${p.evidenceHash}` } : { ...p, raw: `https://guard.coingraph.ai/api/evidence/${p.evidenceHash}` };
+}
+app.get("/api/evidence/:hash", (c) => {
+  const raw = getEvidence(c.req.param("hash"));
+  return raw ? c.body(raw, 200, { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=31536000, immutable", "access-control-allow-origin": "*" }) : c.json({ error: "No raw data stored for this hash." }, 404);
+});
+app.get("/api/proof/:tx", async (c) => {
+  const tx = c.req.param("tx");
+  if (!/^0x[0-9a-fA-F]{64}$/.test(tx)) return c.json({ error: "Give a transaction hash (0x + 64 hex)." }, 400);
+  try { return c.json(await readRecord(tx as `0x${string}`)); } catch (e) { return c.json({ error: `Could not read that transaction: ${(e as Error).message.split("\n")[0]}` }, 404); }
+});
+app.get("/api/records", (c) => {
+  const out: { tx: string; token: string; verdict: string; at?: string; kind: string }[] = [];
+  try {
+    const lines = readFileSync(new URL("../logs/proofs.jsonl", import.meta.url), "utf8").trim().split("\n").slice(-30).reverse();
+    for (const l of lines) { const j = JSON.parse(l); out.push({ tx: j.txHash, token: j.token, verdict: j.verdict, at: j.at, kind: "live" }); }
+  } catch {}
+  try {
+    const d = JSON.parse(readFileSync(new URL("data/demo.json", root), "utf8"));
+    for (const r of [...d.atlasRuns, ...d.runs]) out.push({ tx: r.proofTx, token: r.token, verdict: r.verdict, kind: "demo" });
+  } catch {}
+  return c.json({ records: out });
+});
+app.get("/proof", (c) => c.html(readFileSync(new URL("public/proof.html", root), "utf8")));
 app.get("/logo.png", (c) => c.body(readFileSync(new URL("public/logo.png", root)), 200, { "content-type": "image/png", "cache-control": "public, max-age=86400" }));
 app.get("/theme.css", (c) => c.body(readFileSync(new URL("public/theme.css", root), "utf8"), 200, { "content-type": "text/css; charset=utf-8", "cache-control": "public, max-age=300" }));
 app.get("/theme.js", (c) => c.body(readFileSync(new URL("public/theme.js", root), "utf8"), 200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "public, max-age=300" }));

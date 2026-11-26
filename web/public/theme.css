@@ -678,3 +678,4 @@ a.mk-go:hover{background:var(--bg2)}
 .devrow .cta{padding:12px 20px}
 .shot .reveal,.shot .fade-up,.shot .hero h1 .w{opacity:1!important;transform:none!important;filter:none!important;transition:none!important;animation:none!important}
 .shot *,.shot *::before,.shot *::after{transition:none!important}
+#proof .run .tx .vfy{font-weight:650;color:var(--ok)}

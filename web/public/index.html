@@ -10,14 +10,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="stylesheet" href="/theme.css?v=38">
+<link rel="stylesheet" href="/theme.css?v=39">
 </head>
 <body>
 <div class="progress" id="progress"></div>
 <nav class="nav" aria-label="Main">
   <a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
   <div class="nav-links">
-    <a href="#reads">Checks</a><a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="/bnb">BNB top 50</a><a href="#agents">For agents</a><a href="/docs">Docs</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a>
+    <a href="#reads">Checks</a><a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="/bnb">BNB top 50</a><a href="#agents">For agents</a><a href="/proof">Verify</a><a href="/docs">Docs</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a>
   </div>
   <button class="theme" type="button" aria-label="Switch light or dark mode">
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -162,7 +162,7 @@
 
 <section class="sec">
   <div class="band reveal"><div class="eyebrow">Why it matters</div><blockquote>If money is lost, replay exactly what the agent knew.</blockquote><p>Every answer is signed and recorded before the trade. Anyone can verify it:</p>
-    <div class="vflow"><span><b>1</b>Download the evidence</span><i>→</i><span><b>2</b>Hash it (keccak256)</span><i>→</i><span><b>3</b>Match the hash on BscScan</span></div></div>
+    <div class="vflow"><span><b>1</b>Open the raw data</span><i>→</i><span><b>2</b>Hash it (keccak256)</span><i>→</i><span><b>3</b>Match the hash on BscScan</span></div><p style="margin-top:16px"><a class="ghost" style="padding:10px 18px;font-size:14px" href="/proof">Verify an answer now →</a></p></div>
 </section>
 
 <section id="top10" class="sec">
@@ -194,11 +194,11 @@
   <div><a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
   Built on BNB Smart Chain and PancakeSwap, with data from CoinMarketCap, Atlas Oracle and Cournot. CoinGraph is not affiliated with Binance or BNB Chain.<br>
   A check is evidence, not a guarantee and not financial advice. BNB Hack Bangkok 2026.</div>
-  <nav><a href="/bnb">BNB top 50</a><a href="/docs">Docs</a><a href="#proof">Mainnet proof</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a><a href="https://coingraph.ai" target="_blank" rel="noopener">coingraph.ai</a></nav>
+  <nav><a href="/bnb">BNB top 50</a><a href="/proof">Verify an answer</a><a href="/docs">Docs</a><a href="#proof">Mainnet proof</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a><a href="https://coingraph.ai" target="_blank" rel="noopener">coingraph.ai</a></nav>
 </footer>
 </main>
 
-<script src="/theme.js?v=38"></script>
+<script src="/theme.js?v=39"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -252,7 +252,7 @@ function renderGuard(r, into) {
   links.append(el("span", "muted", `Block ${r.block}`));
   c.append(links);
   const p = r.proof, pr = el("div", "proofbox");
-  if (p?.recorded) { pr.append(el("b", null, "Recorded on BNB Smart Chain. "), link(p.explorer, "See the record on BscScan")); }
+  if (p?.recorded) { pr.append(el("b", null, "Recorded on BNB Smart Chain. "), link(p.explorer, "See the record on BscScan"), document.createTextNode(" · ")); const v = el("a", null, "Raw data and hash check"); v.href = `/proof?tx=${p.txHash}`; pr.append(v); }
   else if (p) pr.append(el("span", "muted", p.reason));
   if (p) {
     const { proof, ...evidence } = r;
@@ -385,6 +385,7 @@ fetch("/api/demo").then((r) => r.json()).then((d) => {
     const top = el("div", "rt"); top.append(verdictPill(r.verdict)); if (atlas) top.append(el("span", "atl-tag", "Atlas on chain")); c.append(top);
     c.append(el("h3", null, r.token), el("p", "out", r.outcome));
     const tx = el("div", "tx"); tx.append(link(`https://bscscan.com/tx/${r.proofTx}`, "Answer recorded"), link(`https://bscscan.com/tx/${r.buyTx}`, r.verdict === "proceed" ? "The buy" : "The refused buy"));
+    const vf = el("a", "vfy", "Raw data ✓ verify"); vf.href = `/proof?tx=${r.proofTx}`; tx.append(vf);
     c.append(tx, el("code", "hash", short(r.buyTx))); box.append(c); window.cgReveal?.(c);
   };
   for (const r of d.runs) card(r, false);
