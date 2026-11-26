@@ -5,17 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BNB Chain Top 50 · CoinGraph Guard</title>
 <meta name="description" content="The 50 largest assets on BNB Chain by market cap, each with a CoinGraph verdict for a $500 buy.">
-<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0b0c0b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: dark)">
 <script>try{const t=localStorage.getItem("cg-theme");if(t)document.documentElement.dataset.theme=t}catch{}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=6">
+<link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css?v=7">
 <style>
 .page h1{font-size:clamp(44px,6vw,76px);line-height:1;margin:16px 0 12px}
 .market{display:grid;grid-template-columns:repeat(4,1fr) 1.3fr;gap:14px;margin:0 0 40px}
-.m{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow)}.m b{font-family:"Instrument Serif",serif;font-weight:400;font-size:32px;display:block;line-height:1.1}.m span{color:var(--muted);font-size:12.5px}
+.m{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow)}.m b{font-family:var(--fh);font-weight:var(--hw);letter-spacing:var(--hls);font-size:32px;display:block;line-height:1.1}.m span{color:var(--muted);font-size:12.5px}
 .up{color:var(--ok)}.down{color:var(--bad)}
-.fg{background:#121a14;color:#e9efe9;border-color:transparent;display:flex;align-items:center;gap:14px}.fg span{color:#a9b8ad}
+.fg{background:var(--band);color:var(--bandInk);display:flex;align-items:center;gap:14px}.fg span{color:var(--bandMuted)}
 .top{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-bottom:20px}
 .dist{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 18px;box-shadow:var(--shadow)}
 .legend{display:flex;flex-direction:column;gap:4px;font-size:13px}.legend i{display:inline-block;width:9px;height:9px;border-radius:99px;margin-right:6px}
@@ -65,7 +65,7 @@ td.name{display:flex;flex-direction:column}td.name b{font-weight:600}td.name sma
 <footer><div>Market data: CoinMarketCap. Reference prices and source consensus: Atlas Oracle (signed). On-chain checks: BNB Smart Chain and PancakeSwap, with Atlas Oracle reference prices. Official BNB Chain versions of coins like ETH, XRP and DOGE are "bridged": the issuer holds the backing.
 CoinGraph is not affiliated with Binance or BNB Chain. A check is evidence, not a guarantee and not financial advice.</div><nav><a href="/">Check a token</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a></nav></footer>
 </main>
-<script src="/theme.js?v=6"></script>
+<script src="/theme.js?v=7"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
