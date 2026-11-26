@@ -1,0 +1,19 @@
+{
+  "name": "coingraph-bnb-guard",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "check": "tsx checks/cli.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "solc": "^0.8.39",
+    "viem": "^2.58.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.11",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
