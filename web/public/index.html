@@ -6,16 +6,17 @@
 <title>CoinGraph Guard</title>
 <meta name="description" content="Every AI agent trade, checked first. Verifiable on-chain. The CoinGraph check for BNB Chain tokens, enforced by a guard contract.">
 <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: dark)">
-<script>try{const t=localStorage.getItem("cg-theme");if(t)document.documentElement.dataset.theme=t}catch{}</script>
+<script>(()=>{const d=document.documentElement;let t=null;try{t=localStorage.getItem("cg-theme")}catch{}d.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=7">
+<link rel="stylesheet" href="/theme.css?v=15">
 </head>
 <body>
+<div class="progress" id="progress"></div>
 <nav class="nav" aria-label="Main">
   <a class="brand" href="/"><span class="mark"><i></i></span>CoinGraph <span>Guard</span></a>
   <div class="nav-links">
-    <a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="/bnb">BNB top 50</a><a href="#agents">For agents</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a>
+    <a href="#reads">Checks</a><a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="/bnb">BNB top 50</a><a href="#agents">For agents</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a>
   </div>
   <button class="theme" type="button" aria-label="Switch light or dark mode">
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -27,6 +28,8 @@
 
 <main class="wrap" id="top">
 <div class="hero">
+<div class="hero-grid">
+<div class="hero-copy">
   <a class="badge fade-up" href="#proof"><b>Live</b><span class="live"></span>Running on BNB Smart Chain mainnet</a>
   <h1 data-words>Every AI agent trade, <em>checked first.</em></h1>
   <p class="sub fade-up" style="animation-delay:.55s">Ask about any token. Get the sources, the verdict and the proof, recorded on BNB Smart Chain. A guard contract lets the trade through only on a signed "proceed".</p>
@@ -42,6 +45,20 @@
     <span class="chip" data-q="0x6583a27d7c7C0d755414b9471BD55EF9a39afd26"><span class="d" style="background:var(--bad)"></span>copycat "BTCB"</span>
     <span class="chip" data-q="solana">search "solana"</span>
   </div>
+</div>
+  <div class="gf fade-up" style="animation-delay:.4s" aria-label="Animation: tokens an AI agent wants to buy pass through CoinGraph Guard; proceed goes to PancakeSwap, avoid is refused">
+    <div class="gf-top"><span>Live guard · BNB Smart Chain</span><b>mainnet</b></div>
+    <div class="gf-stage" id="gfStage">
+      <svg class="gf-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="gl" d="M24 50 L43 50"/><path class="gl ok" d="M63 50 C71 50 72 22 78 22"/><path class="gl no" d="M63 50 C71 50 72 78 78 78"/></svg>
+      <div class="gf-node agent" style="left:12%;top:50%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg><div><b>AI agent</b><span>wants to buy</span></div></div>
+      <div class="gf-shield" id="gfShield"><div class="glow"></div><div class="ring2"></div><div class="ring"></div><div class="in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>CoinGraph<small>GUARD</small></div></div>
+      <div class="gf-v" id="gfV"></div>
+      <div class="gf-node dex" id="gfDex" style="left:86%;top:22%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg><div><b>PancakeSwap</b><span>trade goes through</span></div></div>
+      <div class="gf-node ref" id="gfRef" style="left:86%;top:78%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg><div><b>Refused</b><span>BNB stays in wallet</span></div></div>
+    </div>
+    <div class="gf-feed"><div class="gf-feed-h">Recorded on BNB Smart Chain</div><div id="gfFeed"></div></div>
+  </div>
+</div>
   <div id="out"></div>
   <div class="mstrip fade-up" id="mstrip" style="animation-delay:1s"></div>
 
@@ -67,6 +84,22 @@
 <div class="marquee" aria-label="Data and infrastructure: BNB Smart Chain, PancakeSwap, CoinMarketCap, Atlas Oracle, Cournot, BscScan">
   <div class="marquee-t"><span>BNB Smart Chain</span><span>PancakeSwap</span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot Intelligence Oracle</span><span>BscScan</span><span>BNB Smart Chain</span><span>PancakeSwap</span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot Intelligence Oracle</span><span>BscScan</span></div>
 </div>
+
+
+<section id="reads">
+  <div class="reveal"><div class="eyebrow">The data behind every answer</div><h2>Seven checks. One verdict.</h2><p class="lead">Before CoinGraph signs anything, it reads the token from every side. Here is a real TRX check, step by step.</p></div>
+  <div class="reader">
+    <div class="radial reveal spot"><svg id="radial" viewBox="0 48 640 382" aria-label="CoinGraph reading seven checks"></svg><div class="cap" id="radialCap">&nbsp;</div></div>
+    <div class="srcs" id="srcs">
+      <div class="src reveal d1"><i></i><b>PancakeSwap</b><span>· buy and sell simulated</span></div>
+      <div class="src reveal d2"><i></i><b>CoinMarketCap</b><span>· official contract, holders, DEX liquidity</span></div>
+      <div class="src reveal d3"><i></i><b>Atlas Oracle</b><span>· signed reference price</span></div>
+      <div class="src reveal d4"><i></i><b>Cournot</b><span>· market-risk probability</span></div>
+      <div class="src reveal d3"><i></i><b>BscScan</b><span>· contract source, owner powers</span></div>
+      <div class="src reveal d2"><i></i><b>BNB Smart Chain</b><span>· the record and the guard</span></div>
+    </div>
+  </div>
+</section>
 
 <section>
   <div class="center reveal"><div class="eyebrow">Every answer, on the record</div><h2>Proof you can check yourself.</h2><p class="lead">CoinGraph signs each answer and records its hash on BNB Smart Chain before the trade happens.</p></div>
@@ -133,11 +166,11 @@
 </footer>
 </main>
 
-<script src="/theme.js?v=7"></script>
+<script src="/theme.js?v=15"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-const money = (x) => x == null ? "–" : x >= 1e9 ? "$" + (x / 1e9).toFixed(1) + "B" : x >= 1e6 ? "$" + (x / 1e6).toFixed(1) + "M" : x >= 100 ? "$" + Math.round(x).toLocaleString("en-US") : x >= 1 ? "$" + x.toFixed(2) : "$" + Number(x).toPrecision(3);
+const money = (x) => x == null ? "–" : x >= 1e12 ? "$" + (x / 1e12).toFixed(2) + "T" : x >= 1e9 ? "$" + (x / 1e9).toFixed(1) + "B" : x >= 1e6 ? "$" + (x / 1e6).toFixed(1) + "M" : x >= 100 ? "$" + Math.round(x).toLocaleString("en-US") : x >= 1 ? "$" + x.toFixed(2) : "$" + Number(x).toPrecision(3);
 const pctx = (x) => x == null ? "–" : x + "%";
 const link = (href, text) => { const a = el("a", null, text); a.href = href; a.target = "_blank"; a.rel = "noopener"; return a; };
 const out = $("#out");
@@ -343,6 +376,7 @@ fetch("/api/top10").then((r) => r.json()).then((d) => {
     const v = el("td"); v.append(verdictPill(r.verdict));
     tr.append(el("td", null, "#" + r.cmcRank), el("td", null, r.asset), v, el("td", "muted", main.length > 110 ? main.slice(0, 108) + "…" : main));
     tr.onclick = () => { $("#q").value = r.token; $("#searchForm").requestSubmit(); };
+    tr.className = "rise"; tr.style.animationDelay = tb.children.length * 0.06 + "s";
     tb.append(tr);
   }
 });
@@ -398,6 +432,93 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
   const links = [...document.querySelectorAll("#howNav a")]; if (!links.length || !("IntersectionObserver" in window)) return;
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-45% 0px -45% 0px" });
   links.forEach((a) => { const p = document.querySelector(a.getAttribute("href")); if (p) io.observe(p); });
+})();
+// The reader: a hub reads seven checks in turn; each lights its source on the right.
+(() => {
+  const svg = document.getElementById("radial"); if (!svg) return;
+  const NS = "http://www.w3.org/2000/svg", mk = (t, a = {}, p = svg) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); p.append(e); return e; };
+  const checks = [
+    ["Honeypot", "Buy and sell both work · 0% tax", 0], ["Copycat", "Official TRON contract, CoinMarketCap #8", 1], ["Liquidity", "$3.8M across 5+ DEX pools", 1],
+    ["Atlas price", "PancakeSwap $0.303 vs Atlas $0.302", 2], ["Owner", "Ownership renounced", 4], ["Holders", "109,680 wallets hold it", 1], ["Market risk", "Cournot: 55% chance BNB < $500, order sized down", 3, 1],
+  ];
+  const cx = 320, cy = 300, R = 215;
+  mk("circle", { cx, cy, r: 150, class: "ring" }); mk("circle", { cx, cy, r: 105, class: "ring" });
+  const lines = [], nodes = [];
+  checks.forEach((c, i) => {
+    const a = Math.PI * (1.08 + (0.84 * i) / (checks.length - 1)), x = cx + R * Math.cos(a), y = cy + R * Math.sin(a) * 0.95;
+    const sx = cx + 72 * Math.cos(a), sy = cy + 72 * Math.sin(a);
+    lines.push(mk("line", { x1: sx, y1: sy, x2: x, y2: y, class: "ln" }));
+    const g = mk("g", { class: "nd" });
+    mk("circle", { cx: x, cy: y, r: 20, class: "halo" }, g); mk("circle", { cx: x, cy: y, r: 11, class: "o" }, g); mk("circle", { cx: x, cy: y, r: 4.5, class: "i" }, g);
+    const t = mk("text", { x, y: y - 22, "text-anchor": x < cx - 40 ? "end" : x > cx + 40 ? "start" : "middle", class: "lbl" }, g); t.textContent = c[0];
+    if (x < cx - 40) t.setAttribute("x", x + 8); if (x > cx + 40) t.setAttribute("x", x - 8);
+    nodes.push(g);
+  });
+  mk("circle", { cx, cy, r: 92, class: "hubglow" }); mk("circle", { cx, cy, r: 70, class: "hub" });
+  const ht = mk("text", { x: cx, y: cy - 2, "text-anchor": "middle", class: "hubt" }); ht.textContent = "CoinGraph";
+  const hs = mk("text", { x: cx, y: cy + 22, "text-anchor": "middle", class: "hubs" }); hs.textContent = "READING…";
+  const cap = document.getElementById("radialCap"), srcs = [...document.querySelectorAll("#srcs .src")];
+  let i = -1, timer;
+  const step = () => {
+    i++;
+    if (i === checks.length) { hs.textContent = "PROCEED · SIGNED"; srcs.forEach((s) => s.classList.remove("on")); srcs[5].classList.add("on");
+      cap.innerHTML = '<span class="t"><b>Verdict</b> · Proceed, sized to 45% of the order · <span>recorded on BNB Smart Chain</span></span>'; timer = setTimeout(reset, 3200); return; }
+    const c = checks[i];
+    nodes.forEach((n, k) => { n.classList.toggle("on", k === i); });
+    lines.forEach((l, k) => l.classList.toggle("on", k === i));
+    if (i > 0) { const w = checks[i - 1][3]; nodes[i - 1].classList.add(w ? "warn" : "done"); lines[i - 1].classList.add(w ? "warn" : "done"); }
+    srcs.forEach((s, k) => s.classList.toggle("on", k === c[2]));
+    cap.innerHTML = ""; const t = el("span", "t"); const b = el("b", c[3] ? "warn" : null, c[0]); t.append(b, " · " + c[1] + " ", el("span", null, "· coingraph check")); cap.append(t);
+    timer = setTimeout(step, 1300);
+  };
+  const reset = () => { i = -1; hs.textContent = "READING…"; nodes.forEach((n) => n.className.baseVal = "nd"); lines.forEach((l) => l.setAttribute("class", "ln")); step(); };
+  new IntersectionObserver((es) => { if (es[0].isIntersecting && i === -1 && !timer) step(); }, { threshold: 0.35 }).observe(svg);
+})();
+
+// Scroll progress, active nav link, and the card spotlight that follows the cursor.
+(() => {
+  const bar = document.getElementById("progress");
+  const links = [...document.querySelectorAll(".nav-links a[href^='#']")];
+  const secs = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+  const onScroll = () => {
+    const h = document.documentElement.scrollHeight - innerHeight; if (bar) bar.style.transform = `scaleX(${h > 0 ? scrollY / h : 0})`;
+    let cur = null; for (const s of secs) if (s.getBoundingClientRect().top < innerHeight * 0.4) cur = s.id;
+    links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + cur));
+  };
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  const spot = (root) => root.querySelectorAll(".run,.num,.cols .card,.panel,.radial").forEach((c) => { if (c.dataset.spot) return; c.dataset.spot = 1; c.classList.add("spot");
+    c.addEventListener("pointermove", (e) => { const r = c.getBoundingClientRect(); c.style.setProperty("--mx", e.clientX - r.left + "px"); c.style.setProperty("--my", e.clientY - r.top + "px"); }); });
+  spot(document); new MutationObserver(() => spot(document)).observe(document.getElementById("runs"), { childList: true });
+})();
+// Hero: real mainnet runs flow from the agent through the guard; proceed goes on to PancakeSwap, the rest are refused.
+(() => {
+  const stage = document.getElementById("gfStage"); if (!stage || !stage.animate) return;
+  const runs = [["ASTER", "proceed", "0x96ba…b135"], ["copycat BTCB", "avoid", "0x340c…f871"], ["TWT", "proceed", "0xf8f6…e36e"], ["NVDAB", "caution", "0x46d0…e61b"], ["CAKE", "proceed", "0xc658…308c"], ["TRX", "proceed", "0x00d2…f723"]];
+  const shield = document.getElementById("gfShield"), v = document.getElementById("gfV"), dex = document.getElementById("gfDex"), ref = document.getElementById("gfRef"), feed = document.getElementById("gfFeed");
+  const kind = (x) => x === "proceed" ? "ok" : x === "avoid" ? "no" : "hold";
+  let k = 0, running = false;
+  for (const [sym, verdict, tx] of [["TRX", "proceed", "0x00d2…f723"], ["copycat BTCB", "avoid", "0x4717…78ab"]]) { const row = el("div", "gf-row"); row.append(el("b", null, sym), verdictPill(verdict), el("code", null, tx)); feed.append(row); }
+  const once = async () => {
+    const [sym, verdict, tx] = runs[k++ % runs.length], c = kind(verdict);
+    const t = el("div", "gf-tok"); t.append(el("i"), sym); stage.append(t);
+    await t.animate([{ left: "18%", top: "50%", opacity: 0 }, { left: "24%", top: "50%", opacity: 1, offset: .2 }, { left: "33%", top: "50%", opacity: 1 }], { duration: 1300, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" }).finished;
+    t.classList.add(c); shield.classList.add(c); v.innerHTML = ""; v.append(verdictPill(verdict)); v.classList.add("show");
+    await new Promise((r) => setTimeout(r, 900));
+    const ok = c === "ok", end = ok ? 22 : 78, node = ok ? dex : ref;
+    // Proceed passes behind the shield and on to PancakeSwap; anything else bounces back and drops to Refused.
+    const path = ok
+      ? [{ left: "33%", top: "50%" }, { left: "53%", top: "50%", offset: .3 }, { left: "66%", top: "42%", offset: .55 }, { left: "74%", top: "28%", offset: .78 }, { left: "80%", top: "22%", opacity: 1, offset: .92 }, { left: "83%", top: "22%", opacity: 0 }]
+      : [{ left: "33%", top: "50%" }, { left: "28%", top: "50%", offset: .15 }, { left: "38%", top: "74%", offset: .45 }, { left: "60%", top: "82%", offset: .72 }, { left: "78%", top: "78%", opacity: 1, offset: .92 }, { left: "81%", top: "78%", opacity: 0 }];
+    const a = t.animate(path, { duration: 1500, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
+    setTimeout(() => { shield.classList.remove(c); v.classList.remove("show"); }, 500);
+    await a.finished; t.remove();
+    node.classList.remove("hit"); void node.offsetWidth; node.classList.add("hit"); setTimeout(() => node.classList.remove("hit"), 900);
+    const row = el("div", "gf-row"); row.append(el("b", null, sym), verdictPill(verdict), el("code", null, tx)); feed.prepend(row);
+    while (feed.children.length > 3) feed.lastChild.remove();
+    setTimeout(once, 500);
+  };
+  const start = () => { if (!running) { running = true; once(); } };
+  if ("IntersectionObserver" in window) new IntersectionObserver((es) => { if (es[0].isIntersecting) start(); }, { threshold: 0.2 }).observe(stage); else start();
 })();
 </script>
 </body>

@@ -6,10 +6,10 @@
 <title>BNB Chain Top 50 · CoinGraph Guard</title>
 <meta name="description" content="The 50 largest assets on BNB Chain by market cap, each with a CoinGraph verdict for a $500 buy.">
 <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: dark)">
-<script>try{const t=localStorage.getItem("cg-theme");if(t)document.documentElement.dataset.theme=t}catch{}</script>
+<script>(()=>{const d=document.documentElement;let t=null;try{t=localStorage.getItem("cg-theme")}catch{}d.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=7">
+<link rel="stylesheet" href="/theme.css?v=15">
 <style>
 .page h1{font-size:clamp(44px,6vw,76px);line-height:1;margin:16px 0 12px}
 .market{display:grid;grid-template-columns:repeat(4,1fr) 1.3fr;gap:14px;margin:0 0 40px}
@@ -32,6 +32,7 @@ td.name{display:flex;flex-direction:column}td.name b{font-weight:600}td.name sma
 </style>
 </head>
 <body>
+<div class="progress" id="progress"></div>
 <nav class="nav" aria-label="Main">
   <a class="brand" href="/"><span class="mark"><i></i></span>CoinGraph <span>Guard</span></a>
   <div class="nav-links"><a href="/">Check a token</a><a class="on" href="/bnb">BNB top 50</a><a href="/#proof">Mainnet proof</a><a href="/#how">How it works</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></div>
@@ -44,10 +45,10 @@ td.name{display:flex;flex-direction:column}td.name b{font-weight:600}td.name sma
 </nav>
 <main class="wrap page">
 <div class="market fade-up" id="market">
-  <div class="m"><b id="mc">–</b><span>Crypto market cap</span></div>
-  <div class="m"><b id="mcc">–</b><span>Market cap, 24h</span></div>
-  <div class="m"><b id="dom">–</b><span>Bitcoin dominance</span></div>
-  <div class="m"><b id="alt">–</b><span>Altcoin season index</span></div>
+  <div class="m spot"><b id="mc">–</b><span>Crypto market cap</span></div>
+  <div class="m spot"><b id="mcc">–</b><span>Market cap, 24h</span></div>
+  <div class="m spot"><b id="dom">–</b><span>Bitcoin dominance</span></div>
+  <div class="m spot"><b id="alt">–</b><span>Altcoin season index</span></div>
   <div class="m fg"><svg id="gauge" width="92" height="54" viewBox="0 0 92 54" aria-hidden="true"></svg><div><b id="fgv">–</b><span id="fgl">Fear &amp; Greed</span></div></div>
 </div>
 
@@ -65,7 +66,7 @@ td.name{display:flex;flex-direction:column}td.name b{font-weight:600}td.name sma
 <footer><div>Market data: CoinMarketCap. Reference prices and source consensus: Atlas Oracle (signed). On-chain checks: BNB Smart Chain and PancakeSwap, with Atlas Oracle reference prices. Official BNB Chain versions of coins like ETH, XRP and DOGE are "bridged": the issuer holds the backing.
 CoinGraph is not affiliated with Binance or BNB Chain. A check is evidence, not a guarantee and not financial advice.</div><nav><a href="/">Check a token</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a></nav></footer>
 </main>
-<script src="/theme.js?v=7"></script>
+<script src="/theme.js?v=15"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
@@ -75,20 +76,21 @@ const chg = (x) => { const s = el("span", x >= 0 ? "up" : "down", (x >= 0 ? "▲
 
 fetch("/api/market").then((r) => r.json()).then((m) => {
   if (!m.totalMarketCapUsd) { $("#market").style.display = "none"; return; }
-  $("#mc").textContent = big(m.totalMarketCapUsd);
+  $("#mc").textContent = big(m.totalMarketCapUsd); window.cgCount?.($("#mc"));
   $("#mcc").textContent = ""; $("#mcc").append(chg(m.marketCapChange24hPct ?? 0));
-  $("#dom").textContent = (m.btcDominance ?? 0).toFixed(1) + "%";
+  $("#dom").textContent = (m.btcDominance ?? 0).toFixed(1) + "%"; window.cgCount?.($("#dom"));
   $("#alt").textContent = m.altcoinSeason != null ? m.altcoinSeason + " / 100" : "–";
   if (m.fearGreed) {
-    $("#fgv").textContent = m.fearGreed.value; $("#fgl").textContent = "Fear & Greed · " + m.fearGreed.label;
+    $("#fgv").textContent = m.fearGreed.value; window.cgCount?.($("#fgv")); $("#fgl").textContent = "Fear & Greed · " + m.fearGreed.label;
     // Half-circle gauge, needle at the value.
     const v = Math.max(0, Math.min(100, m.fearGreed.value)), a = Math.PI * (1 - v / 100), cx = 46, cy = 48, r = 38;
     $("#gauge").innerHTML = `<path d="M8 48 A38 38 0 0 1 84 48" fill="none" stroke="#2f4a39" stroke-width="8" stroke-linecap="round"/>` +
-      `<path d="M8 48 A38 38 0 0 1 ${cx + r * Math.cos(a)} ${cy - r * Math.sin(a)}" fill="none" stroke="#c3e07a" stroke-width="8" stroke-linecap="round"/>` +
+      `<path d="M8 48 A38 38 0 0 1 ${cx + r * Math.cos(a)} ${cy - r * Math.sin(a)}" fill="none" stroke="#16c784" stroke-width="8" stroke-linecap="round"/>` +
       `<circle cx="${cx + r * Math.cos(a)}" cy="${cy - r * Math.sin(a)}" r="5" fill="#f4f1ea"/>`;
   }
 }).catch(() => { $("#market").style.display = "none"; });
 
+let drawn = false;
 function draw(b) {
   const tb = $("#rows"); tb.innerHTML = "";
   if (!b.rows?.length) { tb.innerHTML = '<tr><td colspan="10" class="muted" style="text-align:center;padding:30px">Building the board, check back in a minute.</td></tr>'; return; }
@@ -104,13 +106,14 @@ function draw(b) {
     if (r.atlas) { at.append(document.createTextNode(price(r.atlas.priceUsd)), el("small", null, `${r.atlas.gapPct.toFixed(2)}% gap · consensus ${r.atlas.consensus != null ? r.atlas.consensus.toFixed(2) : "–"}`)); } else at.append(el("small", null, "no free feed"));
     tr.append(el("td", "muted", r.rank), name, el("td", null, price(r.priceUsd)), c24, c7, el("td", null, big(r.marketCapUsd)), el("td", null, big(r.volume24hUsd)), at, v, go);
     tr.onclick = () => { location.href = `/?q=${r.address}&usd=500`; };
+    if (!drawn) { tr.className = "rise"; tr.style.animationDelay = Math.min(tb.children.length, 20) * 0.04 + "s"; }
     tb.append(tr);
   }
   // Donut of verdicts.
-  const total = b.rows.length, seg = [["proceed", "#2f7d4f"], ["caution", "#a86512"], ["avoid", "#b3392f"], ["none", "#d8d2c4"]];
+  const total = b.rows.length, seg = [["proceed", "#16c784"], ["caution", "#a86512"], ["avoid", "#ea3943"], ["none", "#d8d2c4"]];
   let off = 25, svg = '<circle cx="21" cy="21" r="15.9" fill="none" stroke="currentColor" stroke-opacity=".12" stroke-width="6"/>';
-  for (const [k, col] of seg) { const p = (n[k] / total) * 100; if (!p) continue; svg += `<circle cx="21" cy="21" r="15.9" fill="none" stroke="${col}" stroke-width="6" stroke-dasharray="${p} ${100 - p}" stroke-dashoffset="${off}"/>`; off -= p; }
-  $("#donut").innerHTML = svg;
+  for (const [k, col] of seg) { const p = (n[k] / total) * 100; if (!p) continue; svg += `<circle cx="21" cy="21" r="15.9" fill="none" stroke="${col}" stroke-width="6" stroke-dasharray="${p} ${100 - p}" stroke-dashoffset="${off}" class="${drawn ? "" : "donut-seg"}"/>`; off -= p; }
+  $("#donut").innerHTML = svg; drawn = true;
   const lg = $("#legend"); lg.innerHTML = "";
   for (const [k, col] of seg.slice(0, 3)) { const d = el("div"); const i = el("i"); i.style.background = col; d.append(i, `${n[k]} ${k}`); lg.append(d); }
   if (n.none) { const d = el("div", "muted", `${n.none} being checked`); lg.append(d); }
@@ -118,6 +121,8 @@ function draw(b) {
 }
 const load = () => fetch("/api/board").then((r) => r.json()).then((b) => { draw(b); if (b.rows?.some((r) => !r.verdict)) setTimeout(load, 15000); });
 load();
+addEventListener("scroll", () => { const h = document.documentElement.scrollHeight - innerHeight; $("#progress").style.transform = `scaleX(${h > 0 ? scrollY / h : 0})`; }, { passive: true });
+document.querySelectorAll(".spot").forEach((c) => c.addEventListener("pointermove", (e) => { const r = c.getBoundingClientRect(); c.style.setProperty("--mx", e.clientX - r.left + "px"); c.style.setProperty("--my", e.clientY - r.top + "px"); }));
 </script>
 </body>
 </html>
