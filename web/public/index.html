@@ -30,6 +30,7 @@ section{margin:36px 0}h2{font-size:22px;letter-spacing:-.02em;margin:0 0 6px}.le
 ul.findings{list-style:none;margin:0;padding:0}ul.findings li{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line)}ul.findings li:first-child{border-top:0}
 .dot{flex:0 0 auto;margin-top:7px;width:9px;height:9px;border-radius:99px}.d-ok{background:var(--ok)}.d-caution{background:var(--warn)}.d-avoid{background:var(--bad)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:14px}.stat{background:var(--panel2);border-radius:10px;padding:10px 12px}.stat b{display:block;font-size:17px}.stat span{color:var(--muted);font-size:13px}
+.proofbox{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--panel2);font-size:14px;word-break:break-all}.small{font-size:12px;margin-top:6px}
 .links{margin-top:12px;font-size:14px;display:flex;flex-wrap:wrap;gap:14px}.muted{color:var(--muted)}.err{color:var(--bad)}
 table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:10px 8px;border-top:1px solid var(--line)}th{color:var(--muted);font-weight:600;font-size:13px;border-top:0}
 tbody tr{cursor:pointer}tbody tr:hover{background:var(--panel2)}.tablewrap{overflow-x:auto}
@@ -96,6 +97,7 @@ footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 40px;colo
 
 <section id="how">
   <h2>How it works</h2>
+  <p class="lead" id="proofstats"></p>
   <div class="steps">
     <div class="card step"><b>Ask before the trade</b><p class="muted">The agent sends the token and the order size.</p></div>
     <div class="card step"><b>Check on BNB Chain</b><p class="muted">A real buy and sell is simulated on PancakeSwap, plus liquidity, owner powers and price impact.</p></div>
@@ -148,6 +150,18 @@ function renderGuard(r, into) {
   if (n.pool) a(`https://bscscan.com/address/${n.pool}`, "Pool on BscScan");
   links.append(el("span", "muted", `Checked at block ${r.block}`));
   c.append(links);
+  // The on-chain record of this exact answer, and its evidence for anyone to re-hash.
+  const p = r.proof, pr = el("div", "proofbox");
+  if (p?.recorded) {
+    pr.append(el("b", null, "Recorded on BNB Smart Chain. "));
+    const tx = el("a", null, "See the record on BscScan"); tx.href = p.explorer; tx.target = "_blank"; tx.rel = "noopener"; pr.append(tx);
+  } else if (p) pr.append(el("span", "muted", p.reason));
+  if (p) {
+    const { proof, ...evidence } = r;
+    const dl = el("a", null, "Download evidence"); dl.href = URL.createObjectURL(new Blob([JSON.stringify(evidence)], { type: "application/json" })); dl.download = `coingraph-answer-${p.evidenceHash}.json`;
+    pr.append(document.createTextNode(" · "), dl, el("div", "muted small", `Evidence hash ${p.evidenceHash}: keccak256 of the downloaded JSON, matching the record on chain.`));
+  }
+  c.append(pr);
   into.append(c);
 }
 
@@ -237,6 +251,12 @@ fetch("/api/top10").then((r) => r.json()).then((d) => {
   }
 });
 
+fetch("/api/proofs").then((r) => r.json()).then((p) => {
+  if (!p.enabled) return;
+  const usd = p.totalCostUsd != null ? ` for $${p.totalCostUsd.toFixed(4)} in gas` : "";
+  const t = $("#proofstats"); t.textContent = `Every answer is recorded on BNB Smart Chain. Since ${new Date(p.since).toLocaleString()}: ${p.recorded} answers recorded${usd}. `;
+  const a = el("a", null, "Proof contract on BscScan"); a.href = `https://bscscan.com/address/${p.proofLog}`; a.target = "_blank"; a.rel = "noopener"; t.append(a);
+}).catch(() => {});
 fetch("/api/agents").then((r) => r.json()).then((d) => {
   const box = $("#agentsList"); box.textContent = "";
   const items = d.data?.agents ?? d.data ?? [];

@@ -8,9 +8,11 @@ import { Hono } from "hono";
 import { isAddress } from "viem";
 import "../checks/env.js";
 import { checkToken } from "../checks/check.js";
+import { proofEnabled, proofStats, recordProof } from "./proof.js";
 
 const CG = "https://coingraph.ai/api/v1";
 const app = new Hono();
+let lastBnbPrice: number | undefined;
 const root = new URL("./", import.meta.url);
 
 // A small per-IP limit so a public page cannot burn the CoinMarketCap, Atlas or CoinGraph credits.
@@ -38,7 +40,11 @@ app.get("/api/check", async (c) => {
   const usd = Math.min(Math.max(Number(c.req.query("usd") ?? 500) || 500, 1), 100_000);
   if (!isAddress(token)) return c.json({ error: "Paste a BNB Smart Chain token contract address (0x...)." }, 400);
   try {
-    return c.json(await checkToken(token, usd));
+    const r = await checkToken(token, usd);
+    // Every answer is recorded on BNB Smart Chain. Its evidence hash is keccak256 of this JSON without the "proof" field.
+    const proof = await recordProof(r);
+    lastBnbPrice = r.numbers.bnbPriceUsd;
+    return c.json({ ...r, proof });
   } catch (e) {
     return c.json({ error: (e as Error).message }, 422);
   }
@@ -77,7 +83,10 @@ app.get("/api/top10", (c) => {
   return existsSync(f) ? c.json(JSON.parse(readFileSync(f, "utf8"))) : c.json({ results: [] });
 });
 
-app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY, atlas: !!process.env.ATLAS_API_KEY, ask: !!process.env.COINGRAPH_API_KEY }));
+app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY, atlas: !!process.env.ATLAS_API_KEY, ask: !!process.env.COINGRAPH_API_KEY, proofs: proofEnabled() }));
+
+// How many answers have been recorded on chain, and what that cost.
+app.get("/api/proofs", (c) => c.json(proofStats(lastBnbPrice)));
 
 app.get("/", (c) => c.html(readFileSync(new URL("public/index.html", root), "utf8")));
 app.get("/poster", (c) => c.html(readFileSync(new URL("public/poster.html", root), "utf8")));
