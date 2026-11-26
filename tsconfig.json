@@ -1,1 +1,1 @@
-{ "compilerOptions": { "target": "ES2022", "module": "NodeNext", "moduleResolution": "NodeNext", "strict": true, "skipLibCheck": true, "noEmit": true, "types": ["node"] }, "include": ["checks/**/*.ts", "agent/**/*.ts"] }
+{ "compilerOptions": { "target": "ES2022", "module": "NodeNext", "moduleResolution": "NodeNext", "strict": true, "skipLibCheck": true, "noEmit": true, "types": ["node"] }, "include": ["checks/**/*.ts", "agent/**/*.ts", "contracts/**/*.ts"] }
