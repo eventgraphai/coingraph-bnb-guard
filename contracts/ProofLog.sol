@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-/// @title CoinGraph ProofLog (opBNB)
+/// @title CoinGraph ProofLog (BNB Smart Chain)
 /// @notice CoinGraph records the hash of every answer here when it is issued, before any trade.
-///         Anyone can later match an answer to this log on opBNBScan and see what the agent knew, and when.
+///         Anyone can later match an answer to this log on BscScan and see what the agent knew, and when.
 contract ProofLog {
     address public immutable recorder;
 
