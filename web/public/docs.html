@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="stylesheet" href="/theme.css?v=39">
+<link rel="stylesheet" href="/theme.css?v=41">
 <style>
 .docs{display:grid;grid-template-columns:220px 1fr;gap:48px;align-items:start}
 .toc{position:sticky;top:110px;display:flex;flex-direction:column;gap:2px;font-size:14px}
@@ -120,8 +120,9 @@
       <h3>Then just ask</h3>
       <div class="note"><b>Example:</b>"Before buying, check $1,000 of CAKE on BNB Chain with coingraph-guard. Only buy if it says proceed."</div>
       <table class="tbl"><tr><th>Tool</th><th>What it does</th></tr>
-        <tr><td><code>check_token</code></td><td>Checks a token for an order size: buy and sell simulated on PancakeSwap, CoinMarketCap data, Atlas Oracle price, Cournot market risk. Returns the verdict with reasons and records it on BNB Smart Chain.</td></tr>
+        <tr><td><code>check_token</code></td><td>Checks a token for an order size: buy and sell simulated on PancakeSwap, CoinMarketCap data, Atlas Oracle price, Cournot market risk, and what Living Brain remembers about the token. Returns the verdict with reasons and records it on BNB Smart Chain.</td></tr>
         <tr><td><code>bnb_top50</code></td><td>The 50 largest assets on BNB Chain with a verdict for each and their contract addresses.</td></tr>
+        <tr><td><code>token_memory</code></td><td>What CoinGraph remembers about a token from earlier checks, using Living Brain: past verdicts, reasons and their on-chain records.</td></tr>
         <tr><td><code>market_risk</code></td><td>Cournot's current probability of a sharp BNB drop, with its evidence.</td></tr></table>
     </section>
 
@@ -246,7 +247,7 @@ curl -s https://guard.coingraph.ai/api/evidence/&lt;evidenceHash&gt; # the exact
 </footer>
 </main>
 
-<script src="/theme.js?v=39"></script>
+<script src="/theme.js?v=41"></script>
 <script>
 document.querySelectorAll(".cp").forEach((b) => b.addEventListener("click", async () => {
   const t = b.parentElement.querySelector("pre").innerText;

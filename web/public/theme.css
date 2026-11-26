@@ -679,3 +679,15 @@ a.mk-go:hover{background:var(--bg2)}
 .shot .reveal,.shot .fade-up,.shot .hero h1 .w{opacity:1!important;transform:none!important;filter:none!important;transition:none!important;animation:none!important}
 .shot *,.shot *::before,.shot *::after{transition:none!important}
 #proof .run .tx .vfy{font-weight:650;color:var(--ok)}
+
+/* ---- Living Brain memory ---- */
+.memrow{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
+.memrow:first-of-type{border-top:0}
+.memrow b{font-size:14px}.memrow span{font-size:13px}
+.gf-srcs span{font-size:10px;padding:4px 7px}
+@media (max-width:1040px){
+  .nav-links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:8px;box-shadow:var(--shadow2)}
+  .nav.open .nav-links{display:flex}
+  .menu{display:grid;margin-left:0}.nav>.theme:not(.menu){margin-left:auto}
+  .nav .cta{display:none}
+}

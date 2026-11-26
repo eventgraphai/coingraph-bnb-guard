@@ -91,6 +91,20 @@ The scaled amount goes into the signed answer's `maxAmountIn`, so **the guard co
 
 Setup: works without a key on Cournot's free allowance (3 calls per IP); set `COURNOT_API_KEY` for a prepaid pack. `COURNOT_CACHE_HOURS` (default 6) and `COURNOT_ENABLED=0` (off) are optional. Run one live call: `npx tsx scripts/cournot-probe.ts BNB`.
 
+## Living Brain integration (memory)
+
+CoinGraph Guard uses [Living Brain](https://docs.livingbrain.com) (by ChatAndBuild) as its persistent memory, through the TypeScript SDK (`@living-brain/sdk`). Code: `checks/memory.ts`, wired in `checks/check.ts` and `web/server.ts`.
+
+1. **Remember.** After every check, the token, verdict, reasons and the BscScan record are captured into one brain, "CoinGraph Guard memory", with the answer's evidence hash as the capture's `originRef` (a retry never duplicates). Living Brain compiles the notes into pages in the background.
+2. **Recall.** Before every check, the brain is searched for pages about that token (contract address or symbol). Matches become a "Living Brain recalls…" finding and a `numbers.memory` block with each page's title, summary, status and similarity.
+3. **Provable.** The memory block is part of the answer's raw JSON, so its hash is recorded on BNB Smart Chain and the recall can be verified at `/proof` like everything else.
+4. **For agents.** The free MCP server has a `token_memory` tool: what CoinGraph remembers about a token from earlier checks.
+5. **Seeded** with the mainnet guarded runs: `npx tsx scripts/brain-seed.ts`. Probe it: `npx tsx scripts/brain-probe.ts <token> <symbol>`.
+
+Example: a check of the copycat BTCB recalls its earlier AVOID ("copies BTCB's name, does not trade like BTCB"), so an agent sees the history, not just today's numbers.
+
+Setup: `LIVING_BRAIN_API_KEY` (lbk_...) and `LIVING_BRAIN_SUBJECT_ID` in `.env`; the brain is found or created by name. Without them, checks run as before and skip memory.
+
 ## How it works
 
 1. The agent asks CoinGraph to check a token before a trade (API, MCP, or x402 pay per check).

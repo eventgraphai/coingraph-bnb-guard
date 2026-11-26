@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="stylesheet" href="/theme.css?v=39">
+<link rel="stylesheet" href="/theme.css?v=41">
 </head>
 <body>
 <div class="progress" id="progress"></div>
@@ -53,7 +53,7 @@
   <div class="gf fade-up" style="animation-delay:.4s" aria-label="Animation: tokens an AI agent wants to buy pass through CoinGraph Guard; proceed goes to PancakeSwap, avoid is refused">
     <div class="gf-top"><span>Live guard · BNB Smart Chain</span><b>mainnet</b></div>
     <div class="gf-stage" id="gfStage">
-      <div class="gf-srcs" id="gfSrcs"><span>PancakeSwap<small>sim</small></span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot</span><span>BscScan</span></div>
+      <div class="gf-srcs" id="gfSrcs"><span>PancakeSwap<small>sim</small></span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot</span><span>Living Brain</span><span>BscScan</span></div>
       <svg class="gf-wires" id="gfWires" aria-hidden="true"></svg>
       <svg class="gf-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="gl" d="M24 64 L43 64"/><path class="gl ok" d="M63 64 C71 64 72 42 78 42"/><path class="gl no" d="M63 64 C71 64 72 86 78 86"/></svg>
       <div class="gf-node agent" style="left:12%;top:64%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg><div><b>AI agent</b><span>wants to buy</span></div></div>
@@ -114,15 +114,16 @@
 
 
 <section id="reads">
-  <div class="center reveal"><div class="eyebrow">The data behind every answer</div><h2>Seven checks. One verdict.</h2><p class="lead">Before CoinGraph signs, it reads the token from every side. A real TRX check for a $1,000 buy:</p></div>
+  <div class="center reveal"><div class="eyebrow">The data behind every answer</div><h2>Eight checks. One verdict.</h2><p class="lead">Before CoinGraph signs, it reads the token from every side. A real TRX check for a $1,000 buy:</p></div>
   <div class="reader">
-    <div class="radial reveal spot"><svg id="radial" viewBox="0 48 640 382" aria-label="CoinGraph reading seven checks"></svg><div class="cap" id="radialCap">&nbsp;</div></div>
+    <div class="radial reveal spot"><svg id="radial" viewBox="0 48 640 382" aria-label="CoinGraph reading eight checks"></svg><div class="cap" id="radialCap">&nbsp;</div></div>
     <div class="srcs" id="srcs">
       <div class="src reveal d1"><i></i><b>PancakeSwap</b><span>· buy and sell simulated</span><em class="res"></em></div>
       <div class="src reveal d2"><i></i><b>CoinMarketCap</b><span>· official contract, holders, DEX liquidity</span><em class="res"></em></div>
       <div class="src reveal d3"><i></i><b>Atlas Oracle</b><span>· signed reference price</span><em class="res"></em></div>
       <div class="src reveal d4"><i></i><b>Cournot</b><span>· market-risk probability</span><em class="res"></em></div>
       <div class="src reveal d3"><i></i><b>BscScan</b><span>· contract source, owner powers</span><em class="res"></em></div>
+      <div class="src reveal d2"><i></i><b>Living Brain</b><span>· remembers earlier checks</span><em class="res"></em></div>
       <div class="src reveal d2"><i></i><b>BNB Smart Chain</b><span>· the record and the guard</span><em class="res"></em></div>
     </div>
   </div>
@@ -130,7 +131,7 @@
 
 <p class="marquee-l">Built on and integrated with</p>
 <div class="marquee" aria-label="Data and infrastructure: BNB Smart Chain, PancakeSwap, CoinMarketCap, Atlas Oracle, Cournot, BscScan">
-  <div class="marquee-t"><span>BNB Smart Chain</span><span>PancakeSwap</span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot Intelligence Oracle</span><span>BscScan</span><span>BNB Smart Chain</span><span>PancakeSwap</span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot Intelligence Oracle</span><span>BscScan</span></div>
+  <div class="marquee-t"><span>BNB Smart Chain</span><span>PancakeSwap</span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot Intelligence Oracle</span><span>Living Brain</span><span>BscScan</span><span>BNB Smart Chain</span><span>PancakeSwap</span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot Intelligence Oracle</span><span>Living Brain</span><span>BscScan</span></div>
 </div>
 
 
@@ -139,7 +140,7 @@
   <div class="tiles">
     <a class="tile reveal d1" href="https://bscscan.com/address/0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d" target="_blank" rel="noopener"><span class="tl">Answers recorded</span><b id="n-recorded">–</b><span class="td"><span><i class="live"></i> live on BNB Smart Chain · <u>view records →</u></span></span></a>
     <div class="tile reveal d2"><span class="tl">Cost per record</span><b data-count>$0.0007</b><span class="td">about 26,000 gas at 0.05 gwei</span></div>
-    <div class="tile reveal d3"><span class="tl">Data sources per check</span><b data-count>4</b><span class="td">PancakeSwap simulation, CoinMarketCap, Atlas Oracle, Cournot</span></div>
+    <div class="tile reveal d3"><span class="tl">Data sources per check</span><b data-count>5</b><span class="td">PancakeSwap simulation, CoinMarketCap, Atlas Oracle, Cournot, Living Brain memory</span></div>
     <div class="tile reveal d4"><span class="tl">Contracts on mainnet</span><b data-count>3</b><span class="td"><a href="https://bscscan.com/address/0x7f914975c2af57253a707fb2c2e44776dc45000b" target="_blank" rel="noopener">Guard</a> · <a href="https://bscscan.com/address/0xf86e3867cee19d56cacfb704dabb1b138af8b0ed" target="_blank" rel="noopener">Guard + Atlas</a> · <a href="https://bscscan.com/address/0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d" target="_blank" rel="noopener">ProofLog</a></span></div>
   </div>
 </section>
@@ -192,13 +193,13 @@
 
 <footer>
   <div><a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
-  Built on BNB Smart Chain and PancakeSwap, with data from CoinMarketCap, Atlas Oracle and Cournot. CoinGraph is not affiliated with Binance or BNB Chain.<br>
+  Built on BNB Smart Chain and PancakeSwap, with data from CoinMarketCap, Atlas Oracle and Cournot, and memory from Living Brain. CoinGraph is not affiliated with Binance or BNB Chain.<br>
   A check is evidence, not a guarantee and not financial advice. BNB Hack Bangkok 2026.</div>
   <nav><a href="/bnb">BNB top 50</a><a href="/proof">Verify an answer</a><a href="/docs">Docs</a><a href="#proof">Mainnet proof</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a><a href="https://coingraph.ai" target="_blank" rel="noopener">coingraph.ai</a></nav>
 </footer>
 </main>
 
-<script src="/theme.js?v=39"></script>
+<script src="/theme.js?v=41"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -242,6 +243,13 @@ function renderGuard(r, into) {
       row.append(el("span", null, p.dex), tr, el("span", "muted", money(p.liquidityUsd))); box.append(row);
     }
     c.append(box);
+  }
+  // Memory: what Living Brain already knew about this token before this check.
+  if (n.memory?.hits?.length) {
+    const mb = el("div", "pools"); mb.append(el("div", "layer", "Memory · Living Brain"));
+    for (const h of n.memory.hits) { const row = el("div", "memrow"); row.append(el("b", null, h.title), el("span", "muted", h.summary), el("em", "muted small", `${h.status} · match ${Math.round(h.similarity * 100)}%`)); mb.append(row); }
+    mb.append(el("div", "muted small", "Recalled from the CoinGraph Guard brain, then recorded with this answer's raw data. This check is now remembered too."));
+    c.append(mb);
   }
   // Market risk: Cournot Intelligence Oracle's probability for a downside claim, the market price, and its evidence.
   if (n.cournot && !n.cournot.error) c.append(renderCournot(n.cournot, r.orderUsd));
@@ -449,20 +457,20 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
   const cross = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg>';
   const bang = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2.5v4.2M6 9.2v.1"/></svg>';
   const runs = [
-    { tab: "ASTER", amt: "$500", verdict: "proceed", ask: "Can I buy $500 of ASTER?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #45", 1, "CoinMarketCap"], ["Liquidity", "$3.3M across DEX pools", 1, "CoinMarketCap DEX data"], ["Price impact", "1.55% for $500", 1, "simulated on PancakeSwap"], ["Owner powers", "renounced", 1, "BscScan"]],
+    { tab: "ASTER", amt: "$500", verdict: "proceed", ask: "Can I buy $500 of ASTER?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #45", 1, "CoinMarketCap"], ["Liquidity", "$3.3M across DEX pools", 1, "CoinMarketCap DEX data"], ["Price impact", "1.55% for $500", 1, "simulated on PancakeSwap"], ["Owner powers", "renounced", 1, "BscScan"], ["Memory", "recalls an earlier proceed", 1, "Living Brain"]],
       v: "Proceed", p: "Every check passed. Signed for this agent, this token and $500, valid 5 minutes, one use.", signed: { verdict: "proceed", token: "ASTER", maxAmountIn: "$500 of BNB", validFor: "5 min, one use" },
       proof: "0x96bab07f0d8dc7567995d8788a447c81e8f529a5e9b4206f6c7824a02cceb135", buy: "0x21f574b6aff2a2de746276b898339cd699bfa8be33e6d71eee4c918d45d82e65", guard: ["p-proceed", "Guard: trade goes through"], buyLabel: "See a guarded buy" },
-    { tab: "TRX", amt: "$1,000", verdict: "proceed", ask: "Can I buy $1,000 of TRX?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #8", 1, "CoinMarketCap"], ["Liquidity", "$3.8M across DEX pools", 1, "CoinMarketCap DEX data"], ["Price vs Atlas Oracle", "0.13% apart", 1, "Atlas Oracle, signed"], ["Price impact", "0.73% for $1,000", 1, "simulated on PancakeSwap"]],
+    { tab: "TRX", amt: "$1,000", verdict: "proceed", ask: "Can I buy $1,000 of TRX?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #8", 1, "CoinMarketCap"], ["Liquidity", "$3.8M across DEX pools", 1, "CoinMarketCap DEX data"], ["Price vs Atlas Oracle", "0.13% apart", 1, "Atlas Oracle, signed"], ["Price impact", "0.73% for $1,000", 1, "simulated on PancakeSwap"], ["Memory", "recalls an earlier proceed", 1, "Living Brain"]],
       v: "Proceed", p: "Signed for $1,000, and the guard re-checks Atlas Oracle's price inside the same transaction.", signed: { verdict: "proceed", token: "TRX", maxAmountIn: "$1,000 of BNB", atlasFeed: "TRX/USD", validFor: "5 min, one use" },
       proof: "0x00d28a53c6b7711eb01e0abcb12b0deb23a99f64628bbf572b703af3404f6723", buy: "0xc1278e5ba8389cc7de019765394d8aa3e5d649e1c77b89f2bdf100caa2331cf8", guard: ["p-proceed", "Guard: trade goes through"], buyLabel: "See a guarded buy" },
-    { tab: "NVDAB", amt: "$10K", verdict: "caution", ask: "Can I buy $10,000 of NVDAB?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official listing", "CoinMarketCap #225", 1, "CoinMarketCap"], ["Pool liquidity", "$20,788, thin", 2, "PancakeSwap pool"], ["Price impact", "48.9% for $10,000", 2, "simulated on PancakeSwap"], ["Atlas Oracle sources", "disagree (0.85)", 2, "Atlas Oracle, signed"]],
+    { tab: "NVDAB", amt: "$10K", verdict: "caution", ask: "Can I buy $10,000 of NVDAB?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official listing", "CoinMarketCap #225", 1, "CoinMarketCap"], ["Pool liquidity", "$20,788, thin", 2, "PancakeSwap pool"], ["Price impact", "48.9% for $10,000", 2, "simulated on PancakeSwap"], ["Atlas Oracle sources", "disagree (0.85)", 2, "Atlas Oracle, signed"], ["Memory", "recalls an earlier caution", 2, "Living Brain"]],
       v: "Caution", p: "A real token, but $10,000 is too big for this pool. Size down or trade where its liquidity is. The guard holds the buy.", signed: { verdict: "caution", token: "NVDAB", order: "$10,000", reason: "thin pool, 48.9% price impact" },
       proof: "0x46d06b40acafaa6b63d6a58f0c54b0f6b45eedee1016cc980ea8a4608f41e61b", buy: "0xbf1dcd51ef697e34fe27bf309d5ad8e6ed69d82dd25a284482cbbf917d0fa5c6", guard: ["p-caution", "Guard: buy held back"], buyLabel: "See the held buy" },
-    { tab: "Copycat BTCB", amt: "$10K", verdict: "avoid", ask: "Can I buy $10,000 of BTCB?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "copies the name only", 0, "CoinMarketCap"], ["Holders", "9 wallets", 0, "CoinMarketCap DEX data"], ["Pool liquidity", "$3.20", 0, "PancakeSwap pool"], ["Price vs Atlas Oracle", "100% apart", 0, "Atlas Oracle, signed"]],
+    { tab: "Copycat BTCB", amt: "$10K", verdict: "avoid", ask: "Can I buy $10,000 of BTCB?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "copies the name only", 0, "CoinMarketCap"], ["Holders", "9 wallets", 0, "CoinMarketCap DEX data"], ["Pool liquidity", "$3.20", 0, "PancakeSwap pool"], ["Price vs Atlas Oracle", "100% apart", 0, "Atlas Oracle, signed"], ["Memory", "recalls an earlier avoid", 0, "Living Brain"]],
       v: "Avoid", p: "Not the real BTCB. Even with a signed answer, the guard refuses the buy on chain.", signed: { verdict: "avoid", token: "BTCB (copycat)", order: "$10,000", atlasFeed: "BTC/USD" },
       proof: "0x47172a1b27c76a1ebf3a2b5b02d8eac83e82b35b87963472d68f6f92503978ab", buy: "0x56a8e669729405756850de65d83af8dc3efab9f918f884ab169370d1a901b64e", guard: ["p-avoid", "Guard: refused (OracleDeviation)"], buyLabel: "See the refused buy" },
   ];
-  const caps = ["The agent sends the token and the order size. No trade happens yet.", "CoinGraph reads the token from every side at this order size: a simulated buy and sell, the official listing, liquidity, price impact and the signed Atlas price.", "CoinGraph signs the verdict for this exact agent, token and amount. It expires in 5 minutes and works once.", "The answer is recorded on BNB Smart Chain, then the guard contract lets the buy through only on a signed proceed."];
+  const caps = ["The agent sends the token and the order size. No trade happens yet.", "CoinGraph reads the token from every side at this order size: a simulated buy and sell, the official listing, liquidity, price impact, the signed Atlas price, and what Living Brain remembers from earlier checks.", "CoinGraph signs the verdict for this exact agent, token and amount. It expires in 5 minutes and works once.", "The answer is recorded on BNB Smart Chain, then the guard contract lets the buy through only on a signed proceed."];
   const tabs = $("#dmTabs"), steps = [...document.querySelectorAll(".dm-step")], bar = $("#dmBar"), cap = $("#dmCap");
   let cur = 0, timers = [], cycle = 0;
   const later = (ms, f) => timers.push(setTimeout(f, ms));
@@ -499,13 +507,14 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-45% 0px -45% 0px" });
   links.forEach((a) => { const p = document.querySelector(a.getAttribute("href")); if (p) io.observe(p); });
 })();
-// The reader: a hub reads seven checks in turn; each lights its source on the right.
+// The reader: a hub reads eight checks in turn; each lights its source on the right.
 (() => {
   const svg = document.getElementById("radial"); if (!svg) return;
   const NS = "http://www.w3.org/2000/svg", mk = (t, a = {}, p = svg) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); p.append(e); return e; };
   const checks = [
     ["Honeypot", "Buy and sell both work · 0% tax", 0, 0, "0% tax"], ["Copycat", "Official TRON contract, CoinMarketCap #8", 1, 0, "official · #8"], ["Liquidity", "$3.8M across 5+ DEX pools", 1, 0, "$3.8M"],
     ["Atlas price", "PancakeSwap $0.303 vs Atlas $0.303, 0.13% apart", 2, 0, "0.13% apart"], ["Owner", "Ownership renounced", 4, 0, "renounced"], ["Holders", "109,677 wallets hold it", 1, 0, "109,677 holders"], ["Market risk", "Cournot: 55% chance of a sharp BNB drop, so CoinGraph signs for 45% of the $1,000", 3, 1, "55% → signs 45%"],
+    ["Memory", "Living Brain recalls an earlier TRX check: proceed, ownership renounced", 5, 0, "recalls proceed"],
   ];
   const cx = 320, cy = 300, R = 215;
   mk("circle", { cx, cy, r: 150, class: "ring" }); mk("circle", { cx, cy, r: 105, class: "ring" });
@@ -528,7 +537,7 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
   const step = () => {
     i++;
     if (i === checks.length) { hs.textContent = "PROCEED · SIGNED"; nodes[i - 1].classList.add("warn"); lines[i - 1].classList.add("warn"); lines[i - 1].classList.remove("on"); nodes[i - 1].classList.remove("on");
-      srcs.forEach((s) => s.classList.remove("on")); srcs[5].classList.add("on", "got"); srcs[5].querySelector(".res").textContent = "recorded · proceed $450";
+      srcs.forEach((s) => s.classList.remove("on")); const last = srcs[srcs.length - 1]; last.classList.add("on", "got"); last.querySelector(".res").textContent = "recorded · proceed $450";
       cap.innerHTML = '<span class="t"><b>Verdict</b> · Proceed for $450 of the $1,000 · <span>signed and recorded on BNB Smart Chain</span></span>'; timer = setTimeout(reset, 2600); return; }
     const c = checks[i];
     nodes.forEach((n, k) => { n.classList.toggle("on", k === i); });
