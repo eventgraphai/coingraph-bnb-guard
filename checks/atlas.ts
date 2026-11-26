@@ -13,7 +13,8 @@ const PKG = 20; // feedId 4 bytes, value 10 bytes (18 decimals), timestamp 6 byt
 
 export const atlasEnabled = () => !!process.env.ATLAS_API_KEY;
 
-export type AtlasPrice = { feedId: string; price: number; timestamp: number; signature: string };
+export type AtlasQuality = { consensusScore: number; consensusStatus: string; twapUsd: number; medianUsd: number; volatility: number; changePct: number };
+export type AtlasPrice = { feedId: string; price: number; timestamp: number; signature: string; quality?: AtlasQuality };
 
 function hexBytes(hex: string): Uint8Array {
   const h = hex.startsWith("0x") ? hex.slice(2) : hex;
@@ -57,5 +58,19 @@ export async function atlasPrices(feedIds: string[]): Promise<AtlasPrice[]> {
   } catch {}
   if (!res.ok || !json.data) throw new Error(`Atlas API ${res.status}: ${json.status?.error_message ?? "no data"}`);
   const strip = (s: string) => (s.startsWith("0x") ? s.slice(2) : s);
-  return decodeAtlas("0x" + strip(json.data.payload) + strip(json.data.signature) + strip(json.data.magicMarker));
+  const prices = decodeAtlas("0x" + strip(json.data.payload) + strip(json.data.signature) + strip(json.data.magicMarker));
+  // Data quality (only in the unsigned response): how strongly sources agree, TWAP, median, short-term volatility.
+  const q = await atlasQuality(feedIds).catch(() => new Map<string, AtlasQuality>());
+  for (const p of prices) p.quality = q.get(p.feedId);
+  return prices;
+}
+
+export async function atlasQuality(feedIds: string[]): Promise<Map<string, AtlasQuality>> {
+  const key = process.env.ATLAS_API_KEY;
+  const out = new Map<string, AtlasQuality>();
+  if (!key || !feedIds.length) return out;
+  const res = await fetch(`${BASE}/report/v1/price/latest`, { method: "POST", headers: { "Content-Type": "application/json", "X-API-KEY": key }, body: JSON.stringify({ signed: false, feedIds }), signal: AbortSignal.timeout(10_000) });
+  const json = (await res.json().catch(() => ({}))) as { data?: { consensusScores?: { feedId: string; consensusScore: number; consensusStatus: string; twapPrice: string; medianPrice: string; priceVolatility: number; priceChangePct: number }[] } };
+  for (const c of json.data?.consensusScores ?? []) out.set(String(c.feedId), { consensusScore: c.consensusScore, consensusStatus: c.consensusStatus, twapUsd: Number(c.twapPrice), medianUsd: Number(c.medianPrice), volatility: c.priceVolatility, changePct: c.priceChangePct });
+  return out;
 }

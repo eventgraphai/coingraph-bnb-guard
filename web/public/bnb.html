@@ -27,7 +27,7 @@ h1{font-size:clamp(32px,4.4vw,48px);line-height:1.05;margin:10px 0 8px}.lead{col
 .legend{display:flex;flex-direction:column;gap:4px;font-size:13px}.legend i{display:inline-block;width:9px;height:9px;border-radius:99px;margin-right:6px}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{text-align:right;padding:12px 12px;border-top:1px solid var(--line);white-space:nowrap}th{color:var(--grey);font-weight:600;font-size:12.5px;border-top:0;background:#faf8f3;position:sticky;top:0}
-th:nth-child(2),td:nth-child(2),th:last-child,td:last-child,th:nth-child(8),td:nth-child(8){text-align:left}
+th:nth-child(2),td:nth-child(2),th:last-child,td:last-child,th:nth-child(9),td:nth-child(9){text-align:left}.atl{font-size:13px}.atl small{display:block;color:var(--grey);font-size:11.5px}
 td.name{display:flex;flex-direction:column}td.name b{font-weight:600}td.name small{color:var(--grey);font-size:12px}
 tbody tr{cursor:pointer}tbody tr:hover{background:var(--cream)}
 .pill{display:inline-flex;align-items:center;border-radius:99px;padding:3px 10px;font-weight:700;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
@@ -61,12 +61,12 @@ footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 40px;colo
 </div>
 
 <div class="card tablewrap"><table>
-  <thead><tr><th>#</th><th>Name</th><th>Price</th><th>24h</th><th>7d</th><th>Market cap</th><th>Volume (24h)</th><th>CoinGraph</th><th></th></tr></thead>
-  <tbody id="rows"><tr><td colspan="9" class="muted" style="text-align:center;padding:30px">Loading the board…</td></tr></tbody>
+  <thead><tr><th>#</th><th>Name</th><th>Price</th><th>24h</th><th>7d</th><th>Market cap</th><th>Volume (24h)</th><th>Atlas Oracle</th><th>CoinGraph</th><th></th></tr></thead>
+  <tbody id="rows"><tr><td colspan="10" class="muted" style="text-align:center;padding:30px">Loading the board…</td></tr></tbody>
 </table></div>
 <p class="muted" id="updated" style="font-size:13px;margin-top:10px"></p>
 
-<footer>Market data: CoinMarketCap. On-chain checks: BNB Smart Chain and PancakeSwap, with Atlas Oracle reference prices. Official BNB Chain versions of coins like ETH, XRP and DOGE are "bridged": the issuer holds the backing.
+<footer>Market data: CoinMarketCap. Reference prices and source consensus: Atlas Oracle (signed). On-chain checks: BNB Smart Chain and PancakeSwap, with Atlas Oracle reference prices. Official BNB Chain versions of coins like ETH, XRP and DOGE are "bridged": the issuer holds the backing.
 CoinGraph is not affiliated with Binance or BNB Chain. A check is evidence, not a guarantee and not financial advice.</footer>
 </div>
 <script>
@@ -94,7 +94,7 @@ fetch("/api/market").then((r) => r.json()).then((m) => {
 
 function draw(b) {
   const tb = $("#rows"); tb.innerHTML = "";
-  if (!b.rows?.length) { tb.innerHTML = '<tr><td colspan="9" class="muted" style="text-align:center;padding:30px">Building the board, check back in a minute.</td></tr>'; return; }
+  if (!b.rows?.length) { tb.innerHTML = '<tr><td colspan="10" class="muted" style="text-align:center;padding:30px">Building the board, check back in a minute.</td></tr>'; return; }
   const n = { proceed: 0, caution: 0, avoid: 0, none: 0 };
   for (const r of b.rows) {
     n[r.verdict ?? "none"]++;
@@ -103,7 +103,9 @@ function draw(b) {
     const v = el("td"); v.append(el("span", "pill p-" + (r.verdict ?? "none"), r.verdict ?? "checking"), el("div", "reason", r.reason ?? ""));
     const go = el("td"); const btn = el("button", "check", "Check"); go.append(btn);
     const c24 = el("td"); c24.append(chg(r.change24hPct)); const c7 = el("td"); c7.append(chg(r.change7dPct));
-    tr.append(el("td", "muted", r.rank), name, el("td", null, price(r.priceUsd)), c24, c7, el("td", null, big(r.marketCapUsd)), el("td", null, big(r.volume24hUsd)), v, go);
+    const at = el("td", "atl");
+    if (r.atlas) { at.append(document.createTextNode(price(r.atlas.priceUsd)), el("small", null, `${r.atlas.gapPct.toFixed(2)}% gap · consensus ${r.atlas.consensus != null ? r.atlas.consensus.toFixed(2) : "–"}`)); } else at.append(el("small", null, "no free feed"));
+    tr.append(el("td", "muted", r.rank), name, el("td", null, price(r.priceUsd)), c24, c7, el("td", null, big(r.marketCapUsd)), el("td", null, big(r.volume24hUsd)), at, v, go);
     tr.onclick = () => { location.href = `/?q=${r.address}&usd=500`; };
     tb.append(tr);
   }

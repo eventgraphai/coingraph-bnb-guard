@@ -26,6 +26,8 @@ Before a buy, the agent asks CoinGraph about the token and the order size. CoinG
 | CoinMarketCap | `GET /v1/global-metrics/quotes/latest`, `GET /v3/fear-and-greed/latest`, `GET /v1/altcoin-season-index/latest` | **Market mood banner:** total market cap, BTC dominance, Fear & Greed, altcoin season. |
 | CoinMarketCap | `GET /v1/cryptocurrency/listings/latest` + `info` tag names | **BNB Chain top 50 board** (guard.coingraph.ai/bnb): the largest assets tradable on BNB Chain with price, 24h and 7d change, market cap, volume, category tags and a CoinGraph verdict for each. |
 | Atlas Oracle | Pull API `POST /report/v1/price/latest` (signed payload, decoded per Atlas's SDK layout) | **Independent reference price.** Pool price vs Atlas price for BTC (#626), ADA (#630), DOGE, TRX and tokenized stocks and ETFs on BNB Chain (Apple #979, NVIDIA, S&P 500 ETF and more). A token trading far from the asset it represents gets avoid. |
+| Atlas Oracle | Same API, unsigned mode: `consensusScores` | **Data quality CoinMarketCap does not have:** source consensus score and health (caution when sources disagree), **TWAP and median price** (a pool far from the time-weighted price flags a pump), volatility. Shown on every card and in an Atlas column on the top 50 board. |
+| Atlas Oracle | Stablecoin feeds (U, USDG, VAI) | **Peg check:** a stablecoin more than 0.5% off $1 by Atlas's TWAP gets caution, more than 2% gets avoid. |
 | BNB Smart Chain | PancakeSwap v2 factory, pairs, router; token bytecode | Buy and sell simulated inside eth_call (nothing spent): taxes, honeypot, liquidity, burned LP, owner powers, price impact. |
 
 **Using both together** is what catches the hardest case. The copycat "BTCB" (0x6583…fd26) passed the honeypot test, since buying and selling both worked. But CoinMarketCap showed it isn't the listed BTCB, and Atlas showed its price 100% away from BTC/USD. Its pool was then drained from $65,333 to $3.21 of liquidity within a day.
@@ -45,7 +47,7 @@ Each answer record costs about 26,000 gas, roughly $0.0007. The evidence for eve
 
 ## What we would build next
 
-1. **The guard reads Atlas on chain:** the swap reverts when the PancakeSwap price strays from Atlas's signed price, using Atlas's pull-oracle consumer.
+1. **The guard verifies Atlas's signed price on chain** (pull mode) and reads Atlas push feeds on BNB Smart Chain: the swap reverts when the PancakeSwap price strays from Atlas's signed price, using Atlas's pull-oracle consumer.
 2. **CoinMarketCap DEX data** for brand-new BNB Chain pairs and holder data, so launches are checked minutes after they list.
 3. **x402 pay-per-check**, so agents pay per call without an account, and PancakeSwap v3 pools.
 4. **More chains** for the same check and proof, as part of CoinGraph, the trust layer for AI agents in crypto.

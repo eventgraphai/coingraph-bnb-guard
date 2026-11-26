@@ -6,11 +6,14 @@ import { writeFileSync, readFileSync, existsSync, mkdirSync } from "node:fs";
 import "../checks/env.js";
 import { checkToken, type Verdict } from "../checks/check.js";
 import type { CmcListing } from "../checks/cmc.js";
+import { atlasPrices } from "../checks/atlas.js";
+import { atlasFeedFor } from "../checks/atlas-feeds.js";
 
 export type BoardRow = {
   rank: number; name: string; symbol: string; address: string; priceUsd: number; change24hPct: number; change7dPct: number;
   marketCapUsd: number; volume24hUsd: number; kind: "native" | "bridged"; tags: string[];
   verdict?: Verdict; reason?: string; checkedAt?: string;
+  atlas?: { label: string; priceUsd: number; gapPct: number; consensus?: number; status?: string };
 };
 
 const CACHE = new URL("./data/board.json", import.meta.url);
@@ -46,6 +49,16 @@ async function buildMarket(): Promise<BoardRow[]> {
     const tags = (info[String(l.id)]?.["tag-names"] ?? []).filter((t) => !/portfolio|ecosystem|capital|ventures|labs|holdings|launchpad|binance listing|alleged/i.test(t)).slice(0, 3);
     rows.push({ rank: l.cmc_rank, name: l.name, symbol: l.symbol, address, priceUsd: q.price, change24hPct: q.percent_change_24h, change7dPct: q.percent_change_7d, marketCapUsd: q.market_cap, volume24hUsd: q.volume_24h, kind: own || l.symbol === "BNB" ? "native" : "bridged", tags });
     if (rows.length === 50) break;
+  }
+  // Atlas Oracle reference price for every row with a free feed, in one call.
+  const feeds = rows.map((r) => ({ r, f: atlasFeedFor(r.symbol === "BTC" ? "BTCB" : r.symbol) })).filter((x) => x.f);
+  if (feeds.length) {
+    const prices = await atlasPrices([...new Set(feeds.map((x) => x.f!.feedId))]).catch(() => []);
+    const byId = new Map(prices.map((p) => [p.feedId, p]));
+    for (const { r, f } of feeds) {
+      const p = byId.get(f!.feedId);
+      if (p && p.price > 0) r.atlas = { label: f!.label, priceUsd: p.price, gapPct: (Math.abs(r.priceUsd - p.price) / p.price) * 100, consensus: p.quality?.consensusScore, status: p.quality?.consensusStatus };
+    }
   }
   return rows;
 }

@@ -12,6 +12,7 @@ export const ATLAS_FREE_FEEDS: Record<string, { feedId: string; label: string }>
   NEAR: { feedId: "1055", label: "NEAR/USD" },
   SUI: { feedId: "1059", label: "SUI/USD" },
   U: { feedId: "624", label: "U/USD" },
+  // Stablecoins (peg check)
   USDG: { feedId: "1061", label: "USDG/USD" },
   VAI: { feedId: "1049", label: "VAI/USD" },
   // Tokenized stocks and ETFs on BNB Chain
