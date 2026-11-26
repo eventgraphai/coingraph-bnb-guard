@@ -50,11 +50,16 @@ export async function listingByAddress(address: string): Promise<CmcListing | nu
 export async function topAssetForSymbol(symbol: string): Promise<{ name: string; symbol: string; rank: number; bscAddress: string | null; chain: string | null } | null> {
   const map = await cmc<MapEntry[]>("/v1/cryptocurrency/map", { symbol: symbol.trim().toUpperCase() });
   const ranked = (map ?? []).filter((m) => m.is_active && m.rank).sort((a, b) => a.rank! - b.rank!);
-  const top = ranked[0];
-  if (!top) return null;
-  // A native coin (ADA, DOGE) lists its official BNB Chain version among its own contract addresses.
-  const info = await cmc<Record<string, InfoEntry>>("/v2/cryptocurrency/info", { id: String(top.id) });
-  const contracts = info?.[String(top.id)]?.contract_address ?? [];
-  const bsc = contracts.find((c) => isBsc(c.platform?.coin?.slug, c.platform?.name))?.contract_address ?? (isBsc(top.platform?.slug, top.platform?.name) ? top.platform!.token_address : null);
-  return { name: top.name, symbol: top.symbol, rank: top.rank!, bscAddress: bsc, chain: top.platform?.name ?? "its own chain" };
+  if (!ranked.length) return null;
+  // Several assets can share a symbol. Look at the best-ranked few: a native coin (ADA, DOGE) lists its official
+  // BNB Chain version among its own contract addresses, a BNB Chain token has it as its platform address.
+  const few = ranked.slice(0, 5);
+  const info = await cmc<Record<string, InfoEntry>>("/v2/cryptocurrency/info", { id: few.map((m) => m.id).join(",") });
+  const withBsc = few.map((m) => {
+    const contracts = (info?.[String(m.id)]?.contract_address ?? []).filter((c) => /^0x[0-9a-fA-F]{40}$/.test(c.contract_address));
+    const bsc = contracts.find((c) => isBsc(c.platform?.coin?.slug, c.platform?.name))?.contract_address ?? (isBsc(m.platform?.slug, m.platform?.name) ? m.platform!.token_address : null);
+    return { name: m.name, symbol: m.symbol, rank: m.rank!, bscAddress: bsc, chain: m.platform?.name ?? "its own chain" };
+  });
+  // Prefer the asset that actually has a BNB Chain contract: that is the one a copycat on BNB Chain imitates.
+  return withBsc.find((a) => a.bscAddress) ?? withBsc[0];
 }
