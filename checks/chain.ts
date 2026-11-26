@@ -1,4 +1,5 @@
 // BNB Smart Chain mainnet addresses and the client the checks read through.
+import "./env.js";
 import { createPublicClient, fallback, http, type Address } from "viem";
 import { bsc } from "viem/chains";
 

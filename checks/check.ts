@@ -3,6 +3,7 @@
 import { encodeFunctionData, decodeFunctionResult, formatUnits, getAddress, isAddress, parseAbi, parseEther, toFunctionSelector, type Address, type Hex } from "viem";
 import { ADDR, KNOWN, QUOTES, STABLES, client } from "./chain.js";
 import { simulatorAbi, simulatorCode } from "./simulator.generated.js";
+import { cmcEnabled, listingByAddress, topAssetForSymbol, type CmcListing } from "./cmc.js";
 
 export type Level = "ok" | "caution" | "avoid";
 export type Verdict = "proceed" | "caution" | "avoid";
@@ -27,6 +28,8 @@ export type CheckResult = {
     lpBurnedPct: number | null;
     owner: Address | null;
     isProxy: boolean;
+    poolPriceUsd: number | null;
+    cmc: CmcListing | null;
   };
   checkedAt: string;
   block: string;
@@ -66,6 +69,7 @@ const ESTABLISHED_USD = 1_000_000;
 
 const pct = (x: number) => Math.round(x * 10000) / 100;
 const usd = (x: number) => `$${x >= 100 ? Math.round(x).toLocaleString("en-US") : x.toFixed(2)}`;
+const fmtPrice = (x: number) => (x >= 1 ? `$${x.toFixed(2)}` : `$${x.toPrecision(3)}`);
 const safe = async <T>(p: Promise<T>): Promise<T | null> => p.catch(() => null);
 
 function selectorsIn(code: Hex): Set<string> {
@@ -97,9 +101,25 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
   if (!code || code === "0x") throw new Error("No contract at this address on BNB Chain.");
   if (decimals === null) throw new Error("This contract does not behave like a token (no decimals).");
 
-  // Copycat: a well-known symbol at an address that is not the real token.
-  const real = symbol ? KNOWN[symbol.trim().toUpperCase()] : undefined;
-  if (real && getAddress(real) !== token) add("avoid", "copycat", `This is not the real ${symbol}. It copies the name of ${symbol} (real contract ${real}) at a different address.`);
+  // Identity. With a CoinMarketCap key: is this exact contract listed, and if not, does its symbol belong to a
+  // well-known listed asset (a copycat)? Without a key: a built-in list of major BNB Chain tokens.
+  let listing: CmcListing | null = null;
+  if (cmcEnabled()) {
+    listing = await safe(listingByAddress(token));
+    if (listing) {
+      const vol = listing.volume24hUsd ? `, ${usd(listing.volume24hUsd)} traded in 24h` : "";
+      add("ok", "identity", `Listed on CoinMarketCap as ${listing.name} (${listing.symbol})${listing.rank ? `, rank #${listing.rank}` : ""}${vol}.`);
+    } else {
+      const top = symbol ? await safe(topAssetForSymbol(symbol)) : null;
+      if (top && top.rank <= 1000) {
+        const where = top.bscAddress ? `its BNB Chain contract is ${top.bscAddress}` : `it lives on ${top.chain}`;
+        add("avoid", "copycat", `This is not the real ${top.symbol}. On CoinMarketCap, ${top.symbol} is ${top.name} (rank #${top.rank}) and ${where}. This contract only copies the name.`);
+      } else add("caution", "identity", "Not listed on CoinMarketCap, so there is no independent record of who is behind it (common for new launches).");
+    }
+  } else {
+    const real = symbol ? KNOWN[symbol.trim().toUpperCase()] : undefined;
+    if (real && getAddress(real) !== token) add("avoid", "copycat", `This is not the real ${symbol}. It copies the name of ${symbol} (real contract ${real}) at a different address.`);
+  }
 
   // BNB price from the deepest pool on BNB Chain.
   const bnbOut = await client.readContract({ address: ADDR.pancakeRouterV2, abi: routerAbi, functionName: "getAmountsOut", args: [parseEther("1"), [ADDR.WBNB, ADDR.USDT]] });
@@ -139,7 +159,7 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
     if (!best || liquidityUsd > best.liquidityUsd) best = { pool, quote, liquidityUsd };
   }
 
-  const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: null, sellTaxPct: null, priceImpactPct: null, lpBurnedPct: null, owner: owner ?? null, isProxy };
+  const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: null, sellTaxPct: null, priceImpactPct: null, lpBurnedPct: null, owner: owner ?? null, isProxy, poolPriceUsd: null, cmc: listing };
 
   const established = !!best && best.liquidityUsd >= ESTABLISHED_USD;
   ownerFindings(established);
@@ -191,6 +211,16 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
     if (impact > 0.1) add("avoid", "price_impact", `A ${usd(orderUsd)} buy would move the price ${pct(impact)}%. Size down a lot or skip.`);
     else if (impact > 0.02) add("caution", "price_impact", `A ${usd(orderUsd)} buy would move the price ${pct(impact)}%. Consider a smaller order.`);
     else add("ok", "price_impact", `A ${usd(orderUsd)} buy moves the price ${pct(impact)}%.`);
+
+    // Pool price vs CoinMarketCap's market price: a big gap means the pool is thin, stale or being pushed.
+    const tokens = Number(formatUnits(outTiny.at(-1)!, decimals));
+    const poolPrice = (Number(formatUnits(tiny, 18)) * bnbPriceUsd) / tokens;
+    numbers.poolPriceUsd = poolPrice;
+    if (listing?.priceUsd) {
+      const gap = Math.abs(poolPrice - listing.priceUsd) / listing.priceUsd;
+      const text = `PancakeSwap price ${fmtPrice(poolPrice)} vs CoinMarketCap ${fmtPrice(listing.priceUsd)}: ${pct(gap)}% apart.`;
+      add(gap > 0.1 ? "avoid" : gap > 0.03 ? "caution" : "ok", "market_price", text);
+    }
   }
 
   const sim = await safe(
