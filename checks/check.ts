@@ -183,21 +183,26 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
   const lower = token.toLowerCase();
   const launchpad = lower.endsWith("4444") ? "Four.meme" : lower.endsWith("7777") ? "Flap" : null;
   const onCurve = launchpad ? ` Its address ends in ${lower.slice(-4)}, the pattern ${launchpad} tokens use, so it is probably still on the ${launchpad} bonding curve and has not graduated to PancakeSwap.` : "";
+  // A large listed token with little or no PancakeSwap v2 liquidity usually trades on PancakeSwap v3 or another DEX,
+  // which this check does not read yet. Say so plainly and use caution (the guard still blocks anything but proceed).
+  const listedBig = (listing?.marketCapUsd ?? 0) >= 10_000_000;
+  const v3note = listedBig && listing ? ` ${listing.name} has a ${usd(listing.marketCapUsd!)} market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.` : "";
   if (!best) {
-    add("avoid", "liquidity", `No PancakeSwap pool against BNB, USDT or FDUSD was found, so an agent cannot buy or sell it on a DEX.${onCurve}`);
+    add(listedBig ? "caution" : "avoid", "liquidity", `No PancakeSwap v2 pool against BNB, USDT or FDUSD was found, so the guard's route cannot trade it.${v3note || onCurve}`);
     return finish();
   }
   if (best.liquidityUsd < 1) {
     numbers.pool = best.pool;
     numbers.liquidityUsd = 0;
-    add("avoid", "liquidity", `Its PancakeSwap pool exists but is empty, so there is nothing to trade against yet.${onCurve}`);
+    add(listedBig ? "caution" : "avoid", "liquidity", `Its PancakeSwap v2 pool exists but is empty, so there is nothing to trade against there.${v3note || onCurve}`);
     return finish();
   }
   const quoteName = best.quote === ADDR.WBNB ? "BNB" : best.quote === ADDR.USDT ? "USDT" : "FDUSD";
   numbers.liquidityUsd = Math.round(best.liquidityUsd);
   numbers.pool = best.pool;
   numbers.poolQuote = quoteName;
-  if (best.liquidityUsd < 5_000) add("avoid", "liquidity", `Only ${usd(best.liquidityUsd)} of liquidity in its PancakeSwap pool; the price can be moved or drained easily.`);
+  if (best.liquidityUsd < 5_000 && listedBig) add("caution", "liquidity", `Only ${usd(best.liquidityUsd)} of liquidity in its PancakeSwap v2 pool.${v3note}`);
+  else if (best.liquidityUsd < 5_000) add("avoid", "liquidity", `Only ${usd(best.liquidityUsd)} of liquidity in its PancakeSwap pool; the price can be moved or drained easily.`);
   else if (best.liquidityUsd < 50_000) add("caution", "liquidity", `${usd(best.liquidityUsd)} of liquidity in its PancakeSwap pool: thin.`);
   else add("ok", "liquidity", `${usd(best.liquidityUsd)} of liquidity in its PancakeSwap ${quoteName} pool.`);
 
@@ -224,7 +229,8 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
   if (outOrder && outTiny && outTiny.at(-1)! > 0n) {
     const impact = 1 - Number((outOrder.at(-1)! * 1_000_000n) / (outTiny.at(-1)! * 1000n)) / 1_000_000;
     numbers.priceImpactPct = pct(Math.max(0, impact));
-    if (impact > 0.1) add("avoid", "price_impact", `A ${usd(orderUsd)} buy would move the price ${pct(impact)}%. Size down a lot or skip.`);
+    if (impact > 0.1 && listedBig) add("caution", "price_impact", `A ${usd(orderUsd)} buy through PancakeSwap v2 would move the price ${pct(impact)}%. Trade it where its liquidity is, not through this route.`);
+    else if (impact > 0.1) add("avoid", "price_impact", `A ${usd(orderUsd)} buy would move the price ${pct(impact)}%. Size down a lot or skip.`);
     else if (impact > 0.02) add("caution", "price_impact", `A ${usd(orderUsd)} buy would move the price ${pct(impact)}%. Consider a smaller order.`);
     else add("ok", "price_impact", `A ${usd(orderUsd)} buy moves the price ${pct(impact)}%.`);
 

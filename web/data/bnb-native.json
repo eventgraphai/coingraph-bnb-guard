@@ -1,0 +1,231 @@
+{
+  "orderUsd": 1,
+  "checkedAt": "2026-11-26T11:54:02.687Z",
+  "rows": [
+    {
+      "rank": 46,
+      "symbol": "ASTER",
+      "name": "Aster",
+      "marketCap": 1374191707.772606,
+      "verdict": "proceed",
+      "reason": "All checks passed.",
+      "token": "0x000Ae314E2A2172a039B26378814C252734f556A"
+    },
+    {
+      "rank": 64,
+      "symbol": "NIGHT",
+      "name": "Midnight",
+      "marketCap": 796728599.9512116,
+      "verdict": "caution",
+      "reason": "Only $14.17 of liquidity in its PancakeSwap v2 pool. Midnight has a $796,728,600 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0xFe930c2d63AeD9b82fC4DBC801920dD2c1a3224F"
+    },
+    {
+      "rank": 80,
+      "symbol": "币安人生",
+      "name": "币安人生",
+      "marketCap": 449060324.9717069,
+      "verdict": "caution",
+      "reason": "Not listed on CoinMarketCap, so there is no independent record of who is behind it (common for new launches).",
+      "token": "0x924fa68a0FC644485b8df8AbfA0A41C2e7744444"
+    },
+    {
+      "rank": 83,
+      "symbol": "STABLE",
+      "name": "Stable",
+      "marketCap": 437880526.8438373,
+      "verdict": "caution",
+      "reason": "The contract is upgradeable by its owner contract 0x2548B8D0FD9277cD4f4b78c79172caEfc46Fd2E6, so its code can be replaced after you buy.",
+      "token": "0x011EBe7d75E2C9D1E0bD0be0bEf5C36f0A90075F"
+    },
+    {
+      "rank": 128,
+      "symbol": "SOON",
+      "name": "SOON",
+      "marketCap": 154870558.7899426,
+      "verdict": "caution",
+      "reason": "The contract is upgradeable by its owner contract 0xadf42817318B7B60cdEFb0fF98C6E6a66e50ADdD, so its code can be replaced after you buy.",
+      "token": "0xb9E1Fd5A02D3A33b25a14d661414E6ED6954a721"
+    },
+    {
+      "rank": 138,
+      "symbol": "TWT",
+      "name": "Trust Wallet Token",
+      "marketCap": 134316433.659434,
+      "verdict": "proceed",
+      "reason": "All checks passed.",
+      "token": "0x4B0F1812e5Df2A09796481Ff14017e6005508003"
+    },
+    {
+      "rank": 156,
+      "symbol": "O",
+      "name": "o1.exchange",
+      "marketCap": 105778949.24923424,
+      "verdict": "caution",
+      "reason": "Its PancakeSwap v2 pool exists but is empty, so there is nothing to trade against there. o1.exchange has a $105,788,696 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0x500A02a20B0B0A3F3efCCFc0559543F5743bd1C4"
+    },
+    {
+      "rank": 160,
+      "symbol": "B",
+      "name": "BUILDon",
+      "marketCap": 98395104.91182886,
+      "verdict": "proceed",
+      "reason": "All checks passed.",
+      "token": "0x6bdcCe4A559076e37755a78Ce0c06214E59e4444"
+    },
+    {
+      "rank": 167,
+      "symbol": "GENIUS",
+      "name": "Genius Terminal",
+      "marketCap": 90373048.05950397,
+      "verdict": "caution",
+      "reason": "Its PancakeSwap v2 pool exists but is empty, so there is nothing to trade against there. Genius Terminal has a $90,373,530 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0x1F12B85aAC097E43Aa1555b2881E98a51090e9A6"
+    },
+    {
+      "rank": 171,
+      "symbol": "SFP",
+      "name": "SafePal",
+      "marketCap": 86094609.86707275,
+      "verdict": "proceed",
+      "reason": "All checks passed.",
+      "token": "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb"
+    },
+    {
+      "rank": 192,
+      "symbol": "FORM",
+      "name": "Four",
+      "marketCap": 63045898.386571,
+      "verdict": "caution",
+      "reason": "Its PancakeSwap v2 pool exists but is empty, so there is nothing to trade against there. Four has a $63,054,399 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0x5b73A93b4E5e4f1FD27D8b3F8C97D69908b5E284"
+    },
+    {
+      "rank": 225,
+      "symbol": "NVDAB",
+      "name": "NVIDIA Tokenized bStocks",
+      "marketCap": 197762449.72302595,
+      "verdict": "caution",
+      "reason": "$20,684 of liquidity in its PancakeSwap pool: thin.",
+      "token": "0x02Fca66C1D1aFB4E2A7884261eB00F63598a7436"
+    },
+    {
+      "rank": 229,
+      "symbol": "WFI",
+      "name": "WeFi",
+      "marketCap": 177913087.87104908,
+      "verdict": "caution",
+      "reason": "The contract has an owner wallet 0x82Da9eb4ed392078dE478201dFf042f288331228; no risky owner functions were found in its code.",
+      "token": "0x90c48855Bb69f9D2C261Efd0D8C7F35990F2dd6f"
+    },
+    {
+      "rank": 231,
+      "symbol": "KOGE",
+      "name": "48 Club Token",
+      "marketCap": 172959065.57479045,
+      "verdict": "caution",
+      "reason": "Only 0% of the pool's liquidity tokens are burned; the rest could be withdrawn (it may be locked elsewhere, which this check does not see).",
+      "token": "0xe6DF05CE8C8301223373CF5B969AFCb1498c5528"
+    },
+    {
+      "rank": 232,
+      "symbol": "PREDICT",
+      "name": "Predict.fun",
+      "marketCap": 172544759.21877277,
+      "verdict": "caution",
+      "reason": "No PancakeSwap v2 pool against BNB, USDT or FDUSD was found, so the guard's route cannot trade it. Predict.fun has a $172,544,759 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0x8888cef3923385c7F90ADE66d09f41fB16668888"
+    },
+    {
+      "rank": 234,
+      "symbol": "ARIA",
+      "name": "AriaAI",
+      "marketCap": 152192768.0638759,
+      "verdict": "caution",
+      "reason": "Its PancakeSwap v2 pool exists but is empty, so there is nothing to trade against there. AriaAI has a $151,722,128 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0x5d3A12c42E5372B2CC3264AB3cdcF660a1555238"
+    },
+    {
+      "rank": 237,
+      "symbol": "DGAI",
+      "name": "DGrid AI",
+      "marketCap": 142736970.85080492,
+      "verdict": "caution",
+      "reason": "No PancakeSwap v2 pool against BNB, USDT or FDUSD was found, so the guard's route cannot trade it. DGrid AI has a $142,709,877 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0x10D4183389e99233db3cc981c43443Ebd28Ebd5e"
+    },
+    {
+      "rank": 238,
+      "symbol": "ALE",
+      "name": "Ailey",
+      "marketCap": 142732261.51238668,
+      "verdict": "caution",
+      "reason": "Only $2.08 of liquidity in its PancakeSwap v2 pool. Ailey has a $142,729,186 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0x9dCE13E71B11eb5Df66ca269bD657696587Fd4E2"
+    },
+    {
+      "rank": 247,
+      "symbol": "CRCLB",
+      "name": "Circle Internet Group Tokenized bStocks",
+      "marketCap": 115314030.24704996,
+      "verdict": "caution",
+      "reason": "Its PancakeSwap v2 pool exists but is empty, so there is nothing to trade against there. Circle Internet Group Tokenized bStocks has a $115,304,619 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0x80f3D493EBCe97e343c53D29a137942416B4ffC0"
+    },
+    {
+      "rank": 249,
+      "symbol": "SPCXB",
+      "name": "SpaceX Tokenized bStocks",
+      "marketCap": 112666708.6351912,
+      "verdict": "caution",
+      "reason": "$35,142 of liquidity in its PancakeSwap pool: thin.",
+      "token": "0xbe9D156892E55e7154BcD3cB0FEA677F9D3103E1"
+    },
+    {
+      "rank": 250,
+      "symbol": "SOXLB",
+      "name": "Semicon Bull 3X ETF Tokenized bStocks",
+      "marketCap": 110386302.84997888,
+      "verdict": "caution",
+      "reason": "$7,323 of liquidity in its PancakeSwap pool: thin.",
+      "token": "0xd97d097a89113fa59b76c572E5b2Eb647E8eefaf"
+    },
+    {
+      "rank": 255,
+      "symbol": "QQQB",
+      "name": "Invesco QQQ Trust Tokenized bStocks",
+      "marketCap": 98404283.40710239,
+      "verdict": "caution",
+      "reason": "Only 0% of the pool's liquidity tokens are burned; the rest could be withdrawn (it may be locked elsewhere, which this check does not see).",
+      "token": "0x205812CdBed920aFf76C6580abD681a46D11efc7"
+    },
+    {
+      "rank": 268,
+      "symbol": "GOOGLB",
+      "name": "Alphabet Tokenized bStocks",
+      "marketCap": 78693694.25750849,
+      "verdict": "caution",
+      "reason": "$11,669 of liquidity in its PancakeSwap pool: thin.",
+      "token": "0x3F53De71c126BdaBAe20f9cD64848d317f6C3238"
+    },
+    {
+      "rank": 275,
+      "symbol": "MSTRB",
+      "name": "Strategy Tokenized bStocks",
+      "marketCap": 71562730.03096156,
+      "verdict": "caution",
+      "reason": "$6,602 of liquidity in its PancakeSwap pool: thin.",
+      "token": "0xE87afb3076AeB0f9B14E368DE8145ae6a2826A14"
+    },
+    {
+      "rank": 277,
+      "symbol": "MUB",
+      "name": "Micron Technology Tokenized bStocks",
+      "marketCap": 69616207.5725661,
+      "verdict": "caution",
+      "reason": "Its PancakeSwap v2 pool exists but is empty, so there is nothing to trade against there. Micron Technology Tokenized bStocks has a $69,602,026 market cap on CoinMarketCap, so its trading is probably on PancakeSwap v3 or another DEX, which this check does not read yet.",
+      "token": "0xcdf2f3e0fa43C47A6662a91C9E4a7C5f69762699"
+    }
+  ]
+}
