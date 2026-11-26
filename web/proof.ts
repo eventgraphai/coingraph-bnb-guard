@@ -78,6 +78,30 @@ export async function recordProof(r: CheckResult): Promise<Proof> {
   }
 }
 
+// On start, count every answer already recorded on chain (and its gas cost), so the totals survive redeploys.
+let loaded = false;
+export async function loadChainTotals() {
+  const d = deployment();
+  if (!d || loaded) return;
+  loaded = true;
+  try {
+    const deployRc = await client.getTransactionReceipt({ hash: d.proofLogTx as Hex });
+    const logs = await client.getLogs({ address: d.proofLog, fromBlock: deployRc.blockNumber, toBlock: "latest" });
+    const txs = [...new Set(logs.map((l) => l.transactionHash))];
+    let total = 0n;
+    for (const h of txs.slice(-500)) {
+      const rc = await client.getTransactionReceipt({ hash: h });
+      total += rc.gasUsed * rc.effectiveGasPrice;
+    }
+    stats.recorded += txs.length;
+    stats.confirmed += txs.length;
+    stats.totalWei += total;
+    stats.since = new Date(Number((await client.getBlock({ blockNumber: deployRc.blockNumber })).timestamp) * 1000).toISOString();
+  } catch {
+    loaded = false; // try again on the next request
+  }
+}
+
 export function proofStats(bnbPriceUsd?: number) {
   const bnb = Number(formatEther(stats.totalWei));
   const d = deployment();

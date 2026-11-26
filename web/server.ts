@@ -8,7 +8,7 @@ import { Hono } from "hono";
 import { isAddress } from "viem";
 import "../checks/env.js";
 import { checkToken } from "../checks/check.js";
-import { proofEnabled, proofStats, recordProof } from "./proof.js";
+import { loadChainTotals, proofEnabled, proofStats, recordProof } from "./proof.js";
 
 const CG = "https://coingraph.ai/api/v1";
 const app = new Hono();
@@ -97,4 +97,5 @@ app.get("/", (c) => c.html(readFileSync(new URL("public/index.html", root), "utf
 app.get("/poster", (c) => c.html(readFileSync(new URL("public/poster.html", root), "utf8")));
 
 const port = Number(process.env.PORT ?? 8787);
+loadChainTotals();
 serve({ fetch: app.fetch, port }, () => console.log(`guard listening on http://localhost:${port}`));
