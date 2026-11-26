@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="stylesheet" href="/theme.css?v=34">
+<link rel="stylesheet" href="/theme.css?v=37">
 </head>
 <body>
 <div class="progress" id="progress"></div>
@@ -134,61 +134,59 @@
 </div>
 
 
-<section>
+<section id="stats" class="sec">
   <div class="center reveal"><div class="eyebrow">Every answer, on the record</div><h2>Proof you can check yourself.</h2><p class="lead">CoinGraph signs each answer and records its hash on BNB Smart Chain before the trade happens.</p></div>
-  <div class="nums">
-    <div class="num reveal d1"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></div><div><b id="n-recorded">–</b><p>answers recorded on BNB Smart Chain</p></div></div>
-    <div class="num reveal d2"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1 1-1.8 2.5-1.8s2.5.7 2.5 1.8-1 1.6-2.5 1.9-2.5.9-2.5 2 1 1.8 2.5 1.8 2.5-.8 2.5-1.8"/></svg></div><div><b data-count>$0.0007</b><p>to record one answer on chain</p></div></div>
-    <div class="num reveal d3"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><div><b data-count>4</b><p>sources in every check: on-chain simulation, CoinMarketCap, Atlas Oracle, Cournot</p></div></div>
+  <div class="tiles">
+    <a class="tile reveal d1" href="https://bscscan.com/address/0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d" target="_blank" rel="noopener"><span class="tl">Answers recorded</span><b id="n-recorded">–</b><span class="td"><span><i class="live"></i> live on BNB Smart Chain · <u>view records →</u></span></span></a>
+    <div class="tile reveal d2"><span class="tl">Cost per record</span><b data-count>$0.0007</b><span class="td">about 26,000 gas at 0.05 gwei</span></div>
+    <div class="tile reveal d3"><span class="tl">Data sources per check</span><b data-count>4</b><span class="td">PancakeSwap simulation, CoinMarketCap, Atlas Oracle, Cournot</span></div>
+    <div class="tile reveal d4"><span class="tl">Contracts on mainnet</span><b data-count>3</b><span class="td"><a href="https://bscscan.com/address/0x7f914975c2af57253a707fb2c2e44776dc45000b" target="_blank" rel="noopener">Guard</a> · <a href="https://bscscan.com/address/0xf86e3867cee19d56cacfb704dabb1b138af8b0ed" target="_blank" rel="noopener">Guard + Atlas</a> · <a href="https://bscscan.com/address/0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d" target="_blank" rel="noopener">ProofLog</a></span></div>
   </div>
 </section>
 
-<section id="proof">
-  <div class="reveal"><div class="eyebrow">Live on mainnet</div><h2>Same agent. Same contract.<br>Different tokens.</h2><p class="lead">An AI agent asked CoinGraph before each buy, then bought through the guard. Only "proceed" goes through. Every link opens the real transaction on BscScan.</p></div>
+<section id="proof" class="sec">
+  <div class="center reveal"><div class="eyebrow">Live on mainnet</div><h2>Same agent. Same contract. Different tokens.</h2><p class="lead">An AI agent asked CoinGraph before each buy, then bought through the guard. Only "proceed" goes through. Every link opens the transaction on BscScan.</p></div>
   <div class="runs" id="runs"></div>
-  <p class="contracts" id="contracts"></p>
+  <p class="contracts center" id="contracts"></p>
 </section>
 
-<section id="how">
-  <div class="reveal"><div class="eyebrow">How it works</div><h2>Ask first. Then trade.</h2><p class="lead">Four steps, every time an agent moves money.</p></div>
-  <div class="how">
-    <div class="how-nav" id="howNav"><a href="#s1" class="on"><span>01</span>Ask</a><a href="#s2"><span>02</span>Check</a><a href="#s3"><span>03</span>Verdict</a><a href="#s4"><span>04</span>Proof and guard</a></div>
-    <div class="how-panels">
-      <div class="panel reveal" id="s1"><div class="mini"><div><span class="muted">Agent</span><code>0xb15b…6710</code></div><div><span class="muted">Token</span><b>CAKE</b></div><div><span class="muted">Order</span><b>$1,000</b></div></div><h3>Ask</h3><p>The agent sends the token and the order size, by API, MCP or pay per check.</p></div>
-      <div class="panel reveal" id="s2"><div class="mini"><div><span>Buy and sell simulated on PancakeSwap</span><b style="color:var(--ok)">✓</b></div><div><span>Official contract, per CoinMarketCap</span><b style="color:var(--ok)">✓</b></div><div><span>Price vs Atlas Oracle, signed</span><b style="color:var(--ok)">✓</b></div><div><span>BNB drop risk, Cournot</span><b>55%</b></div></div><h3>Check</h3><p>Honeypots, taxes, liquidity, owner powers, copycats, price against Atlas Oracle, and market risk from Cournot.</p></div>
-      <div class="panel reveal" id="s3"><div class="mini"><div><span class="muted">Verdict</span><span class="pill p-proceed">Proceed</span></div><div><span class="muted">Signed for</span><b>$450 of $1,000</b></div><div><span class="muted">Valid</span><b>5 minutes, one use</b></div></div><h3>Verdict</h3><p>Proceed, caution or avoid, sized to the order, with every reason written out.</p></div>
-      <div class="panel reveal" id="s4"><div class="mini"><div><span class="muted">Recorded</span><code>ProofLog 0x186e…7f5d</code></div><div><span class="muted">Proceed</span><b style="color:var(--ok)">trade goes through</b></div><div><span class="muted">Caution or avoid</span><b style="color:var(--bad)">guard reverts</b></div></div><h3>Proof and guard</h3><p>The answer's hash is recorded on BNB Smart Chain. The guard contract enforces it: no signed proceed, no trade.</p></div>
-    </div>
+<section id="how" class="sec">
+  <div class="center reveal"><div class="eyebrow">How it works</div><h2>Ask first. Then trade.</h2><p class="lead">Four steps, every time an agent moves money.</p></div>
+  <div class="steps4">
+    <div class="st reveal d1"><span class="sn">01</span><div class="mini"><div><span class="muted">Agent</span><code>0xb15b…6710</code></div><div><span class="muted">Token</span><b>CAKE</b></div><div><span class="muted">Order</span><b>$1,000</b></div></div><h3>Ask</h3><p>The agent sends the token and the order size, by API, MCP or pay per check.</p></div>
+    <div class="st reveal d2"><span class="sn">02</span><div class="mini"><div><span>Buy and sell simulated</span><b style="color:var(--ok)">✓</b></div><div><span>Official contract</span><b style="color:var(--ok)">✓</b></div><div><span>Atlas price, signed</span><b style="color:var(--ok)">✓</b></div><div><span>BNB drop risk</span><b style="color:var(--warn)">55%</b></div></div><h3>Check</h3><p>Honeypots, taxes, liquidity, owner powers, copycats, Atlas price and Cournot market risk.</p></div>
+    <div class="st reveal d3"><span class="sn">03</span><div class="mini"><div><span class="muted">Verdict</span><span class="pill p-proceed">Proceed</span></div><div><span class="muted">Signed for</span><b>$450 of $1,000</b></div><div><span class="muted">Valid</span><b>5 min, one use</b></div></div><h3>Verdict</h3><p>Proceed, caution or avoid, sized to the order, with every reason written out.</p></div>
+    <div class="st reveal d4"><span class="sn">04</span><div class="mini"><div><span class="muted">Recorded</span><code>ProofLog</code></div><div><span class="muted">Proceed</span><b style="color:var(--ok)">goes through</b></div><div><span class="muted">Caution, avoid</span><b style="color:var(--bad)">reverts</b></div></div><h3>Proof and guard</h3><p>The hash is recorded on BNB Smart Chain. No signed proceed, no trade.</p></div>
   </div>
 </section>
 
-<section>
-  <div class="band reveal"><div class="eyebrow">Why it matters</div><blockquote>If money is lost, replay exactly what the agent knew.</blockquote><p>Every answer is signed and recorded before the trade. Download the evidence, hash it, and match it on BscScan.</p></div>
+<section class="sec">
+  <div class="band reveal"><div class="eyebrow">Why it matters</div><blockquote>If money is lost, replay exactly what the agent knew.</blockquote><p>Every answer is signed and recorded before the trade. Anyone can verify it:</p>
+    <div class="vflow"><span><b>1</b>Download the evidence</span><i>→</i><span><b>2</b>Hash it (keccak256)</span><i>→</i><span><b>3</b>Match the hash on BscScan</span></div></div>
 </section>
 
-<section id="top10">
-  <div class="reveal"><div class="eyebrow">Live checks</div><h2>Top 10 on BNB Chain.</h2><p class="lead">By market cap, each checked for a <span id="t10usd">$500</span> buy. Click a row to check it live. <a href="/bnb">See all 50 →</a></p></div>
-  <div class="card tablewrap reveal"><table><thead><tr><th>Rank</th><th>Asset</th><th>Verdict</th><th>Main reason</th></tr></thead><tbody id="t10"></tbody></table></div>
+<section id="top10" class="sec">
+  <div class="center reveal"><div class="eyebrow">Live checks</div><h2>Top 10 on BNB Chain.</h2><p class="lead">By market cap, each checked for a <span id="t10usd">$500</span> buy. Click any row to run it live. <a href="/bnb">See all 50 →</a></p></div>
+  <div class="card tablewrap t10 reveal"><table><thead><tr><th>#</th><th>Asset</th><th>Verdict</th><th>Main reason</th><th>Pool liquidity</th><th></th></tr></thead><tbody id="t10"></tbody></table></div>
 </section>
 
-<section id="agents">
-  <div class="reveal"><div class="eyebrow">For humans and AI agents</div><h2>One check, wherever your agent runs.</h2></div>
-  <div class="cols" style="margin-top:28px">
-    <div class="card reveal d1"><div class="layer">API</div><b class="t">Check a token</b>
+<section id="agents" class="sec">
+  <div class="center reveal"><div class="eyebrow">For humans and AI agents</div><h2>One check, wherever your agent runs.</h2><p class="lead">Call it from code, connect it to any agent, or enforce it in a contract.</p></div>
+  <div class="cols">
+    <div class="card reveal d1"><div class="layer">API</div><b class="t">Check a token</b><p class="cd">One request returns the verdict, every reason and the on-chain record.</p>
       <pre><code>GET guard.coingraph.ai/api/check
-  ?token=0x…&amp;usd=500</code></pre></div>
-    <div class="card reveal d2"><div class="layer">MCP</div><b class="t">Connect any agent</b>
-      <pre><code>{ "url": "https://coingraph.ai/mcp" }</code></pre>
-      <p class="muted small">Sign in once. Calls spend credits. <a href="https://coingraph.ai/docs/mcp" target="_blank" rel="noopener">Guide</a></p></div>
-    <div class="card reveal d3"><div class="layer">Contract</div><b class="t">Enforce on chain</b>
+  ?token=0x…&amp;usd=1000</code></pre></div>
+    <div class="card reveal d2"><div class="layer">MCP</div><b class="t">Connect any agent</b><p class="cd">Claude, Cursor and other MCP clients. Sign in once; calls spend credits.</p>
+      <pre><code>{ "url": "https://coingraph.ai/mcp" }</code></pre><p class="muted small"><a href="https://coingraph.ai/docs/mcp" target="_blank" rel="noopener">MCP guide →</a></p></div>
+    <div class="card reveal d3"><div class="layer">Contract</div><b class="t">Enforce on chain</b><p class="cd">The guard swaps only on a recent signed proceed for that agent, token and amount.</p>
       <pre><code>guard.buy(answer, signature,
   minOut, path, deadline)</code></pre></div>
   </div>
-  <div style="margin-top:22px" class="reveal"><div class="layer" style="margin-bottom:10px">Ready-made CoinGraph agents</div><div class="agents" id="agentsList"></div></div>
+  <div class="agentsrow reveal"><span class="layer">Ready-made CoinGraph agents</span><div class="agents" id="agentsList"></div></div>
 </section>
 
-<section>
-  <div class="final reveal"><div class="eyebrow">Before the next trade</div><h2>Give your agent a second opinion it can prove.</h2><p class="lead">Check any BNB Chain token in seconds. The answer is recorded on chain.</p><a class="cta" href="#top">Check a token</a></div>
+<section class="sec">
+  <div class="final reveal"><div class="eyebrow">Before the next trade</div><h2>Give your agent a second opinion it can prove.</h2><p class="lead">Check any BNB Chain token in seconds. The answer is recorded on chain.</p><div class="fbtns"><a class="cta" href="#top">Check a token</a><a class="ghost" href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">View the source</a></div></div>
 </section>
 
 <footer>
@@ -199,7 +197,7 @@
 </footer>
 </main>
 
-<script src="/theme.js?v=34"></script>
+<script src="/theme.js?v=37"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -379,35 +377,30 @@ document.addEventListener("click", (e) => { const c = e.target.closest(".chip[da
 
 fetch("/api/demo").then((r) => r.json()).then((d) => {
   const box = $("#runs"); if (!box || !d.runs) return;
-  const card = (r, box) => {
+  const short = (h) => h.slice(0, 6) + "…" + h.slice(-4);
+  const card = (r, atlas) => {
     const kind = r.verdict === "proceed" ? "ok" : r.verdict === "avoid" ? "no" : "hold";
-    const c = el("div", "run reveal " + kind); c.style.transitionDelay = (box.children.length % 3) * 0.08 + "s";
-    c.append(el("div", "big", kind === "ok" ? "✓" : kind === "no" ? "✕" : "‖"), verdictPill(r.verdict), el("h3", null, r.token), el("p", "out", r.outcome));
+    const c = el("div", "run reveal " + kind); c.style.transitionDelay = (box.children.length % 4) * 0.06 + "s";
+    const top = el("div", "rt"); top.append(verdictPill(r.verdict)); if (atlas) top.append(el("span", "atl-tag", "Atlas on chain")); c.append(top);
+    c.append(el("h3", null, r.token), el("p", "out", r.outcome));
     const tx = el("div", "tx"); tx.append(link(`https://bscscan.com/tx/${r.proofTx}`, "Answer recorded"), link(`https://bscscan.com/tx/${r.buyTx}`, r.verdict === "proceed" ? "The buy" : "The refused buy"));
-    c.append(tx); box.append(c); window.cgReveal?.(c);
+    c.append(tx, el("code", "hash", short(r.buyTx))); box.append(c); window.cgReveal?.(c);
   };
-  for (const r of d.runs) card(r, box);
+  for (const r of d.runs) card(r, false);
+  for (const r of d.atlasRuns ?? []) card(r, true);
   const c = $("#contracts"); c.textContent = "Contracts: ";
-  c.append(link(`https://bscscan.com/address/${d.contracts.guard}`, "CoinGraphGuard"), document.createTextNode(" · "), link(`https://bscscan.com/address/${d.contracts.proofLog}`, "ProofLog"));
-  if (d.atlasRuns?.length) {
-    const head = el("h3", "subhead", "Atlas Oracle price, checked inside the contract.");
-    const lead = el("p", "lead", "CoinGraphGuardAtlas verifies Atlas's signed price on chain in the same transaction as the buy. Even a signed \"proceed\" cannot buy a token whose pool price is far from the real asset.");
-    const ab = el("div", "runs");
-    c.after(head, lead, ab);
-    for (const r of d.atlasRuns) card(r, ab);
-    const c2 = el("p", "contracts"); c2.textContent = "Contract: ";
-    c2.append(link(`https://bscscan.com/address/${d.contracts.guardAtlas}`, "CoinGraphGuardAtlas"));
-    ab.after(c2);
-  }
+  c.append(link(`https://bscscan.com/address/${d.contracts.guard}`, "CoinGraphGuard"), document.createTextNode(" · "), link(`https://bscscan.com/address/${d.contracts.guardAtlas}`, "CoinGraphGuardAtlas"), document.createTextNode(" · "), link(`https://bscscan.com/address/${d.contracts.proofLog}`, "ProofLog"));
 }).catch(() => {});
 
 fetch("/api/top10").then((r) => r.json()).then((d) => {
   if (d.orderUsd) $("#t10usd").textContent = money(d.orderUsd);
   const tb = $("#t10");
   for (const r of d.results ?? []) {
-    const tr = el("tr"); const main = r.findings.find((f) => f.level !== "ok")?.text ?? "All checks passed.";
+    const tr = el("tr"); const main = (r.findings.find((f) => f.level !== "ok")?.text ?? "All checks passed.").replace(/0x[0-9a-fA-F]{40}/g, (a) => a.slice(0, 6) + "…" + a.slice(-4));
     const v = el("td"); v.append(verdictPill(r.verdict));
-    tr.append(el("td", null, "#" + r.cmcRank), el("td", null, r.asset), v, el("td", "muted", main.length > 110 ? main.slice(0, 108) + "…" : main));
+    const nm = el("td", "an"); nm.append(el("b", null, r.asset.replace(/ \(.*\)$/, "")), el("small", null, r.symbol));
+    const go = el("td", "go"); go.append(el("span", "chk", "Check →"));
+    tr.append(el("td", "muted", "#" + r.cmcRank), nm, v, (() => { const t = el("td", "rs"); const dv = el("div", null, main); dv.title = main; t.append(dv); return t; })(), el("td", "lq", money(r.numbers?.liquidityUsd)), go);
     tr.onclick = () => { $("#q").value = r.token; $("#searchForm").requestSubmit(); };
     tr.className = "rise"; tr.style.animationDelay = tb.children.length * 0.06 + "s";
     tb.append(tr);
