@@ -7,7 +7,16 @@
 
   const nav = document.querySelector(".nav");
   if (nav) {
-    const onScroll = () => nav.classList.toggle("scrolled", scrollY > 10);
+    // Hide the nav while scrolling down, bring it back on any scroll up (or near the top).
+    let lastY = scrollY;
+    const onScroll = () => {
+      const y = scrollY, d = y - lastY;
+      nav.classList.toggle("scrolled", y > 10);
+      if (nav.classList.contains("open") || y < 120) nav.classList.remove("hide");
+      else if (d > 6) nav.classList.add("hide");
+      else if (d < -6) nav.classList.remove("hide");
+      if (Math.abs(d) > 6) lastY = y;
+    };
     addEventListener("scroll", onScroll, { passive: true }); onScroll();
     nav.querySelector(".menu")?.addEventListener("click", () => nav.classList.toggle("open"));
     nav.querySelectorAll(".nav-links a").forEach((a) => a.addEventListener("click", () => nav.classList.remove("open")));
