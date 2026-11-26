@@ -58,6 +58,27 @@ Tested against live mainnet state and a live Atlas payload without spending anyt
 
 Deploy: `npx tsx scripts/deploy-atlas.ts` (dry run, then `--yes`). Demo: `npx tsx scripts/demo-atlas.ts <token> <usd> [feedId] --yes`.
 
+## Cournot Integration (market risk)
+
+Before an agent buys, CoinGraph asks the [Cournot Intelligence Oracle](https://skill.cournot.ai/) how likely a sharp drop is in the asset the trade depends on, and uses the answer to decide how much it will sign for. Code: `checks/cournot.ts`, wired in `checks/check.ts` and `checks/answer.ts`.
+
+1. **The claim.** Every buy through the guard is paid in BNB, so the default claim is about BNB; tokens that track another asset (BTCB, ETH, SOL) use that asset. CoinGraph builds a downside claim about 10% below today's price, for example *"Will BNB price fall below $500 before 2027-01-01?"*
+2. **Resolve (free).** The claim is matched to a prediction market with Cournot's `resolve` endpoint, using the official skill's rule (one match, or a clear leader; ties that only differ by end date go to the date in the claim).
+3. **Probability.** Cournot's `probability` endpoint returns its fair-value probability, the market's own price and the external evidence (`basis`). Results are cached for 6 hours per market, and every call is logged in `logs/cournot-calls.jsonl`; the full response of each successful call is saved in `proofs/cournot/`.
+4. **The decision.** The probability sets the order CoinGraph signs for:
+
+| Cournot probability of the drop | What CoinGraph does |
+| --- | --- |
+| under 40% | signs for the full order |
+| 40% to 75% | signs for (1 − probability) of the order, at least 25% |
+| 75% or more | caution: no buy for now |
+
+The scaled amount goes into the signed answer's `maxAmountIn`, so **the guard contract enforces Cournot's decision on chain**: a bigger buy reverts with `AmountTooLarge`. The probability and evidence are part of the answer's evidence file, whose hash is recorded on BNB Smart Chain.
+
+5. **Shown to the user.** Each check on guard.coingraph.ai shows the exact claim, Cournot's probability, the prediction-market price, the order size CoinGraph signs for, and every field of Cournot's assessment and evidence, links unchanged. `GET /api/market-risk` returns the current BNB assessment.
+
+Setup: works without a key on Cournot's free allowance (3 calls per IP); set `COURNOT_API_KEY` for a prepaid pack. `COURNOT_CACHE_HOURS` (default 6) and `COURNOT_ENABLED=0` (off) are optional. Run one live call: `npx tsx scripts/cournot-probe.ts BNB`.
+
 ## How it works
 
 1. The agent asks CoinGraph to check a token before a trade (API, MCP, or x402 pay per check).

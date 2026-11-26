@@ -5,6 +5,7 @@ import { ADDR, KNOWN, QUOTES, STABLES, client } from "./chain.js";
 import { simulatorAbi, simulatorCode } from "./simulator.generated.js";
 import { atlasEnabled, atlasPrices } from "./atlas.js";
 import { atlasFeedFor } from "./atlas-feeds.js";
+import { marketRisk, underlyingFor, type CournotAssessment } from "./cournot.js";
 import { cmcEnabled, dexProfile, identify, type CmcListing, type DexProfile } from "./cmc.js";
 
 export type Level = "ok" | "caution" | "avoid";
@@ -35,6 +36,9 @@ export type CheckResult = {
     atlas: { feedId: string; label: string; priceUsd: number; timestamp: number; signature: string; signatureValid?: boolean; consensusScore?: number; consensusStatus?: string; twapUsd?: number; volatility?: number } | null;
     dex: DexProfile | null;
     tags: string[];
+    // Cournot market risk: its probability of a ~10% drop in the asset this buy depends on, and the order-size
+    // factor CoinGraph applies (the signed answer's maxAmountIn is scaled by it, so the guard enforces it on chain).
+    cournot?: (CournotAssessment & { asset: string; sizeFactor: number }) | { error: string } | null;
   };
   checkedAt: string;
   block: string;
@@ -90,7 +94,38 @@ function selectorsIn(code: Hex): Set<string> {
 }
 
 // opts.cmc=false skips CoinMarketCap calls (used by the cached top-50 board, whose identities already come from CoinMarketCap).
-export async function checkToken(tokenIn: string, orderUsd = 500, opts: { cmc?: boolean; listing?: CmcListing } = {}): Promise<CheckResult> {
+/** Waits for a promise up to `ms`; a slow Cournot answer keeps running in the background and fills the cache. */
+const within = <T>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<null>((r) => setTimeout(() => r(null), ms))]);
+
+const pctOf = (x: number) => `${Math.round(x * 100)}%`;
+
+/** The full CoinGraph check: the on-chain and data-partner checks, then Cournot market risk. */
+export async function checkToken(tokenIn: string, orderUsd = 500, opts: { cmc?: boolean; listing?: CmcListing; cournot?: boolean } = {}): Promise<CheckResult> {
+  const r = await checkTokenCore(tokenIn, orderUsd, opts);
+  const useCournot = opts.cournot ?? (opts.cmc !== false && process.env.COURNOT_ENABLED !== "0");
+  if (!useCournot || r.verdict === "avoid") return r;
+  const asset = underlyingFor(r.symbol);
+  const price = asset === "BNB" ? r.numbers.bnbPriceUsd : r.numbers.atlas?.priceUsd ?? r.numbers.cmc?.priceUsd ?? r.numbers.poolPriceUsd ?? 0;
+  const risk = await within(marketRisk(r.symbol, price).catch((e) => ({ error: String(e?.message ?? e) })), Number(process.env.COURNOT_WAIT_MS ?? 25_000));
+  if (!risk) { r.numbers.cournot = risk === null ? null : r.numbers.cournot; return r; }
+  if ("error" in risk) { r.numbers.cournot = risk; return r; }
+  const p = risk.probability;
+  const m = risk.market.marketPrice;
+  // The decision: the more likely a sharp drop, the smaller the order CoinGraph signs for; above 75% it says wait.
+  const sizeFactor = p >= 0.75 ? 0 : p >= 0.4 ? Math.max(0.25, Math.round((1 - p) * 100) / 100) : 1;
+  r.numbers.cournot = { ...risk, asset, sizeFactor };
+  const gap = m != null && p - m >= 0.15 ? ` Cournot sees more downside than the market prices in (market ${pctOf(m)}).` : m != null ? ` Prediction market: ${pctOf(m)}.` : "";
+  const claimText = risk.market.title.replace(/ at any time/, "").replace(/ \d{2}:\d{2} UTC/, "");
+  if (sizeFactor === 0) r.findings.push({ level: "caution", check: "market_risk", text: `Market risk (Cournot): ${pctOf(p)} chance of "${claimText}".${gap} High chance of a sharp drop in ${asset}: hold off for now.` });
+  else if (sizeFactor < 1) r.findings.push({ level: "ok", check: "market_risk", text: `Market risk (Cournot): ${pctOf(p)} chance of "${claimText}".${gap} CoinGraph signs for ${pctOf(sizeFactor)} of the order (${"$"}${(orderUsd * sizeFactor).toFixed(2)}), and the guard enforces that cap on chain.` });
+  else r.findings.push({ level: "ok", check: "market_risk", text: `Market risk (Cournot): ${pctOf(p)} chance of "${claimText}".${gap} Low, so the full order is fine.` });
+  const order = { avoid: 0, caution: 1, ok: 2 } as const;
+  r.findings.sort((a, b) => order[a.level] - order[b.level]);
+  r.verdict = r.findings.some((f) => f.level === "avoid") ? "avoid" : r.findings.some((f) => f.level === "caution") ? "caution" : "proceed";
+  return r;
+}
+
+async function checkTokenCore(tokenIn: string, orderUsd = 500, opts: { cmc?: boolean; listing?: CmcListing } = {}): Promise<CheckResult> {
   const useCmc = opts.cmc !== false && cmcEnabled();
   if (!isAddress(tokenIn)) throw new Error("Not a valid token address.");
   const token = getAddress(tokenIn);

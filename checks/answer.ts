@@ -30,7 +30,10 @@ export const guardDomain = (chainId: number, guard: Address) => ({ name: "CoinGr
 export const evidenceHash = (r: CheckResult): Hex => keccak256(stringToHex(JSON.stringify(r)));
 
 export function toAnswer(r: CheckResult, agent: Address, issuedAt: bigint): Answer {
-  const maxAmountIn = parseEther((r.orderUsd / r.numbers.bnbPriceUsd).toFixed(18));
+  // Cournot market risk scales the amount CoinGraph signs for; the guard rejects anything above it (AmountTooLarge).
+  const c = r.numbers.cournot;
+  const factor = c && !("error" in c) && c.sizeFactor > 0 ? c.sizeFactor : 1;
+  const maxAmountIn = parseEther(((r.orderUsd * factor) / r.numbers.bnbPriceUsd).toFixed(18));
   return { agent, token: r.token, maxAmountIn, verdict: VERDICT_CODE[r.verdict], issuedAt, evidenceHash: evidenceHash(r) };
 }
 

@@ -69,6 +69,7 @@ ul.findings{list-style:none;margin:0;padding:0}ul.findings li{display:flex;gap:1
 .proofbox{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--forest);color:#e9efe9;font-size:14px;word-break:break-all}.proofbox a{color:var(--lime)}.proofbox .muted{color:#a9b8ad}
 .mstrip{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:13px;color:var(--grey);margin:-4px 0 14px}.mstrip b{color:var(--ink);font-weight:600}.mstrip a{font-weight:600}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.tags span{background:var(--cream);border:1px solid var(--line);border-radius:99px;padding:2px 9px;font-size:12px;color:var(--grey)}
+.cournot .claim{font-family:"Source Serif 4",Georgia,serif;font-size:17px;margin:6px 0 10px}.cournot .small{margin-top:10px;font-size:13px;font-weight:600}.ctable{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px;display:block;overflow-x:auto}.ctable th,.ctable td{border-top:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}.ctable th{color:var(--grey);font-weight:600;text-transform:capitalize}
 .pools{margin-top:16px}.pool{display:grid;grid-template-columns:150px 1fr 90px;gap:10px;align-items:center;font-size:13px;margin-top:6px}.pool .b{height:10px;border-radius:99px;background:var(--lime)}.pool .t{background:var(--cream);border-radius:99px}
 .ask{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}.ask input{flex:1 1 260px;min-width:0;background:var(--cream);border:1px solid var(--line);border-radius:10px;font:inherit;padding:10px 12px}
 .results-list button{display:block;width:100%;text-align:left;margin-top:8px}
@@ -255,6 +256,9 @@ function renderGuard(r, into) {
     }
     c.append(box);
   }
+  // Market risk: Cournot Intelligence Oracle's probability for a downside claim, the market price, and its evidence.
+  if (n.cournot && !n.cournot.error) c.append(renderCournot(n.cournot, r.orderUsd));
+  else if (n.cournot?.error) { const b = el("div", "pools"); b.append(el("div", "layer", "Market risk · Cournot Intelligence Oracle"), el("div", "muted small", `Not available right now: ${n.cournot.error}.`)); c.append(b); }
   const links = el("div", "links");
   links.append(link(`https://bscscan.com/token/${r.token}`, "Token on BscScan"));
   if (n.pool) links.append(link(`https://bscscan.com/address/${n.pool}`, "Pool on BscScan"));
@@ -270,6 +274,48 @@ function renderGuard(r, into) {
     c.append(pr);
   }
   into.append(c);
+}
+
+// Cournot evidence is shown as returned: every section and field, links kept exactly as given.
+function cournotValue(v) {
+  if (v == null) return el("span", "muted", "–");
+  if (typeof v === "number") return el("span", null, Math.abs(v) <= 1 && !Number.isInteger(v) ? `${(v * 100).toFixed(1)}%` : v.toLocaleString("en-US"));
+  if (typeof v === "string" && /^https?:\/\//.test(v)) return link(v, v.replace(/^https?:\/\//, "").slice(0, 48));
+  if (typeof v === "string") {
+    const md = v.match(/^\[(.+)\]\((https?:\/\/[^)]+)\)$/); if (md) return link(md[2], md[1]);
+    return el("span", null, v);
+  }
+  return el("span", null, JSON.stringify(v));
+}
+function cournotTable(rows) {
+  const keys = [...new Set(rows.flatMap((r) => (r && typeof r === "object" ? Object.keys(r) : ["value"])))];
+  const t = el("table", "ctable"), hr = el("tr"); for (const k of keys) hr.append(el("th", null, k.replace(/_/g, " "))); t.append(hr);
+  for (const r of rows) { const tr = el("tr"); for (const k of keys) { const td = el("td"); td.append(cournotValue(r && typeof r === "object" ? r[k] : r)); tr.append(td); } t.append(tr); }
+  return t;
+}
+function renderCournot(x, orderUsd) {
+  const box = el("div", "pools cournot");
+  box.append(el("div", "layer", "Market risk · Cournot Intelligence Oracle"));
+  box.append(el("div", "claim", `Claim: “${x.claim}”`));
+  const g = el("div", "grid");
+  const stat = (label, value) => { const s = el("div", "stat"); s.append(el("b", null, value), el("span", null, label)); g.append(s); };
+  stat("Cournot probability", `${Math.round(x.probability * 100)}%`);
+  if (x.market.marketPrice != null) stat("Prediction market price", `${Math.round(x.market.marketPrice * 100)}%`);
+  stat("Order CoinGraph signs for", x.sizeFactor === 0 ? "None: wait" : `${Math.round(x.sizeFactor * 100)}% · ${money(orderUsd * x.sizeFactor)}`);
+  box.append(g);
+  box.append(el("div", "muted small", `Market: ${x.market.title}`));
+  if (x.result && typeof x.result === "object") box.append(el("div", "small", "Cournot assessment"), cournotTable([x.result]));
+  const basis = x.basis;
+  if (Array.isArray(basis) && basis.length) box.append(el("div", "small", "External data basis"), cournotTable(basis));
+  else if (basis && typeof basis === "object") {
+    box.append(el("div", "small", "External data basis"));
+    for (const [sec, v] of Object.entries(basis)) {
+      box.append(el("div", "muted small", sec.replace(/_/g, " ")));
+      box.append(cournotTable(Array.isArray(v) ? v : [v]));
+    }
+  } else box.append(el("div", "muted small", "No external basis data was returned."));
+  box.append(el("div", "muted small", `${x.billing}${x.cached ? " · cached" : ""} · ${new Date(x.at).toUTCString()}. An assessment of pricing, not investment advice.`));
+  return box;
 }
 
 function renderMarket(e, into) {

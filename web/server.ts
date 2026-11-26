@@ -2,6 +2,7 @@
 // New for BNB Hack: /api/check (the on-chain BNB Chain check). Existing CoinGraph platform, called through its public
 // API: token search, the market check (/evaluate), Ask, and the agents list.
 // Run: pnpm tsx web/server.ts   (PORT, default 8787)
+import { marketRisk } from "../checks/cournot.js";
 import { readFileSync, existsSync } from "node:fs";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
@@ -96,7 +97,10 @@ app.get("/api/top10", (c) => {
   return existsSync(f) ? c.json(JSON.parse(readFileSync(f, "utf8"))) : c.json({ results: [] });
 });
 
-app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY, atlas: !!process.env.ATLAS_API_KEY, ask: !!process.env.COINGRAPH_API_KEY, proofs: proofEnabled() }));
+// Market risk for BNB (Cournot Intelligence Oracle), cached; the same assessment every BNB-paired check uses.
+app.get("/api/market-risk", async (c) => c.json((await marketRisk("BNB", lastBnbPrice || 0).catch((e) => ({ error: String(e) }))) ?? { error: "no matching market" }));
+
+app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY, atlas: !!process.env.ATLAS_API_KEY, cournot: process.env.COURNOT_ENABLED !== "0", cournotKey: !!process.env.COURNOT_API_KEY, ask: !!process.env.COINGRAPH_API_KEY, proofs: proofEnabled() }));
 
 // How many answers have been recorded on chain, and what that cost.
 app.get("/api/proofs", (c) => c.json(proofStats(lastBnbPrice)));
