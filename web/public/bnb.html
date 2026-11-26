@@ -9,7 +9,8 @@
 <script>(()=>{const d=document.documentElement;let t=null;try{t=localStorage.getItem("cg-theme")}catch{}d.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=21">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="stylesheet" href="/theme.css?v=23">
 <style>
 .page h1{font-size:clamp(44px,6vw,76px);line-height:1;margin:16px 0 12px}
 .market{display:grid;grid-template-columns:repeat(4,1fr) 1.3fr;gap:14px;margin:0 0 40px}
@@ -34,7 +35,7 @@ td.name{display:flex;flex-direction:column}td.name b{font-weight:600}td.name sma
 <body>
 <div class="progress" id="progress"></div>
 <nav class="nav" aria-label="Main">
-  <a class="brand" href="/"><span class="mark"><i></i></span>CoinGraph <span>Guard</span></a>
+  <a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
   <div class="nav-links"><a href="/">Check a token</a><a class="on" href="/bnb">BNB top 50</a><a href="/#proof">Mainnet proof</a><a href="/#how">How it works</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></div>
   <button class="theme" type="button" aria-label="Switch light or dark mode">
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -66,7 +67,7 @@ td.name{display:flex;flex-direction:column}td.name b{font-weight:600}td.name sma
 <footer><div>Market data: CoinMarketCap. Reference prices and source consensus: Atlas Oracle (signed). On-chain checks: BNB Smart Chain and PancakeSwap, with Atlas Oracle reference prices. Official BNB Chain versions of coins like ETH, XRP and DOGE are "bridged": the issuer holds the backing.
 CoinGraph is not affiliated with Binance or BNB Chain. A check is evidence, not a guarantee and not financial advice.</div><nav><a href="/">Check a token</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a></nav></footer>
 </main>
-<script src="/theme.js?v=21"></script>
+<script src="/theme.js?v=23"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };

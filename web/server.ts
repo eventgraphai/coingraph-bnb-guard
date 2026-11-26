@@ -113,6 +113,7 @@ app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY,
 // How many answers have been recorded on chain, and what that cost.
 app.get("/api/proofs", (c) => c.json(proofStats(lastBnbPrice)));
 
+app.get("/logo.png", (c) => c.body(readFileSync(new URL("public/logo.png", root)), 200, { "content-type": "image/png", "cache-control": "public, max-age=86400" }));
 app.get("/theme.css", (c) => c.body(readFileSync(new URL("public/theme.css", root), "utf8"), 200, { "content-type": "text/css; charset=utf-8", "cache-control": "public, max-age=300" }));
 app.get("/theme.js", (c) => c.body(readFileSync(new URL("public/theme.js", root), "utf8"), 200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "public, max-age=300" }));
 app.get("/", (c) => c.html(readFileSync(new URL("public/index.html", root), "utf8")));

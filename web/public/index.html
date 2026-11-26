@@ -9,12 +9,13 @@
 <script>(()=>{const d=document.documentElement;let t=null;try{t=localStorage.getItem("cg-theme")}catch{}d.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=21">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="stylesheet" href="/theme.css?v=23">
 </head>
 <body>
 <div class="progress" id="progress"></div>
 <nav class="nav" aria-label="Main">
-  <a class="brand" href="/"><span class="mark"><i></i></span>CoinGraph <span>Guard</span></a>
+  <a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
   <div class="nav-links">
     <a href="#reads">Checks</a><a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="/bnb">BNB top 50</a><a href="#agents">For agents</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a>
   </div>
@@ -164,14 +165,14 @@
 </section>
 
 <footer>
-  <div><a class="brand" href="/"><span class="mark"><i></i></span>CoinGraph <span>Guard</span></a>
+  <div><a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
   Built on BNB Smart Chain and PancakeSwap, with data from CoinMarketCap, Atlas Oracle and Cournot. CoinGraph is not affiliated with Binance or BNB Chain.<br>
   A check is evidence, not a guarantee and not financial advice. BNB Hack Bangkok 2026.</div>
   <nav><a href="/bnb">BNB top 50</a><a href="#proof">Mainnet proof</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a><a href="https://coingraph.ai" target="_blank" rel="noopener">coingraph.ai</a></nav>
 </footer>
 </main>
 
-<script src="/theme.js?v=21"></script>
+<script src="/theme.js?v=23"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };

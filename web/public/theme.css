@@ -448,3 +448,16 @@ a.mk-go .arr{color:inherit;font-size:18px;transition:transform .3s}a.mk-go:hover
 @media (max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-grid h1{white-space:normal}}
 @media (max-width:640px){.mstrip{gap:8px}.mk{min-width:0;flex:1 1 calc(50% - 8px)}a.mk-go{flex-basis:100%}.mk b{font-size:15px}.gf-top{font-size:10px}}
 @media (max-width:520px){.gf-srcs{flex-wrap:wrap;justify-content:center;row-gap:6px}.gf-stage{height:360px}}
+
+/* ---- Logo and the market stats bar ---- */
+.logo{width:30px;height:30px;border-radius:8px;display:block;flex:0 0 auto}
+.mstrip{display:flex;flex-wrap:nowrap;align-items:stretch;gap:0;width:fit-content;max-width:100%;margin:36px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.mk{min-width:0;padding:12px 24px;border:0;border-radius:0;background:transparent;box-shadow:none;justify-content:center}
+.mk:hover{transform:none;box-shadow:none}
+.mk+.mk{border-left:1px solid var(--line)}
+.mk b{font-size:16px}
+.mk i.fg{width:120px}
+a.mk-go{background:transparent;color:var(--accent);border-left:1px solid var(--line);font-size:14px;padding:12px 22px;white-space:nowrap}
+a.mk-go:hover{background:var(--bg2)}
+@media (max-width:760px){.mstrip{display:grid;grid-template-columns:1fr 1fr;width:100%}.mk+.mk{border-left:0}.mk{border-top:1px solid var(--line)!important}.mk:nth-child(-n+2){border-top:0!important}.mk:nth-child(even){border-left:1px solid var(--line)!important}a.mk-go{grid-column:1/-1;justify-content:center;border-left:0!important}.mk i.fg{width:100%}}
+:root[data-theme="dark"] .logo{box-shadow:0 0 0 1px var(--line2)}
