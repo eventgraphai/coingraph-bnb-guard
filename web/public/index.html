@@ -489,7 +489,7 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
     later(t + 2600, () => { if (my === cycle) play((cur + 1) % runs.length); });
   };
   const stage = document.querySelector("#demo .stage");
-  if ("IntersectionObserver" in window) { let started = false; new IntersectionObserver((es) => { if (es[0].isIntersecting && !started) { started = true; play(0); } }, { threshold: 0.3 }).observe(stage); } else play(0);
+  if ("IntersectionObserver" in window) { let started = false; const r0 = Number(new URLSearchParams(location.search).get("run") ?? 0) || 0; new IntersectionObserver((es) => { if (es[0].isIntersecting && !started) { started = true; play(r0); } }, { threshold: 0.3 }).observe(stage); } else play(0);
 })();
 
 // How it works: highlight the step whose panel is in view.

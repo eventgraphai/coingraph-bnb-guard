@@ -22,6 +22,8 @@
     nav.querySelectorAll(".nav-links a").forEach((a) => a.addEventListener("click", () => nav.classList.remove("open")));
   }
 
+  // Screenshot helper: ?shot=<section id> jumps straight to a section with reveals settled.
+  { const q = new URLSearchParams(location.search).get("shot"); if (q) root.classList.add("shot"); if (q === "all") { root.style.scrollBehavior = "auto"; addEventListener("load", () => { document.querySelectorAll(".reveal").forEach((e) => e.classList.add("in")); document.querySelector(".nav")?.classList.add("hide"); }); } else if (q && q !== "1") { root.style.scrollBehavior = "auto"; addEventListener("load", () => { document.querySelectorAll(".reveal").forEach((e) => e.classList.add("in")); const el = document.getElementById(q); if (el) { const r = el.getBoundingClientRect(); scrollTo(0, Math.max(0, r.top + scrollY - Math.max(0, (innerHeight - r.height) / 2))); } document.querySelector(".nav")?.classList.add("hide"); }); } }
   // Headline: each word rises in, one after another.
   document.querySelectorAll("[data-words]").forEach((h) => {
     let i = 0;
