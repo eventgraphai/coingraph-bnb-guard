@@ -2,6 +2,7 @@
 (() => {
   const root = document.documentElement;
   const store = { get: () => { try { return localStorage.getItem("cg-theme"); } catch { return null; } }, set: (v) => { try { localStorage.setItem("cg-theme", v); } catch {} } };
+  { const qt = new URLSearchParams(location.search).get("theme"); if (qt === "dark" || qt === "light") root.dataset.theme = qt; }
   const current = () => root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   document.querySelectorAll(".theme").forEach((b) => b.addEventListener("click", () => { const next = current() === "dark" ? "light" : "dark"; root.dataset.theme = next; store.set(next); }));
 
@@ -23,7 +24,7 @@
   }
 
   // Screenshot helper: ?shot=<section id> jumps straight to a section with reveals settled.
-  { const q = new URLSearchParams(location.search).get("shot"); if (q) root.classList.add("shot"); if (q === "all") { root.style.scrollBehavior = "auto"; addEventListener("load", () => { document.querySelectorAll(".reveal").forEach((e) => e.classList.add("in")); document.querySelector(".nav")?.classList.add("hide"); }); } else if (q && q !== "1") { root.style.scrollBehavior = "auto"; addEventListener("load", () => { document.querySelectorAll(".reveal").forEach((e) => e.classList.add("in")); const el = document.getElementById(q); if (el) { const r = el.getBoundingClientRect(); scrollTo(0, Math.max(0, r.top + scrollY - Math.max(0, (innerHeight - r.height) / 2))); } document.querySelector(".nav")?.classList.add("hide"); }); } }
+  { const q = new URLSearchParams(location.search).get("shot"); if (q) root.classList.add("shot"); if (q === "all") { root.style.scrollBehavior = "auto"; addEventListener("load", () => { document.querySelectorAll(".reveal").forEach((e) => e.classList.add("in")); document.querySelector(".nav")?.classList.add("hide"); setTimeout(() => { const o = {}; for (const id of ["demo","reads","proof","stats"]) { const e = document.getElementById(id); if (e) { const r = e.getBoundingClientRect(); o[id] = [Math.round(r.top + scrollY), Math.round(r.height)]; } } document.body.dataset.pos = JSON.stringify(o); }, 1500); }); } else if (q && q !== "1") { root.style.scrollBehavior = "auto"; addEventListener("load", () => { document.querySelectorAll(".reveal").forEach((e) => e.classList.add("in")); const el = document.getElementById(q); if (el) { const r = el.getBoundingClientRect(); scrollTo(0, Math.max(0, r.top + scrollY - Math.max(0, (innerHeight - r.height) / 2))); } document.querySelector(".nav")?.classList.add("hide"); }); } }
   // Headline: each word rises in, one after another.
   document.querySelectorAll("[data-words]").forEach((h) => {
     let i = 0;
