@@ -35,6 +35,10 @@ Each answer record costs about 26,000 gas (about $0.0007 at 0.05 gwei). Every ch
 3. CoinGraph signs the answer and records its hash on BNB Smart Chain.
 4. The guard contract wraps the PancakeSwap swap: a valid recent "proceed" lets it through; "avoid" makes the transaction revert.
 
+## CoinMarketCap × Atlas
+
+See the one-page integration write-up: [docs/CMC-ATLAS-WRITEUP.md](docs/CMC-ATLAS-WRITEUP.md).
+
 ## Folders
 
 | Folder | What goes there |
