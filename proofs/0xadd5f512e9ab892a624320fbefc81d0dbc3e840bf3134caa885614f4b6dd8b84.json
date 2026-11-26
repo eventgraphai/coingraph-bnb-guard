@@ -1,0 +1,81 @@
+{
+  "answerHash": "0xadd5f512e9ab892a624320fbefc81d0dbc3e840bf3134caa885614f4b6dd8b84",
+  "evidenceHash": "0xae78b524462e95af1bdbd31300f65d29c7b2a3f3a4883b8ccb6b62afd767b7c6",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26",
+    "maxAmountIn": "1819900980216696",
+    "verdict": 3,
+    "issuedAt": "1795693391",
+    "evidenceHash": "0xae78b524462e95af1bdbd31300f65d29c7b2a3f3a4883b8ccb6b62afd767b7c6"
+  },
+  "signature": "0xae6605006701279be550fdcada6c9c9d74f76d756925cf4a165afda601f097df13782176eaae9ae480dee9c9b2393badd274626bb41317b44549280b47f447421c",
+  "check": {
+    "chain": "bsc",
+    "token": "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26",
+    "name": "BTCB",
+    "symbol": "BTCB",
+    "orderUsd": 1,
+    "verdict": "avoid",
+    "findings": [
+      {
+        "level": "avoid",
+        "check": "copycat",
+        "text": "This is not the real BTCB. On CoinMarketCap, BTCB is Bitcoin BEP2 (rank #7647) and its official BNB Chain contract is 0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c. This contract only copies the name."
+      },
+      {
+        "level": "avoid",
+        "check": "liquidity",
+        "text": "Only $3.18 of liquidity in its PancakeSwap pool; the price can be moved or drained easily."
+      },
+      {
+        "level": "avoid",
+        "check": "price_impact",
+        "text": "A $1.00 buy would move the price 38.48%. Size down a lot or skip."
+      },
+      {
+        "level": "avoid",
+        "check": "oracle_price",
+        "text": "PancakeSwap price $0.00000737 vs Atlas Oracle BTC/USD $60686.81: 100% apart. It does not trade like the asset it represents."
+      },
+      {
+        "level": "caution",
+        "check": "lp_burned",
+        "text": "Only 0% of the pool's liquidity tokens are burned; the rest could be withdrawn (it may be locked elsewhere, which this check does not see)."
+      },
+      {
+        "level": "ok",
+        "check": "owner",
+        "text": "Ownership is renounced: no one can change the contract's rules."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 549.4804447442684,
+      "liquidityUsd": 3,
+      "pool": "0xdE21d191E9a10CCb7C63E2222d2c106003e4e7AB",
+      "poolQuote": "BNB",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 38.48,
+      "lpBurnedPct": 0,
+      "owner": null,
+      "isProxy": false,
+      "poolPriceUsd": 0.000007368425363197565,
+      "cmc": null,
+      "atlas": {
+        "feedId": "626",
+        "label": "BTC/USD",
+        "priceUsd": 60686.812306,
+        "timestamp": 1795693391,
+        "signature": "0x94177ce4c2173121f0e4fb07875f139e50f800a09d14e5c2df4b225d6a62eac175dd93d1ccf914d30248123c5a35fce2ed3a980e02eba78eda519fc1ee132bd41c"
+      }
+    },
+    "checkedAt": "2026-11-26T11:43:11.472Z",
+    "block": "135840685"
+  }
+}

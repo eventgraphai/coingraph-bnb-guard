@@ -16,6 +16,18 @@ Built for BNB Hack at BNB Bangkok (25 to 27 Nov 2026). This repository was start
 
 Live site: https://guard.coingraph.ai
 
+### Live demo on mainnet (26 Nov 2026)
+
+An AI agent asked CoinGraph before each $1 buy, recorded the signed answer, then bought through the guard.
+
+| Token | CoinGraph verdict | Answer recorded | Buy through the guard |
+| --- | --- | --- | --- |
+| CAKE | proceed | [record](https://bscscan.com/tx/0xc658181593f990e4d6cd0aa5a391618cc2129dc78585f19706a74d4fdc8f308c) | [went through](https://bscscan.com/tx/0x03e5021db14c948b6c3b8425ede04c27a8f33b5394546117128f4aa0fa0a9c09) |
+| Copycat "BTCB" (0x6583…fd26) | avoid | [record](https://bscscan.com/tx/0x340c4adf9d5fbb85fffb169ca96d5da444607668b677cfd610ac388ad419f871) | [refused on chain: NotProceed](https://bscscan.com/tx/0x3778d8c4a28a3faeb5ce5f4e2788360e86a8b0a3ba9117c5ca184861701f39b6) |
+
+The full evidence for each answer is in [`proofs/`](proofs). Its keccak256 hash matches the `evidenceHash` recorded on chain.
+Each answer record costs about 26,000 gas (about $0.0007 at 0.05 gwei). Every check served on guard.coingraph.ai is recorded the same way.
+
 ## How it works
 
 1. The agent asks CoinGraph to check a token before a trade (API, MCP, or x402 pay per check).

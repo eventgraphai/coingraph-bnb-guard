@@ -1,0 +1,86 @@
+{
+  "answerHash": "0x3af81f32b46f26788868b6c994e379d4b831c52467d23fe7398c6615a062d9d2",
+  "evidenceHash": "0xce0ff25b91df3fc2ffa2b00e49cf4097df8f168341ba792ee425ca034c37862f",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+    "maxAmountIn": "1820164948577473",
+    "verdict": 1,
+    "issuedAt": "1795693370",
+    "evidenceHash": "0xce0ff25b91df3fc2ffa2b00e49cf4097df8f168341ba792ee425ca034c37862f"
+  },
+  "signature": "0xb63f4e1526b6f7e4aa783b6bcd303dc7e9182b162c78bf8158200236c0c6329c5f503c3b3356893139ff76b1714cddb0819a6c552b64641bed1defb464a8ab2b1b",
+  "check": {
+    "chain": "bsc",
+    "token": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+    "name": "PancakeSwap Token",
+    "symbol": "Cake",
+    "orderUsd": 1,
+    "verdict": "proceed",
+    "findings": [
+      {
+        "level": "ok",
+        "check": "identity",
+        "text": "Listed on CoinMarketCap as Pancake (CAKE), rank #76, $20,602,908 traded in 24h."
+      },
+      {
+        "level": "ok",
+        "check": "owner_powers",
+        "text": "The owner contract 0x73feaa1eE314F8c655E354234017bE2193C9E24E can mint new tokens. Normal for a large, established token run by a contract."
+      },
+      {
+        "level": "ok",
+        "check": "liquidity",
+        "text": "$16,101,191 of liquidity in its PancakeSwap BNB pool."
+      },
+      {
+        "level": "ok",
+        "check": "lp_burned",
+        "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+      },
+      {
+        "level": "ok",
+        "check": "price_impact",
+        "text": "A $1.00 buy moves the price 0%."
+      },
+      {
+        "level": "ok",
+        "check": "market_price",
+        "text": "PancakeSwap price $1.57 vs CoinMarketCap $1.58: 0.07% apart."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 549.4007566630361,
+      "liquidityUsd": 16101191,
+      "pool": "0x0eD7e52944161450477ee417DE9Cd3a859b14fD0",
+      "poolQuote": "BNB",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 0,
+      "lpBurnedPct": 0,
+      "owner": "0x73feaa1eE314F8c655E354234017bE2193C9E24E",
+      "isProxy": false,
+      "poolPriceUsd": 1.5749600794386323,
+      "cmc": {
+        "id": 7186,
+        "name": "Pancake",
+        "symbol": "CAKE",
+        "slug": "pancakeswap",
+        "rank": 76,
+        "priceUsd": 1.5760945696059585,
+        "volume24hUsd": 20602908.28189067,
+        "marketCapUsd": 499660587.3370587,
+        "change24hPct": 5.761693232444,
+        "dateAdded": "2020-09-25T00:00:00.000Z"
+      },
+      "atlas": null
+    },
+    "checkedAt": "2026-11-26T11:42:50.499Z",
+    "block": "135840640"
+  }
+}
