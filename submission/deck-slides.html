@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CoinGraph Guard slides</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#f4f1ea;--paper:#fff;--forest:#1b2e22;--forest2:#24392c;--forest3:#2f4a39;--lime:#c3e07a;--ink:#16191d;--grey:#6b6f73;--line:#e3ded2;--ok:#2f7d4f;--warn:#a86512;--bad:#b3392f;--okbg:#e4f1e7;--warnbg:#f8ecd9;--badbg:#f7e3e0}
+*{box-sizing:border-box;margin:0}
+html,body{width:1280px;height:720px;overflow:hidden;background:var(--cream);color:var(--ink);font-family:Inter,system-ui,sans-serif}
+.serif{font-family:"Source Serif 4",Georgia,serif;letter-spacing:-.015em}
+.s{display:none;width:1280px;height:720px;position:relative}
+body[data-s="cover"] #cover,body[data-s="proof"] #proof,body[data-s="data"] #data{display:flex}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--forest3)}
+.bar{width:64px;height:6px;background:var(--lime);border-radius:2px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:22px}.mark{width:40px;height:40px;border-radius:10px;background:var(--forest);display:grid;place-items:center}.mark i{width:16px;height:16px;border-radius:99px;border:3.5px solid var(--lime)}
+.pill{display:inline-flex;align-items:center;border-radius:99px;padding:5px 12px;font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.p-proceed{background:var(--okbg);color:var(--ok)}.p-caution{background:var(--warnbg);color:var(--warn)}.p-avoid{background:var(--badbg);color:var(--bad)}
+.dk .p-proceed{background:rgba(195,224,122,.18);color:var(--lime)}.dk .p-caution{background:rgba(240,190,110,.16);color:#f0c889}.dk .p-avoid{background:rgba(240,130,120,.16);color:#f3a49b}
+.foot{position:absolute;left:70px;right:70px;bottom:30px;display:flex;justify-content:space-between;font-size:14px;color:var(--grey)}
+
+/* Cover: split like the deck */
+#cover .l{width:600px;padding:62px 56px 0 70px;display:flex;flex-direction:column}
+#cover h1{font-size:54px;line-height:1.06;margin:16px 0 18px}#cover h1 em{font-style:normal;color:var(--forest3)}
+#cover .sub{font-size:19px;color:var(--grey);line-height:1.45}
+#cover .r{flex:1;background:var(--forest);color:#e9efe9;padding:56px 48px;display:flex;flex-direction:column;justify-content:center}
+.dg{display:grid;grid-template-columns:1fr 58px auto;align-items:center}
+.dg .c{display:flex;flex-direction:column;gap:9px}.dg .c div{background:var(--forest2);border:1px solid var(--forest3);border-radius:10px;padding:9px 12px;font-size:14.5px;font-weight:600;text-align:center}
+.dg .o{display:flex;flex-direction:column;align-items:center;gap:12px}.core{width:100px;height:100px;border-radius:99px;border:4px solid var(--lime);display:grid;place-items:center;background:#122019}.core b{font-family:"Source Serif 4",serif;color:var(--lime);font-size:16px}
+.vd{background:var(--lime);color:var(--forest);font-weight:700;border-radius:10px;padding:8px 14px}
+.note{font-size:12.5px;color:#a9b8ad;text-align:center;max-width:150px}
+.gd{margin-top:22px;border-top:1px solid var(--forest3);padding-top:16px;display:flex;gap:8px;flex-wrap:wrap;font-size:13.5px;align-items:center}
+
+/* Proof */
+#proof,#data{flex-direction:column;padding:56px 70px}
+h2{font-size:44px;line-height:1.08;margin:10px 0 8px}.lead{font-size:18px;color:var(--grey);margin-bottom:26px}
+.runs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.run{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px;position:relative}
+.run.ok{border-top:5px solid var(--ok)}.run.no{border-top:5px solid var(--bad)}.run.hold{border-top:5px solid var(--warn)}
+.run h3{font-family:"Source Serif 4",serif;font-size:24px;margin:10px 0 3px}.run p{font-size:14.5px;color:var(--grey)}.run .big{position:absolute;right:18px;top:14px;font-size:32px}
+
+/* Data partners */
+.cols{display:grid;grid-template-columns:1fr 1fr 300px;gap:18px;align-items:stretch}
+.col{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+.col h3{font-family:"Source Serif 4",serif;font-size:24px;margin:6px 0 10px}
+.col ul{list-style:none;padding:0}.col li{padding:8px 0;border-top:1px solid var(--line);font-size:15px}.col li:first-child{border-top:0}.col li b{display:block;font-size:15px}.col li span{color:var(--grey);font-size:13.5px}
+.case{background:var(--forest);color:#e9efe9;border-radius:16px;padding:20px 22px}.case h3{font-family:"Source Serif 4",serif;font-size:22px;margin:8px 0 12px}
+.case li{list-style:none;font-size:14px;padding:6px 0;border-top:1px solid var(--forest3);display:flex;gap:8px}.case li:first-child{border-top:0}.case ul{padding:0}.x{color:#f3a49b;font-weight:700}
+</style>
+</head>
+<body>
+<section class="s" id="cover">
+  <div class="l">
+    <div class="brand"><div class="mark"><i></i></div>CoinGraph Guard</div>
+    <div class="eyebrow" style="margin-top:34px">The trust layer for AI agents · BNB Chain</div>
+    <h1 class="serif">Every AI agent trade, <em>checked first.</em> Verifiable on-chain.</h1>
+    <p class="sub">AI agents now trade real money in crypto. Before they buy, they ask CoinGraph: the sources, the verdict, the proof.</p>
+    <div style="margin-top:auto;padding-bottom:70px"><div class="bar"></div><p style="margin-top:14px;font-size:17px">Winner, TOKEN2049 Origins 2026</p></div>
+  </div>
+  <div class="r dk">
+    <div style="font-size:13px;color:#a9b8ad;margin-bottom:12px">What goes into every answer</div>
+    <div class="dg">
+      <div class="c"><div>Can you sell it?</div><div>Is it the real token?</div><div>Is the price real?</div><div>Can the rules change?</div><div>Who holds it?</div></div>
+      <svg viewBox="0 0 58 230" style="height:230px;width:58px" preserveAspectRatio="none"><g stroke="#4c6a56" stroke-width="1.3" fill="none"><path d="M0 20 C36 20 36 115 58 115"/><path d="M0 67 C36 67 36 115 58 115"/><path d="M0 115 L58 115"/><path d="M0 163 C36 163 36 115 58 115"/><path d="M0 210 C36 210 36 115 58 115"/></g></svg>
+      <div class="o"><div class="core"><b>CoinGraph</b></div><div class="vd">One verdict</div><div class="note">signed and recorded on BNB Smart Chain</div></div>
+    </div>
+    <div class="gd"><span>Guard contract:</span><span class="pill p-proceed">Proceed → trades</span><span class="pill p-caution">Caution → held</span><span class="pill p-avoid">Avoid → stopped</span></div>
+    <p style="margin-top:22px;font-size:13px;color:#a9b8ad">guard.coingraph.ai · BNB Hack Bangkok 2026</p>
+  </div>
+</section>
+
+<section class="s" id="proof">
+  <div class="eyebrow">Live on BNB Smart Chain mainnet</div>
+  <h2 class="serif">Same agent. Same contract. Different tokens.</h2>
+  <p class="lead">An AI agent asked CoinGraph before each $1 buy, then bought through the guard. Only "proceed" goes through.</p>
+  <div class="runs">
+    <div class="run ok"><span class="big" style="color:var(--ok)">✓</span><span class="pill p-proceed">Proceed</span><h3>ASTER</h3><p>Bought through the guard</p></div>
+    <div class="run ok"><span class="big" style="color:var(--ok)">✓</span><span class="pill p-proceed">Proceed</span><h3>TWT</h3><p>Bought through the guard</p></div>
+    <div class="run ok"><span class="big" style="color:var(--ok)">✓</span><span class="pill p-proceed">Proceed</span><h3>SFP</h3><p>Bought through the guard</p></div>
+    <div class="run ok"><span class="big" style="color:var(--ok)">✓</span><span class="pill p-proceed">Proceed</span><h3>CAKE</h3><p>Bought through the guard</p></div>
+    <div class="run hold"><span class="big" style="color:var(--warn)">‖</span><span class="pill p-caution">Caution</span><h3>NVDAB</h3><p>Held back: thin liquidity ($20,759)</p></div>
+    <div class="run no"><span class="big" style="color:var(--bad)">✕</span><span class="pill p-avoid">Avoid</span><h3>Copycat "BTCB"</h3><p>Stopped on chain: not the real BTCB</p></div>
+  </div>
+  <div class="foot"><span>Every answer recorded on BNB Smart Chain · about $0.0007 each</span><span>CoinGraphGuard 0x7f91…000b · ProofLog 0x186e…5f7d</span></div>
+</section>
+
+<section class="s" id="data">
+  <div class="eyebrow">Data partners</div>
+  <h2 class="serif">What it is. Whether its price is real.</h2>
+  <p class="lead">CoinMarketCap and Atlas Oracle feed every check, on top of a real buy-and-sell test on PancakeSwap.</p>
+  <div class="cols">
+    <div class="col"><div class="eyebrow">CoinMarketCap · 11 endpoints</div><h3>What the token is</h3><ul>
+      <li><b>Identity and copycats</b><span>Real contract, or a copy of a famous name</span></li>
+      <li><b>Holders</b><span>CAKE 1.89M · the copycat 9</span></li>
+      <li><b>Liquidity across every DEX pool</b><span>PancakeSwap v2 and v3, Uniswap v3</span></li>
+      <li><b>Market and mood</b><span>Price, volume, Fear &amp; Greed, top 50 board</span></li></ul></div>
+    <div class="col"><div class="eyebrow">Atlas Oracle · signed prices</div><h3>Whether the price is real</h3><ul>
+      <li><b>Signed reference price</b><span>Signature verified against Atlas's signer</span></li>
+      <li><b>Source consensus</b><span>BTC 0.94, healthy</span></li>
+      <li><b>Time-weighted price</b><span>Flags a pump in progress</span></li>
+      <li><b>Stablecoin peg</b><span>U holding $1</span></li></ul></div>
+    <div class="case dk"><span class="pill p-avoid">Avoid</span><h3>Copycat "BTCB"</h3><ul>
+      <li><span class="x">✕</span>Not the real BTCB (CoinMarketCap)</li>
+      <li><span class="x">✕</span>Only 9 holders (CoinMarketCap)</li>
+      <li><span class="x">✕</span>100% away from BTC (Atlas)</li>
+      <li><span class="x">✕</span>Pool drained: $65,333 → $3</li>
+      <li><span class="x">✕</span>Refused on chain by the guard</li></ul></div>
+  </div>
+</section>
+<script>document.body.dataset.s = location.hash.slice(1) || "cover";</script>
+</body>
+</html>
