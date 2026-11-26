@@ -672,3 +672,7 @@ a.mk-go:hover{background:var(--bg2)}
 .band blockquote{max-width:980px}
 .final h2{max-width:860px}
 .t10 td.rs{display:table-cell;max-width:none;overflow:visible;-webkit-line-clamp:unset}.t10 td.rs div{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;max-width:560px}
+.agents a{background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:8px 15px;font-size:14px;font-weight:500;color:var(--ink);text-decoration:none;transition:border-color .2s,transform .2s}
+.agents a:hover{border-color:var(--ink);transform:translateY(-1px)}
+.devrow{display:flex;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+.devrow .cta{padding:12px 20px}

@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Developer docs · CoinGraph Guard</title>
+<meta name="description" content="Use CoinGraph Guard from code, MCP, agents or a contract: get a key, check a token, connect your agent, enforce the verdict on BNB Smart Chain.">
+<meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: dark)">
+<script>(()=>{const d=document.documentElement;let t=null;try{t=localStorage.getItem("cg-theme")}catch{}d.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="stylesheet" href="/theme.css?v=38">
+<style>
+.docs{display:grid;grid-template-columns:220px 1fr;gap:48px;align-items:start}
+.toc{position:sticky;top:110px;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.toc b{font-family:var(--eyeFont);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+.toc b:first-child{margin-top:0}
+.toc a{color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:10px;transition:all .2s}
+.toc a:hover{color:var(--ink);background:var(--line)}
+.toc a.on{color:var(--ink);background:var(--surface);box-shadow:var(--shadow);font-weight:600}
+.dc{max-width:820px;min-width:0}
+.dc .hero-d h1{font-size:clamp(34px,3.6vw,50px);margin:12px 0 10px;line-height:1.08}
+.dc .hero-d p{font-size:16.5px;color:var(--ink2);margin:0 0 22px;max-width:640px}
+.paths{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.path{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);text-decoration:none;color:inherit;transition:transform .25s}
+.path:hover{transform:translateY(-2px)}
+.path span{font-family:var(--eyeFont);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.path b{font-size:15px}.path em{font-style:normal;font-size:12.5px;color:var(--muted)}
+.dc section{margin:56px 0;scroll-margin-top:100px}
+.dc h2{font-size:clamp(24px,2.3vw,30px);margin:6px 0 10px}
+.dc h3{font-family:var(--fb);font-weight:650;letter-spacing:-.01em;font-size:16px;margin:22px 0 8px}
+.dc p,.dc li{font-size:15px;color:var(--ink2);line-height:1.65}
+.dc ol,.dc ul{padding-left:20px;margin:8px 0}
+.dc code{font-size:13px;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.dc pre code{background:none;border:0;padding:0}
+.cb{position:relative;margin:10px 0 14px}
+.cb pre{margin:0;padding:16px 18px;font-size:13px;line-height:1.6;border-radius:14px}
+.cb .lbl{position:absolute;top:8px;left:14px;font-family:var(--eyeFont);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#8fa596}
+.cb .lbl+pre{padding-top:30px}
+.cp{position:absolute;top:8px;right:8px;font-size:11.5px;padding:4px 10px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#dfe8df}
+.cp:hover{background:rgba(255,255,255,.16)}
+.note{display:flex;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-size:14px;color:var(--ink2);margin:12px 0}
+.note b{color:var(--ink)}
+.note.warn{background:var(--warnbg);border-color:transparent}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.tbl th,.tbl td{padding:10px 12px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl th{background:var(--surface2);border-top:0;font-size:12px}
+.tbl td:first-child{white-space:nowrap}
+.steps-d{counter-reset:s;list-style:none;padding:0}
+.steps-d li{counter-increment:s;position:relative;padding:0 0 14px 40px}
+.steps-d li::before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:99px;background:var(--btn);color:var(--btnInk);display:grid;place-items:center;font-size:12.5px;font-weight:700}
+@media (max-width:900px){.docs{grid-template-columns:1fr}.toc{display:none}.paths{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<nav class="nav" aria-label="Main">
+  <a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
+  <div class="nav-links"><a href="/">Check a token</a><a href="/bnb">BNB top 50</a><a class="on" href="/docs">Docs</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></div>
+  <button class="theme" type="button" aria-label="Switch light or dark mode">
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </button>
+  <button class="theme menu" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="cta" href="https://coingraph.ai/account/keys" target="_blank" rel="noopener">Get an API key</a>
+</nav>
+
+<main class="wrap">
+<div class="docs">
+  <aside class="toc" id="toc">
+    <b>Start</b>
+    <a href="#overview">Overview</a>
+    <a href="#key">Get an API key</a>
+    <b>Use it</b>
+    <a href="#guard-api">Guard API (free)</a>
+    <a href="#rest">CoinGraph API</a>
+    <a href="#mcp">MCP for AI agents</a>
+    <a href="#agents">Ready-made agents</a>
+    <a href="#contract">Guard contract</a>
+    <b>Reference</b>
+    <a href="#response">Reading a response</a>
+    <a href="#limits">Limits and pricing</a>
+    <a href="#verify">Verify an answer</a>
+  </aside>
+
+  <div class="dc">
+    <div class="hero-d fade-up" id="overview">
+      <div class="eyebrow">Developer docs</div>
+      <h1>Check before your agent trades.</h1>
+      <p>Four ways to use CoinGraph Guard, from a single free request to a contract that refuses unsafe buys on BNB Smart Chain. Pick one:</p>
+      <div class="paths">
+        <a class="path" href="#guard-api"><span>Free, no key</span><b>Guard API</b><em>One GET request per token</em></a>
+        <a class="path" href="#rest"><span>API key</span><b>CoinGraph API</b><em>Top 1,000 tokens, sized checks</em></a>
+        <a class="path" href="#mcp"><span>Sign in once</span><b>MCP</b><em>Claude, Cursor, ChatGPT…</em></a>
+        <a class="path" href="#contract"><span>On chain</span><b>Guard contract</b><em>No signed proceed, no trade</em></a>
+      </div>
+    </div>
+
+    <section id="key" class="reveal">
+      <div class="eyebrow">Step 1</div>
+      <h2>Get an API key</h2>
+      <p>The Guard API on this site needs no key. For the CoinGraph API, MCP and agents you need a free CoinGraph account:</p>
+      <ol class="steps-d">
+        <li>Open <a href="https://coingraph.ai/account/keys" target="_blank" rel="noopener">coingraph.ai/account/keys</a> and sign in with Google or email.</li>
+        <li>Click <b>Create key</b> and copy it. It starts with <code>cg_live_</code> and is shown once.</li>
+        <li>Store it as an environment variable, never in your code:</li>
+      </ol>
+      <div class="cb"><span class="lbl">Terminal</span><pre><code>export COINGRAPH_KEY="cg_live_…"</code></pre><button class="cp" type="button">Copy</button></div>
+      <div class="note"><b>Credits.</b> New accounts start with 500 free credits. 1 credit = $0.01. Plans and prices: <a href="https://coingraph.ai/pricing" target="_blank" rel="noopener">coingraph.ai/pricing</a>. Full guide: <a href="https://coingraph.ai/docs/keys" target="_blank" rel="noopener">Keys and pricing</a>.</div>
+    </section>
+
+    <section id="guard-api" class="reveal">
+      <div class="eyebrow">Free · no key</div>
+      <h2>Guard API</h2>
+      <p>Check any BNB Smart Chain token for an order size. CoinGraph simulates the buy and sell on PancakeSwap, reads CoinMarketCap data, compares the price with Atlas Oracle, weighs Cournot market risk, and records the answer on BNB Smart Chain.</p>
+      <div class="cb"><span class="lbl">curl</span><pre><code>curl "https://guard.coingraph.ai/api/check?token=0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3&amp;usd=1000"</code></pre><button class="cp" type="button">Copy</button></div>
+      <div class="cb"><span class="lbl">TypeScript</span><pre><code>const res = await fetch(
+  "https://guard.coingraph.ai/api/check?token=" + token + "&amp;usd=1000"
+);
+const check = await res.json();
+if (check.verdict !== "proceed") throw new Error(check.findings[0].text);
+// check.proof.explorer is the on-chain record of this answer</code></pre><button class="cp" type="button">Copy</button></div>
+      <h3>Parameters</h3>
+      <table class="tbl"><tr><th>Name</th><th>Description</th></tr>
+        <tr><td><code>token</code></td><td>The token's BNB Smart Chain contract address (0x…).</td></tr>
+        <tr><td><code>usd</code></td><td>Order size in US dollars, 1 to 100,000. Default 500. Price impact and liquidity are judged for this size.</td></tr></table>
+      <h3>Other free endpoints</h3>
+      <table class="tbl"><tr><th>Endpoint</th><th>Returns</th></tr>
+        <tr><td><code>GET /api/board</code></td><td>BNB Chain top 50 by market cap, each with a CoinGraph verdict for a $500 buy.</td></tr>
+        <tr><td><code>GET /api/top10</code></td><td>The top 10 with full findings.</td></tr>
+        <tr><td><code>GET /api/market-risk</code></td><td>Cournot's current probability of a sharp BNB drop, with its evidence.</td></tr>
+        <tr><td><code>GET /api/proofs</code></td><td>How many answers are recorded on chain, and what that cost.</td></tr>
+        <tr><td><code>GET /api/search?q=solana</code></td><td>Find a token in CoinGraph's top 1,000.</td></tr></table>
+    </section>
+
+    <section id="rest" class="reveal">
+      <div class="eyebrow">API key</div>
+      <h2>CoinGraph API</h2>
+      <p>The full CoinGraph API covers the top 1,000 tokens across chains: market, on-chain flows, order books, futures, holders, contract security and supply. Base URL: <code>https://coingraph.ai/api/v1</code>.</p>
+      <h3>Standard check (free, no key)</h3>
+      <div class="cb"><span class="lbl">curl</span><pre><code>curl https://coingraph.ai/api/v1/evaluate/chainlink</code></pre><button class="cp" type="button">Copy</button></div>
+      <h3>Check sized to your order (25 credits)</h3>
+      <div class="cb"><span class="lbl">curl</span><pre><code>curl -X POST https://coingraph.ai/api/v1/evaluate \
+  -H "Authorization: Bearer $COINGRAPH_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"token": "chainlink", "size_usd": 1000}'</code></pre><button class="cp" type="button">Copy</button></div>
+      <p>Every answer has an id; <code>GET /verify/{id}</code> returns its proof. All 13 endpoints with real examples: <a href="https://coingraph.ai/docs/api" target="_blank" rel="noopener">coingraph.ai/docs/api</a>.</p>
+    </section>
+
+    <section id="mcp" class="reveal">
+      <div class="eyebrow">Sign in once</div>
+      <h2>MCP for AI agents</h2>
+      <p>Connect CoinGraph to any MCP client and ask in plain words. The first call opens a CoinGraph sign-in; calls then spend your account's credits at the same prices as the API.</p>
+      <h3>Claude Code</h3>
+      <div class="cb"><span class="lbl">Terminal</span><pre><code>claude mcp add --transport http coingraph https://coingraph.ai/mcp</code></pre><button class="cp" type="button">Copy</button></div>
+      <h3>Cursor, Windsurf, VS Code and other clients</h3>
+      <div class="cb"><span class="lbl">mcp.json</span><pre><code>{
+  "mcpServers": {
+    "coingraph": { "url": "https://coingraph.ai/mcp" }
+  }
+}</code></pre><button class="cp" type="button">Copy</button></div>
+      <p>Then ask: <em>"Is it safe to buy $1,000 of CAKE on BNB Chain right now? Use CoinGraph."</em> One page per client, including Claude.ai and ChatGPT: <a href="https://coingraph.ai/docs/mcp" target="_blank" rel="noopener">coingraph.ai/docs/mcp</a>.</p>
+    </section>
+
+    <section id="agents" class="reveal">
+      <div class="eyebrow">One call, one job</div>
+      <h2>Ready-made agents</h2>
+      <p>Each agent does a whole job in one call and answers with its reasons. A run costs 25 credits; try any of them free in the <a href="https://coingraph.ai/agents" target="_blank" rel="noopener">playground</a>.</p>
+      <table class="tbl"><tr><th>Agent</th><th>What it answers</th></tr>
+        <tr><td><b>Trade Gatekeeper</b></td><td>Should this trade go ahead? ALLOW, REDUCE (with a safe size) or BLOCK.</td></tr>
+        <tr><td><b>Wallet Guard</b></td><td>Before a swap or send: checks the token and the destination address (sanctions lists, scam flags). SAFE or STOP.</td></tr>
+        <tr><td><b>Due Diligence Analyst</b></td><td>A written memo on a token, with sources.</td></tr>
+        <tr><td><b>Portfolio Checkup</b></td><td>Risk across a wallet's holdings, with your rules.</td></tr>
+        <tr><td><b>Daily Market Brief</b></td><td>What changed in the market today.</td></tr></table>
+      <div class="cb"><span class="lbl">curl</span><pre><code>curl -X POST https://coingraph.ai/api/v1/agents/trade-gatekeeper \
+  -H "Authorization: Bearer $COINGRAPH_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"token": "solana", "size_usd": 5000, "side": "buy"}'</code></pre><button class="cp" type="button">Copy</button></div>
+      <p>Details for all five: <a href="https://coingraph.ai/docs/agents" target="_blank" rel="noopener">coingraph.ai/docs/agents</a>.</p>
+    </section>
+
+    <section id="contract" class="reveal">
+      <div class="eyebrow">On chain</div>
+      <h2>Guard contract</h2>
+      <p>The guard wraps a PancakeSwap v2 buy. It swaps only with a recent CoinGraph answer, signed for that exact agent, token and amount, that says proceed. Anything else reverts and the BNB stays in the wallet.</p>
+      <table class="tbl"><tr><th>Contract</th><th>Address (BNB Smart Chain mainnet)</th></tr>
+        <tr><td>CoinGraphGuard</td><td><a href="https://bscscan.com/address/0x7f914975c2af57253a707fb2c2e44776dc45000b" target="_blank" rel="noopener"><code>0x7f914975c2af57253a707fb2c2e44776dc45000b</code></a></td></tr>
+        <tr><td>CoinGraphGuardAtlas</td><td><a href="https://bscscan.com/address/0xf86e3867cee19d56cacfb704dabb1b138af8b0ed" target="_blank" rel="noopener"><code>0xf86e3867cee19d56cacfb704dabb1b138af8b0ed</code></a> · also verifies Atlas Oracle's signed price in the same transaction</td></tr>
+        <tr><td>ProofLog</td><td><a href="https://bscscan.com/address/0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d" target="_blank" rel="noopener"><code>0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d</code></a> · every answer recorded before the trade</td></tr></table>
+      <div class="cb"><span class="lbl">Solidity</span><pre><code>struct Answer {
+  address agent;        // who may use this answer
+  address token;        // the token that was checked
+  uint256 maxAmountIn;  // largest BNB amount (wei) it covers
+  uint8   verdict;      // 1 proceed, 2 caution, 3 avoid
+  uint64  issuedAt;     // valid for 5 minutes, once
+  bytes32 evidenceHash; // keccak256 of the full check
+}
+
+function buy(Answer calldata a, bytes calldata sig,
+             uint256 amountOutMin, address[] calldata path,
+             uint256 deadline) external payable;</code></pre><button class="cp" type="button">Copy</button></div>
+      <h3>Why a buy reverts</h3>
+      <table class="tbl"><tr><th>Error</th><th>Meaning</th></tr>
+        <tr><td><code>NotProceed</code></td><td>The answer says caution or avoid.</td></tr>
+        <tr><td><code>OracleDeviation</code></td><td>The pool price is too far from Atlas Oracle's signed price (Atlas guard).</td></tr>
+        <tr><td><code>AmountTooLarge</code></td><td>More BNB than the answer covers.</td></tr>
+        <tr><td><code>AnswerExpired</code> / <code>AnswerUsed</code></td><td>Older than 5 minutes, or already used.</td></tr>
+        <tr><td><code>NotYourAnswer</code> / <code>WrongToken</code> / <code>WrongSigner</code></td><td>Signed for another agent or token, or not by CoinGraph.</td></tr></table>
+      <div class="note warn"><b>Using the guard with your own agent:</b>&nbsp;signed answers are issued for your agent's wallet address. During the hackathon this is set up per team: open an issue on <a href="https://github.com/eventgraphai/coingraph-bnb-guard/issues" target="_blank" rel="noopener">GitHub</a> or email support@coingraph.ai. Decode any refused buy with <code>npx tsx scripts/revert-reason.ts &lt;txHash&gt;</code>.</div>
+    </section>
+
+    <section id="response" class="reveal">
+      <div class="eyebrow">Reference</div>
+      <h2>Reading a response</h2>
+      <div class="cb"><span class="lbl">GET /api/check (shortened)</span><pre><code>{
+  "symbol": "TRX",
+  "orderUsd": 1000,
+  "verdict": "proceed",              // proceed | caution | avoid
+  "findings": [                      // worst first, each with level and text
+    { "level": "ok", "check": "oracle_price",
+      "text": "PancakeSwap price $0.303 vs Atlas Oracle TRX/USD $0.303: 0.13% apart." }
+  ],
+  "numbers": { "liquidityUsd": 276454, "priceImpactPct": 0.73, "atlas": { … }, "cournot": { … } },
+  "proof": { "recorded": true, "txHash": "0x…", "evidenceHash": "0x…", "explorer": "https://bscscan.com/tx/0x…" }
+}</code></pre><button class="cp" type="button">Copy</button></div>
+      <p>Treat anything other than <code>proceed</code> as a stop. A finding the check could not measure is never assumed safe.</p>
+    </section>
+
+    <section id="limits" class="reveal">
+      <div class="eyebrow">Reference</div>
+      <h2>Limits and pricing</h2>
+      <table class="tbl"><tr><th>Surface</th><th>Cost</th><th>Limit</th></tr>
+        <tr><td>Guard API (this site)</td><td>Free</td><td>12 checks per minute per IP</td></tr>
+        <tr><td>CoinGraph standard check</td><td>Free</td><td>No key needed</td></tr>
+        <tr><td>Sized check, agent run</td><td>25 credits</td><td>API key or MCP sign-in</td></tr>
+        <tr><td>MCP</td><td>Same as the API</td><td>Sign in once</td></tr></table>
+      <p>1 credit = $0.01. New accounts get 500 free credits. Full table: <a href="https://coingraph.ai/pricing" target="_blank" rel="noopener">coingraph.ai/pricing</a>.</p>
+    </section>
+
+    <section id="verify" class="reveal">
+      <div class="eyebrow">Reference</div>
+      <h2>Verify an answer</h2>
+      <ol class="steps-d">
+        <li>Run a check on <a href="/">guard.coingraph.ai</a> and click <b>Download evidence</b>.</li>
+        <li>Hash the file with keccak256.</li>
+        <li>Open the record on BscScan and compare it with the <code>evidenceHash</code> in the transaction.</li>
+      </ol>
+      <p>The signed verdict inside any guarded buy can be decoded with <code>scripts/answer-in-tx.ts</code> in the <a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">source code</a>.</p>
+    </section>
+  </div>
+</div>
+
+<footer>
+  <div><a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
+  CoinGraph is not affiliated with Binance or BNB Chain. A check is evidence, not a guarantee and not financial advice.</div>
+  <nav><a href="/">Check a token</a><a href="/bnb">BNB top 50</a><a href="https://coingraph.ai/docs" target="_blank" rel="noopener">coingraph.ai docs</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a></nav>
+</footer>
+</main>
+
+<script src="/theme.js?v=38"></script>
+<script>
+document.querySelectorAll(".cp").forEach((b) => b.addEventListener("click", async () => {
+  const t = b.parentElement.querySelector("pre").innerText;
+  try { await navigator.clipboard.writeText(t); b.textContent = "Copied"; } catch { b.textContent = "Select and copy"; }
+  setTimeout(() => (b.textContent = "Copy"), 1500);
+}));
+const links = [...document.querySelectorAll("#toc a")], secs = links.map((a) => document.querySelector(a.getAttribute("href")));
+const bar = document.getElementById("progress");
+addEventListener("scroll", () => {
+  let cur = secs[0]?.id; for (const s of secs) if (s && s.getBoundingClientRect().top < 160) cur = s.id;
+  links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + cur));
+  const h = document.documentElement.scrollHeight - innerHeight; bar.style.transform = `scaleX(${h > 0 ? scrollY / h : 0})`;
+}, { passive: true });
+</script>
+</body>
+</html>

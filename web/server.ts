@@ -117,6 +117,7 @@ app.get("/logo.png", (c) => c.body(readFileSync(new URL("public/logo.png", root)
 app.get("/theme.css", (c) => c.body(readFileSync(new URL("public/theme.css", root), "utf8"), 200, { "content-type": "text/css; charset=utf-8", "cache-control": "public, max-age=300" }));
 app.get("/theme.js", (c) => c.body(readFileSync(new URL("public/theme.js", root), "utf8"), 200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "public, max-age=300" }));
 app.get("/", (c) => c.html(readFileSync(new URL("public/index.html", root), "utf8")));
+app.get("/docs", (c) => c.html(readFileSync(new URL("public/docs.html", root), "utf8")));
 app.get("/bnb", (c) => c.html(readFileSync(new URL("public/bnb.html", root), "utf8")));
 app.get("/poster", (c) => c.html(readFileSync(new URL("public/poster.html", root), "utf8")));
 

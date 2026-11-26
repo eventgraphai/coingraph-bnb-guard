@@ -10,14 +10,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="stylesheet" href="/theme.css?v=37">
+<link rel="stylesheet" href="/theme.css?v=38">
 </head>
 <body>
 <div class="progress" id="progress"></div>
 <nav class="nav" aria-label="Main">
   <a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
   <div class="nav-links">
-    <a href="#reads">Checks</a><a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="/bnb">BNB top 50</a><a href="#agents">For agents</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a>
+    <a href="#reads">Checks</a><a href="#proof">Mainnet proof</a><a href="#how">How it works</a><a href="/bnb">BNB top 50</a><a href="#agents">For agents</a><a href="/docs">Docs</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a>
   </div>
   <button class="theme" type="button" aria-label="Switch light or dark mode">
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -171,7 +171,7 @@
 </section>
 
 <section id="agents" class="sec">
-  <div class="center reveal"><div class="eyebrow">For humans and AI agents</div><h2>One check, wherever your agent runs.</h2><p class="lead">Call it from code, connect it to any agent, or enforce it in a contract.</p></div>
+  <div class="center reveal"><div class="eyebrow">For humans and AI agents</div><h2>One check, wherever your agent runs.</h2><p class="lead">Call it from code, connect it to any agent, or enforce it in a contract. <a href="/docs">Read the docs →</a></p></div>
   <div class="cols">
     <div class="card reveal d1"><div class="layer">API</div><b class="t">Check a token</b><p class="cd">One request returns the verdict, every reason and the on-chain record.</p>
       <pre><code>GET guard.coingraph.ai/api/check
@@ -183,6 +183,7 @@
   minOut, path, deadline)</code></pre></div>
   </div>
   <div class="agentsrow reveal"><span class="layer">Ready-made CoinGraph agents</span><div class="agents" id="agentsList"></div></div>
+  <div class="devrow reveal"><a class="cta" href="/docs">Developer docs</a><a class="ghost" href="https://coingraph.ai/account/keys" target="_blank" rel="noopener">Get an API key</a></div>
 </section>
 
 <section class="sec">
@@ -193,11 +194,11 @@
   <div><a class="brand" href="/"><img class="logo" src="/logo.png" alt="" width="30" height="30">CoinGraph <span>Guard</span></a>
   Built on BNB Smart Chain and PancakeSwap, with data from CoinMarketCap, Atlas Oracle and Cournot. CoinGraph is not affiliated with Binance or BNB Chain.<br>
   A check is evidence, not a guarantee and not financial advice. BNB Hack Bangkok 2026.</div>
-  <nav><a href="/bnb">BNB top 50</a><a href="#proof">Mainnet proof</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a><a href="https://coingraph.ai" target="_blank" rel="noopener">coingraph.ai</a></nav>
+  <nav><a href="/bnb">BNB top 50</a><a href="/docs">Docs</a><a href="#proof">Mainnet proof</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">Source code</a><a href="https://coingraph.ai" target="_blank" rel="noopener">coingraph.ai</a></nav>
 </footer>
 </main>
 
-<script src="/theme.js?v=37"></script>
+<script src="/theme.js?v=38"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -438,7 +439,7 @@ loadStats();
 fetch("/api/agents").then((r) => r.json()).then((d) => {
   const box = $("#agentsList"); const items = d.data?.agents ?? d.data ?? [];
   if (!Array.isArray(items) || !items.length) { box.textContent = "See coingraph.ai/agents"; return; }
-  for (const a of items) box.append(el("span", null, a.name ?? a.id));
+  for (const a of items) { const x = el("a", null, a.name ?? a.id); x.href = "/docs#agents"; box.append(x); }
 }).catch(() => { $("#agentsList").textContent = "See coingraph.ai/agents"; });
 // "See one check": three real mainnet runs replayed step by step. Tabs switch runs; it auto-advances.
 (() => {
