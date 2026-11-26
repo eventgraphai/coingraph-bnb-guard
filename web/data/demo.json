@@ -1,0 +1,11 @@
+{
+  "contracts": {
+    "guard": "0x7f914975c2af57253a707fb2c2e44776dc45000b",
+    "proofLog": "0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d",
+    "signer": "0x5c514443a2e40F74960822851aF3fab75C44F4C6"
+  },
+  "runs": [
+    { "token": "CAKE", "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", "verdict": "proceed", "outcome": "Bought through the guard", "proofTx": "0xc658181593f990e4d6cd0aa5a391618cc2129dc78585f19706a74d4fdc8f308c", "buyTx": "0x03e5021db14c948b6c3b8425ede04c27a8f33b5394546117128f4aa0fa0a9c09" },
+    { "token": "Copycat \"BTCB\"", "address": "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26", "verdict": "avoid", "outcome": "Refused on chain (NotProceed)", "proofTx": "0x340c4adf9d5fbb85fffb169ca96d5da444607668b677cfd610ac388ad419f871", "buyTx": "0x3778d8c4a28a3faeb5ce5f4e2788360e86a8b0a3ba9117c5ca184861701f39b6" }
+  ]
+}

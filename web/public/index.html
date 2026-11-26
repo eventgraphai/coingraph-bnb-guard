@@ -47,7 +47,7 @@ footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 40px;colo
 <div class="wrap">
 <header>
   <div class="logo">CoinGraph <span>Guard</span></div>
-  <nav><a href="#top10">Top 10</a><a href="#agents">For agents</a><a href="#how">How it works</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></nav>
+  <nav><a href="#mainnet">Mainnet proof</a><a href="#top10">Top 10</a><a href="#agents">For agents</a><a href="#how">How it works</a><a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">GitHub</a></nav>
 </header>
 
 <div class="hero">
@@ -62,14 +62,23 @@ footer{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 40px;colo
     <button class="primary" id="go">Check</button>
   </form>
   <div class="hints">Try:
-    <span class="chip" data-q="0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82">CAKE</span>
+    <span class="chip" data-q="0x000Ae314E2A2172a039B26378814C252734f556A">ASTER</span>
+    <span class="chip" data-q="0x4B0F1812e5Df2A09796481Ff14017e6005508003">TWT</span>
+    <span class="chip" data-q="0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb">SFP</span>
+    <span class="chip" data-q="0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD">LINK on BNB Chain</span>
     <span class="chip" data-q="0x6583a27d7c7C0d755414b9471BD55EF9a39afd26">a copycat "BTCB"</span>
-    <span class="chip" data-q="0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47">ADA on BNB Chain</span>
     <span class="chip" data-q="solana">search "solana"</span>
   </div>
 </div>
 
 <div id="out"></div>
+
+<section id="mainnet">
+  <h2>Proven on BNB Chain mainnet</h2>
+  <p class="lead">An AI agent asked CoinGraph before each $1 buy, recorded the signed answer on chain, then bought through the guard contract. Only "proceed" goes through.</p>
+  <div class="card tablewrap"><table><thead><tr><th>Token</th><th>Verdict</th><th>What the guard did</th><th>On BscScan</th></tr></thead><tbody id="runs"></tbody></table></div>
+  <p class="muted" id="contracts"></p>
+</section>
 
 <section id="top10">
   <h2>Top 10 by market cap, on BNB Chain</h2>
@@ -239,6 +248,21 @@ document.querySelectorAll(".chip").forEach((c) => c.onclick = () => { $("#q").va
 
 // A link like /?q=0x...&usd=100 runs that check on load (shareable results).
 { const u = new URLSearchParams(location.search); if (u.get("usd")) $("#usd").value = u.get("usd"); if (u.get("q")) { $("#q").value = u.get("q"); setTimeout(() => $("#searchForm").requestSubmit(), 50); } }
+fetch("/api/demo").then((r) => r.json()).then((d) => {
+  const tb = $("#runs"); if (!tb || !d.runs) return;
+  const link = (href, text) => { const a = el("a", null, text); a.href = href; a.target = "_blank"; a.rel = "noopener"; return a; };
+  for (const r of d.runs) {
+    const tr = el("tr"), v = el("td"), lk = el("td");
+    v.append(verdictPill(r.verdict));
+    lk.append(link(`https://bscscan.com/tx/${r.proofTx}`, "answer recorded"), document.createTextNode(" · "), link(`https://bscscan.com/tx/${r.buyTx}`, r.verdict === "proceed" ? "buy" : "refused buy"));
+    tr.append(el("td", null, r.token), v, el("td", null, r.outcome), lk);
+    tr.onclick = (e) => { if (e.target.tagName !== "A") { $("#q").value = r.address; $("#searchForm").requestSubmit(); } };
+    tb.append(tr);
+  }
+  const c = $("#contracts"); c.textContent = "Contracts: ";
+  c.append(link(`https://bscscan.com/address/${d.contracts.guard}`, "CoinGraphGuard"), document.createTextNode(" · "), link(`https://bscscan.com/address/${d.contracts.proofLog}`, "ProofLog"), document.createTextNode(` · CoinGraph signer ${d.contracts.signer}`));
+}).catch(() => {});
+
 fetch("/api/top10").then((r) => r.json()).then((d) => {
   if (d.orderUsd) $("#t10usd").textContent = money(d.orderUsd);
   const tb = $("#t10");

@@ -78,6 +78,11 @@ app.post("/api/ask", async (c) => {
 
 app.get("/api/agents", async (c) => c.json((await coingraph("/agents")).body as object));
 
+app.get("/api/demo", (c) => {
+  const f = new URL("data/demo.json", root);
+  return existsSync(f) ? c.json(JSON.parse(readFileSync(f, "utf8"))) : c.json({ runs: [] });
+});
+
 app.get("/api/top10", (c) => {
   const f = new URL("data/top10.json", root);
   return existsSync(f) ? c.json(JSON.parse(readFileSync(f, "utf8"))) : c.json({ results: [] });
