@@ -17,6 +17,9 @@ importers:
       solc:
         specifier: ^0.8.39
         version: 0.8.39
+      tsx:
+        specifier: ^4.23.15
+        version: 4.23.15
       viem:
         specifier: ^2.58.7
         version: 2.58.7(typescript@7.0.2)
@@ -24,9 +27,6 @@ importers:
       '@types/node':
         specifier: ^26.6.11
         version: 26.6.11
-      tsx:
-        specifier: ^4.23.15
-        version: 4.23.15
       typescript:
         specifier: ^7.0.2
         version: 7.0.2

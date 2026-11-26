@@ -80,6 +80,7 @@ app.get("/api/top10", (c) => {
 app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY, atlas: !!process.env.ATLAS_API_KEY, ask: !!process.env.COINGRAPH_API_KEY }));
 
 app.get("/", (c) => c.html(readFileSync(new URL("public/index.html", root), "utf8")));
+app.get("/poster", (c) => c.html(readFileSync(new URL("public/poster.html", root), "utf8")));
 
 const port = Number(process.env.PORT ?? 8787);
 serve({ fetch: app.fetch, port }, () => console.log(`guard listening on http://localhost:${port}`));

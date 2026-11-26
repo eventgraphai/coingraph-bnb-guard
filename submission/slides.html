@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CoinGraph Guard slides</title>
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{width:1600px;height:900px;background:#0b0f14;color:#e8eef5;font-family:Inter,-apple-system,system-ui,sans-serif;overflow:hidden}
+.s{display:none;position:relative;width:1600px;height:900px;padding:64px 80px}
+body[data-s="how"] #how, body[data-s="layers"] #layers, body[data-s="top10"] #top10{display:block}
+.glow{position:absolute;right:-240px;top:-240px;width:900px;height:900px;background:radial-gradient(circle,rgba(198,244,50,.14),transparent 60%)}
+.brand{font-weight:800;font-size:22px}.brand span{color:#c6f432}
+h2{font-size:52px;letter-spacing:-.03em;line-height:1.08;margin:18px 0 10px}h2 em{font-style:normal;color:#c6f432}
+.lead{font-size:22px;color:#b8c4d1;margin-bottom:34px}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.step{background:#121821;border:1px solid #243040;border-radius:18px;padding:24px;min-height:300px}
+.num{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:99px;background:#c6f432;color:#0b0f14;font-weight:800;font-size:20px;margin-bottom:16px}
+.step b{display:block;font-size:24px;margin-bottom:10px}.step p{color:#b8c4d1;font-size:18px;line-height:1.45}
+.step ul{margin-top:10px;padding-left:18px;color:#b8c4d1;font-size:16px;line-height:1.6}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.card{background:#121821;border:1px solid #243040;border-radius:18px;padding:24px}
+.layer{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#93a1b1}
+.row{display:flex;justify-content:space-between;align-items:center;margin:10px 0 12px}.tok{font-size:24px;font-weight:800}
+.pill{font-weight:800;letter-spacing:.06em;border-radius:99px;padding:7px 16px;font-size:16px}
+.ok{background:rgba(74,222,128,.15);color:#4ade80}.ca{background:rgba(251,191,36,.15);color:#fbbf24}.av{background:rgba(248,113,113,.15);color:#f87171}
+ul.f{list-style:none;padding:0}ul.f li{display:flex;gap:10px;padding:9px 0;border-top:1px solid #243040;font-size:16px;line-height:1.4}ul.f li:first-child{border-top:0}
+.d{flex:0 0 auto;width:9px;height:9px;border-radius:99px;margin-top:7px}.dg{background:#4ade80}.dy{background:#fbbf24}.dr{background:#f87171}
+table{width:100%;border-collapse:collapse;font-size:18px}th,td{text-align:left;padding:11px 10px;border-top:1px solid #243040}th{color:#93a1b1;font-size:14px;border-top:0;font-weight:600}td.m{color:#b8c4d1;font-size:16px}
+.foot{position:absolute;left:80px;right:80px;bottom:36px;display:flex;justify-content:space-between;color:#93a1b1;font-size:15px}
+</style>
+</head>
+<body>
+<section class="s" id="how"><div class="glow"></div>
+  <div class="brand">CoinGraph <span>Guard</span></div>
+  <h2>Ask first. <em>Then trade.</em></h2>
+  <p class="lead">For humans and AI agents: the sources, the verdict and the proof, before money moves.</p>
+  <div class="flow">
+    <div class="step"><span class="num">1</span><b>Ask</b><p>The agent (or a person) sends the token and the order size. Or asks anything about it.</p></div>
+    <div class="step"><span class="num">2</span><b>The sources</b><p>Everything an analyst reads, in one call:</p><ul><li>Buy and sell simulated on PancakeSwap</li><li>Taxes, liquidity, owner powers</li><li>Market data, order books, whale flows</li><li>CoinMarketCap identity · Atlas Oracle price</li></ul></div>
+    <div class="step"><span class="num">3</span><b>The verdict</b><p>Proceed, caution or avoid, sized to the order, with every reason and the number behind it.</p></div>
+    <div class="step"><span class="num">4</span><b>The proof</b><p>Signed by CoinGraph and recorded on opBNB. The guard contract on BNB Smart Chain only lets a "proceed" trade through.</p></div>
+  </div>
+  <div class="foot"><span>guard.coingraph.ai</span><span>If money is lost, replay exactly what the agent knew.</span><span>BNB Hack Bangkok 2026</span></div>
+</section>
+
+<section class="s" id="layers"><div class="glow"></div>
+  <div class="brand">CoinGraph <span>Guard</span></div>
+  <h2>Two views of every token</h2>
+  <p class="lead">Live results, CAKE, $500 buy: on-chain on BNB Chain, and the market across exchanges.</p>
+  <div class="cols">
+    <div class="card"><div class="layer">On-chain check · PancakeSwap</div>
+      <div class="row"><div class="tok">CAKE</div><span class="pill ok">PROCEED</span></div>
+      <ul class="f">
+        <li><span class="d dg"></span>Listed on CoinMarketCap, rank #76.</li>
+        <li><span class="d dg"></span>$16.1M of liquidity in its PancakeSwap pool.</li>
+        <li><span class="d dg"></span>Buy and sell both work: 0% tax each way.</li>
+        <li><span class="d dg"></span>A $500 buy moves the price 0.01%.</li>
+        <li><span class="d dg"></span>PancakeSwap price matches CoinMarketCap within 0.05%.</li>
+      </ul></div>
+    <div class="card"><div class="layer">CoinGraph market check · exchanges</div>
+      <div class="row"><div class="tok">CAKE</div><span class="pill ca">CAUTION</span></div>
+      <ul class="f">
+        <li><span class="d dg"></span>Momentum: nothing stretched.</li>
+        <li><span class="d dy"></span>Order books: thin depth within 2% of price.</li>
+        <li><span class="d dg"></span>Futures: leverage not crowded.</li>
+        <li><span class="d dy"></span>Market mood: Extreme Fear.</li>
+        <li><span class="d dy"></span>Contract: supply can be increased.</li>
+      </ul></div>
+  </div>
+  <div class="foot"><span>guard.coingraph.ai</span><span>Every number shown, every source named.</span><span>BNB Hack Bangkok 2026</span></div>
+</section>
+
+<section class="s" id="top10"><div class="glow"></div>
+  <div class="brand">CoinGraph <span>Guard</span></div>
+  <h2>Top 10 by market cap, <em>on BNB Chain</em></h2>
+  <p class="lead">Each checked for a $500 buy. Official bridged tokens get caution: you are trusting the issuer.</p>
+  <div class="card"><table>
+    <thead><tr><th>Rank</th><th>Asset</th><th>Verdict</th><th>Main reason</th></tr></thead>
+    <tbody>
+      <tr><td>#1</td><td>Bitcoin (BTCB)</td><td><span class="pill ca">CAUTION</span></td><td class="m">Issuer wallet can mint new tokens</td></tr>
+      <tr><td>#2</td><td>Ethereum</td><td><span class="pill ca">CAUTION</span></td><td class="m">Official bridged token: you trust the issuer</td></tr>
+      <tr><td>#4</td><td>BNB</td><td><span class="pill ok">PROCEED</span></td><td class="m">Native asset</td></tr>
+      <tr><td>#8</td><td>TRON</td><td><span class="pill ok">PROCEED</span></td><td class="m">All checks passed</td></tr>
+      <tr><td>#10</td><td>Zcash</td><td><span class="pill av">AVOID</span></td><td class="m">Only $320 in its PancakeSwap pool</td></tr>
+      <tr><td>#12</td><td>Dogecoin</td><td><span class="pill ca">CAUTION</span></td><td class="m">Upgradeable by its issuer</td></tr>
+      <tr><td>#15</td><td>Cardano</td><td><span class="pill ca">CAUTION</span></td><td class="m">Official bridged token: you trust the issuer</td></tr>
+    </tbody></table></div>
+  <div class="foot"><span>guard.coingraph.ai</span><span>Data: CoinMarketCap, Atlas Oracle and CoinGraph</span><span>BNB Hack Bangkok 2026</span></div>
+</section>
+<script>document.body.dataset.s = location.hash.slice(1) || "how";</script>
+</body>
+</html>
