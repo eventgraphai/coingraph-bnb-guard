@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CoinGraph Guard</title>
+<title>CoinGraph Guard: Every AI Agent Trade, Checked First. Verifiable On-Chain.</title>
 <meta name="description" content="Every AI agent trade, checked first. Verifiable on-chain. The CoinGraph check for BNB Chain tokens, enforced by a guard contract.">
 <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: dark)">
 <script>(()=>{const d=document.documentElement;let t=null;try{t=localStorage.getItem("cg-theme")}catch{}d.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=15">
+<link rel="stylesheet" href="/theme.css?v=16">
 </head>
 <body>
 <div class="progress" id="progress"></div>
@@ -31,30 +31,35 @@
 <div class="hero-grid">
 <div class="hero-copy">
   <a class="badge fade-up" href="#proof"><b>Live</b><span class="live"></span>Running on BNB Smart Chain mainnet</a>
+  <div class="kicker fade-up" style="animation-delay:.1s">CoinGraph Guard</div>
   <h1 data-words>Every AI agent trade, <em>checked first.</em></h1>
+  <p class="h1b fade-up" style="animation-delay:.5s"><span class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span>Verifiable on-chain.</p>
   <p class="sub fade-up" style="animation-delay:.55s">Ask about any token. Get the sources, the verdict and the proof, recorded on BNB Smart Chain. A guard contract lets the trade through only on a signed "proceed".</p>
   <form class="search fade-up" id="searchForm" style="animation-delay:.7s">
     <input id="q" placeholder="Token contract (0x…), name or symbol" autocomplete="off" aria-label="Token contract, name or symbol">
     <label class="size">$<input id="usd" type="number" min="1" max="100000" value="500" aria-label="Order size in US dollars"></label>
     <button class="go" id="go">Check</button>
   </form>
-  <div class="chips fade-up" style="animation-delay:.85s">Try
+  <div class="tryrow fade-up" style="animation-delay:.85s"><span class="trylbl">Try</span><div class="trymarq"><div class="trytrack" id="tryTrack">
     <span class="chip" data-q="0x000Ae314E2A2172a039B26378814C252734f556A"><span class="d" style="background:var(--ok)"></span>ASTER</span>
     <span class="chip" data-q="0x4B0F1812e5Df2A09796481Ff14017e6005508003"><span class="d" style="background:var(--ok)"></span>TWT</span>
+    <span class="chip" data-q="0x6583a27d7c7C0d755414b9471BD55EF9a39afd26"><span class="d" style="background:var(--bad)"></span>copycat BTCB</span>
     <span class="chip" data-q="0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD"><span class="d" style="background:var(--warn)"></span>LINK</span>
-    <span class="chip" data-q="0x6583a27d7c7C0d755414b9471BD55EF9a39afd26"><span class="d" style="background:var(--bad)"></span>copycat "BTCB"</span>
+    <span class="chip" data-q="0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"><span class="d" style="background:var(--ok)"></span>CAKE</span>
     <span class="chip" data-q="solana">search "solana"</span>
-  </div>
+  </div></div></div>
 </div>
   <div class="gf fade-up" style="animation-delay:.4s" aria-label="Animation: tokens an AI agent wants to buy pass through CoinGraph Guard; proceed goes to PancakeSwap, avoid is refused">
     <div class="gf-top"><span>Live guard · BNB Smart Chain</span><b>mainnet</b></div>
     <div class="gf-stage" id="gfStage">
-      <svg class="gf-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="gl" d="M24 50 L43 50"/><path class="gl ok" d="M63 50 C71 50 72 22 78 22"/><path class="gl no" d="M63 50 C71 50 72 78 78 78"/></svg>
-      <div class="gf-node agent" style="left:12%;top:50%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg><div><b>AI agent</b><span>wants to buy</span></div></div>
+      <div class="gf-srcs" id="gfSrcs"><span>PancakeSwap<small>sim</small></span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot</span><span>BscScan</span></div>
+      <svg class="gf-wires" id="gfWires" aria-hidden="true"></svg>
+      <svg class="gf-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="gl" d="M24 64 L43 64"/><path class="gl ok" d="M63 64 C71 64 72 42 78 42"/><path class="gl no" d="M63 64 C71 64 72 86 78 86"/></svg>
+      <div class="gf-node agent" style="left:12%;top:64%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg><div><b>AI agent</b><span>wants to buy</span></div></div>
       <div class="gf-shield" id="gfShield"><div class="glow"></div><div class="ring2"></div><div class="ring"></div><div class="in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>CoinGraph<small>GUARD</small></div></div>
       <div class="gf-v" id="gfV"></div>
-      <div class="gf-node dex" id="gfDex" style="left:86%;top:22%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg><div><b>PancakeSwap</b><span>trade goes through</span></div></div>
-      <div class="gf-node ref" id="gfRef" style="left:86%;top:78%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg><div><b>Refused</b><span>BNB stays in wallet</span></div></div>
+      <div class="gf-node dex" id="gfDex" style="left:86%;top:42%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg><div><b>PancakeSwap</b><span>trade goes through</span></div></div>
+      <div class="gf-node ref" id="gfRef" style="left:86%;top:86%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg><div><b>Refused</b><span>BNB stays in wallet</span></div></div>
     </div>
     <div class="gf-feed"><div class="gf-feed-h">Recorded on BNB Smart Chain</div><div id="gfFeed"></div></div>
   </div>
@@ -166,7 +171,7 @@
 </footer>
 </main>
 
-<script src="/theme.js?v=15"></script>
+<script src="/theme.js?v=16"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -341,7 +346,7 @@ async function openMarket(id) {
 }
 
 $("#searchForm").onsubmit = (ev) => { ev.preventDefault(); const q = $("#q").value.trim(); if (!q) return; /^0x[0-9a-fA-F]{40}$/.test(q) ? checkAddress(q) : searchName(q); out.scrollIntoView({ behavior: "smooth", block: "start" }); };
-document.querySelectorAll(".chip").forEach((c) => c.onclick = () => { $("#q").value = c.dataset.q; $("#searchForm").requestSubmit(); });
+document.addEventListener("click", (e) => { const c = e.target.closest(".chip[data-q]"); if (!c) return; $("#q").value = c.dataset.q; $("#searchForm").requestSubmit(); });
 { const u = new URLSearchParams(location.search); if (u.get("usd")) $("#usd").value = u.get("usd"); if (u.get("q")) { $("#q").value = u.get("q"); setTimeout(() => $("#searchForm").requestSubmit(), 50); } }
 
 fetch("/api/demo").then((r) => r.json()).then((d) => {
@@ -383,10 +388,25 @@ fetch("/api/top10").then((r) => r.json()).then((d) => {
 
 fetch("/api/market").then((r) => r.json()).then((m) => {
   if (!m.totalMarketCapUsd) return;
-  const box = $("#mstrip"), add = (label, value) => { const s = el("span"); s.append(label + " ", el("b", null, value)); box.append(s); };
-  add("Crypto market cap", money(m.totalMarketCapUsd)); add("24h", (m.marketCapChange24hPct >= 0 ? "+" : "") + (m.marketCapChange24hPct ?? 0).toFixed(2) + "%");
-  add("BTC dominance", (m.btcDominance ?? 0).toFixed(1) + "%"); if (m.fearGreed) add("Fear & Greed", `${m.fearGreed.value} · ${m.fearGreed.label}`);
-  const a = link("/bnb", "BNB Chain top 50 →"); a.target = "_self"; box.append(a);
+  const box = $("#mstrip");
+  const tile = (label, value, extra) => { const t = el("div", "mk"); t.append(el("span", null, label)); const v = el("b", null, value); t.append(v); if (extra) t.append(extra); box.append(t); return v; };
+  tile("Crypto market cap", money(m.totalMarketCapUsd));
+  const ch = m.marketCapChange24hPct ?? 0; const v = tile("24h change", (ch >= 0 ? "▲ " : "▼ ") + Math.abs(ch).toFixed(2) + "%"); v.className = ch >= 0 ? "up" : "down";
+  tile("BTC dominance", (m.btcDominance ?? 0).toFixed(1) + "%");
+  if (m.fearGreed) { const bar = el("i", "fg"); const dot = el("u"); dot.style.left = Math.max(0, Math.min(100, m.fearGreed.value)) + "%"; bar.append(dot); tile("Fear & Greed", `${m.fearGreed.value} · ${m.fearGreed.label}`, bar); }
+  const a = link("/bnb", "BNB Chain top 50"); a.target = "_self"; a.className = "mk mk-go"; a.append(el("span", "arr", "→")); box.append(a);
+}).catch(() => {});
+
+// Try strip: live tokens from the BNB top 50 board (with their verdicts) plus known copycats, scrolling; click to check.
+fetch("/api/board").then((r) => r.json()).then((b) => {
+  const rows = (b.rows ?? []).filter((r) => r.verdict && r.address && /^[\x20-\x7e]+$/.test(r.symbol));
+  if (rows.length < 8) return;
+  const cop = [{ symbol: "copycat BTCB", address: "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26", verdict: "avoid" }];
+  const pick = rows.slice(); pick.splice(3, 0, cop[0]); pick.splice(15, 0, cop[0]);
+  const col = { proceed: "var(--ok)", caution: "var(--warn)", avoid: "var(--bad)" };
+  const tr = $("#tryTrack"); tr.innerHTML = "";
+  for (const pass of [0, 1]) for (const r of pick.slice(0, 26)) { const c = el("span", "chip"); c.dataset.q = r.address; const d = el("span", "d"); d.style.background = col[r.verdict]; c.append(d, r.symbol); if (pass) c.setAttribute("aria-hidden", "true"); tr.append(c); }
+  tr.classList.add("moving");
 }).catch(() => {});
 
 function loadStats() {
@@ -490,34 +510,53 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
     c.addEventListener("pointermove", (e) => { const r = c.getBoundingClientRect(); c.style.setProperty("--mx", e.clientX - r.left + "px"); c.style.setProperty("--my", e.clientY - r.top + "px"); }); });
   spot(document); new MutationObserver(() => spot(document)).observe(document.getElementById("runs"), { childList: true });
 })();
-// Hero: real mainnet runs flow from the agent through the guard; proceed goes on to PancakeSwap, the rest are refused.
+// Hero: real mainnet runs flow from the agent to the guard; five sources report in, then proceed goes on to PancakeSwap and the rest are refused.
 (() => {
   const stage = document.getElementById("gfStage"); if (!stage || !stage.animate) return;
-  const runs = [["ASTER", "proceed", "0x96ba…b135"], ["copycat BTCB", "avoid", "0x340c…f871"], ["TWT", "proceed", "0xf8f6…e36e"], ["NVDAB", "caution", "0x46d0…e61b"], ["CAKE", "proceed", "0xc658…308c"], ["TRX", "proceed", "0x00d2…f723"]];
+  const runs = [["ASTER", "proceed", "0x96ba…b135"], ["copycat BTCB", "avoid", "0x340c…f871"], ["TWT", "proceed", "0xf8f6…e36e"], ["CAKE", "proceed", "0xc658…308c"], ["NVDAB", "caution", "0x46d0…e61b"], ["TRX", "proceed", "0x00d2…f723"], ["SFP", "proceed", "0xf0a6…5b01"], ["copycat BTCB", "avoid", "0x4717…78ab"]];
   const shield = document.getElementById("gfShield"), v = document.getElementById("gfV"), dex = document.getElementById("gfDex"), ref = document.getElementById("gfRef"), feed = document.getElementById("gfFeed");
+  const srcs = [...document.querySelectorAll("#gfSrcs span")], wires = document.getElementById("gfWires");
   const kind = (x) => x === "proceed" ? "ok" : x === "avoid" ? "no" : "hold";
-  let k = 0, running = false;
-  for (const [sym, verdict, tx] of [["TRX", "proceed", "0x00d2…f723"], ["copycat BTCB", "avoid", "0x4717…78ab"]]) { const row = el("div", "gf-row"); row.append(el("b", null, sym), verdictPill(verdict), el("code", null, tx)); feed.append(row); }
-  const once = async () => {
-    const [sym, verdict, tx] = runs[k++ % runs.length], c = kind(verdict);
-    const t = el("div", "gf-tok"); t.append(el("i"), sym); stage.append(t);
-    await t.animate([{ left: "18%", top: "50%", opacity: 0 }, { left: "24%", top: "50%", opacity: 1, offset: .2 }, { left: "33%", top: "50%", opacity: 1 }], { duration: 1300, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" }).finished;
-    t.classList.add(c); shield.classList.add(c); v.innerHTML = ""; v.append(verdictPill(verdict)); v.classList.add("show");
-    await new Promise((r) => setTimeout(r, 900));
-    const ok = c === "ok", end = ok ? 22 : 78, node = ok ? dex : ref;
-    // Proceed passes behind the shield and on to PancakeSwap; anything else bounces back and drops to Refused.
-    const path = ok
-      ? [{ left: "33%", top: "50%" }, { left: "53%", top: "50%", offset: .3 }, { left: "66%", top: "42%", offset: .55 }, { left: "74%", top: "28%", offset: .78 }, { left: "80%", top: "22%", opacity: 1, offset: .92 }, { left: "83%", top: "22%", opacity: 0 }]
-      : [{ left: "33%", top: "50%" }, { left: "28%", top: "50%", offset: .15 }, { left: "38%", top: "74%", offset: .45 }, { left: "60%", top: "82%", offset: .72 }, { left: "78%", top: "78%", opacity: 1, offset: .92 }, { left: "81%", top: "78%", opacity: 0 }];
-    const a = t.animate(path, { duration: 1500, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
-    setTimeout(() => { shield.classList.remove(c); v.classList.remove("show"); }, 500);
-    await a.finished; t.remove();
-    node.classList.remove("hit"); void node.offsetWidth; node.classList.add("hit"); setTimeout(() => node.classList.remove("hit"), 900);
-    const row = el("div", "gf-row"); row.append(el("b", null, sym), verdictPill(verdict), el("code", null, tx)); feed.prepend(row);
-    while (feed.children.length > 3) feed.lastChild.remove();
-    setTimeout(once, 500);
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  // Wires from each source down into the shield, drawn in pixels so they follow the layout.
+  let paths = [];
+  const layout = () => {
+    const w = stage.clientWidth, h = stage.clientHeight, sb = shield.getBoundingClientRect(), st = stage.getBoundingClientRect();
+    const tx = sb.left - st.left + sb.width / 2, ty = sb.top - st.top + 6;
+    wires.setAttribute("viewBox", `0 0 ${w} ${h}`); wires.innerHTML = "";
+    paths = srcs.map((s) => { const r = s.getBoundingClientRect(), x = r.left - st.left + r.width / 2, y = r.bottom - st.top;
+      const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", `M${x} ${y} C${x} ${y + 40} ${tx} ${ty - 50} ${tx} ${ty}`); wires.append(p); return { p, x, y, tx, ty }; });
   };
-  const start = () => { if (!running) { running = true; once(); } };
+  layout(); addEventListener("resize", layout);
+  for (const [sym, verdict, tx] of [["TRX", "proceed", "0x00d2…f723"], ["copycat BTCB", "avoid", "0x4717…78ab"]]) { const row = el("div", "gf-row"); row.append(el("b", null, sym), verdictPill(verdict), el("code", null, tx)); feed.append(row); }
+  let k = 0, running = false;
+  const pulse = (i) => { const w = paths[i]; if (!w) return; srcs[i].classList.add("on"); w.p.classList.add("on");
+    const d = el("div", "gf-pk"); stage.append(d); const len = w.p.getTotalLength(), frames = [];
+    for (let t = 0; t <= 1.0001; t += 0.1) { const pt = w.p.getPointAtLength(len * t); frames.push({ left: pt.x + "px", top: pt.y + "px" }); }
+    d.animate(frames, { duration: 380, easing: "ease-in" }).finished.then(() => d.remove());
+    setTimeout(() => { srcs[i].classList.remove("on"); w.p.classList.remove("on"); }, 520); };
+  const once = async () => {
+    const [sym, verdict, txh] = runs[k++ % runs.length], c = kind(verdict);
+    const t = el("div", "gf-tok"); t.append(el("i"), sym); stage.append(t);
+    await t.animate([{ left: "18%", top: "64%", opacity: 0 }, { left: "24%", top: "64%", opacity: 1, offset: .25 }, { left: "33%", top: "64%", opacity: 1 }], { duration: 750, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" }).finished;
+    shield.classList.add("scan");
+    for (let i = 0; i < srcs.length; i++) { pulse(i); await wait(150); }
+    await wait(250); shield.classList.remove("scan");
+    t.classList.add(c); shield.classList.add(c); v.innerHTML = ""; v.append(verdictPill(verdict)); v.classList.add("show");
+    await wait(550);
+    const ok = c === "ok", node = ok ? dex : ref;
+    const path = ok
+      ? [{ left: "33%", top: "64%" }, { left: "53%", top: "64%", offset: .3 }, { left: "66%", top: "56%", offset: .55 }, { left: "74%", top: "46%", offset: .78 }, { left: "80%", top: "42%", opacity: 1, offset: .92 }, { left: "83%", top: "42%", opacity: 0 }]
+      : [{ left: "33%", top: "64%" }, { left: "28%", top: "64%", offset: .15 }, { left: "38%", top: "80%", offset: .45 }, { left: "60%", top: "88%", offset: .72 }, { left: "78%", top: "86%", opacity: 1, offset: .92 }, { left: "81%", top: "86%", opacity: 0 }];
+    const a = t.animate(path, { duration: 950, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
+    setTimeout(() => { shield.classList.remove(c); v.classList.remove("show"); }, 350);
+    await a.finished; t.remove();
+    node.classList.remove("hit"); void node.offsetWidth; node.classList.add("hit"); setTimeout(() => node.classList.remove("hit"), 700);
+    const row = el("div", "gf-row"); row.append(el("b", null, sym), verdictPill(verdict), el("code", null, txh)); feed.prepend(row);
+    while (feed.children.length > 3) feed.lastChild.remove();
+    setTimeout(once, 250);
+  };
+  const start = () => { if (!running) { running = true; layout(); once(); } };
   if ("IntersectionObserver" in window) new IntersectionObserver((es) => { if (es[0].isIntersecting) start(); }, { threshold: 0.2 }).observe(stage); else start();
 })();
 </script>
