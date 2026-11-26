@@ -30,6 +30,11 @@ function load() {
     }
   } catch {}
   try {
+    // Live checks whose raw data (including the Living Brain memory block) is kept in the repo so it survives redeploys.
+    const dir = new URL("living-brain/", PROOFS);
+    for (const f of readdirSync(dir).filter((x) => /^0x[0-9a-f]{64}\.json$/i.test(x))) add(readFileSync(new URL(f, dir), "utf8"));
+  } catch {}
+  try {
     if (existsSync(STORE)) for (const f of readdirSync(STORE).filter((x) => x.endsWith(".json"))) add(readFileSync(new URL(f, STORE), "utf8"));
   } catch {}
 }

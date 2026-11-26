@@ -205,6 +205,9 @@ app.get("/api/records", (c) => {
     for (const l of lines) { const j = JSON.parse(l); out.push({ tx: j.txHash, token: j.token, verdict: j.verdict, at: j.at, kind: "live" }); }
   } catch {}
   try {
+    for (const r of JSON.parse(readFileSync(new URL("../proofs/living-brain/index.json", import.meta.url), "utf8"))) out.unshift({ tx: r.tx, token: r.name.startsWith("BTCB") ? "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26" : "0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3", verdict: r.verdict, at: r.at, kind: "memory" });
+  } catch {}
+  try {
     const d = JSON.parse(readFileSync(new URL("data/demo.json", root), "utf8"));
     for (const r of [...d.atlasRuns, ...d.runs]) out.push({ tx: r.proofTx, token: r.token, verdict: r.verdict, kind: "demo" });
   } catch {}

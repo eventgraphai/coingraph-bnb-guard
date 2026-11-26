@@ -1,0 +1,20 @@
+[
+  {
+    "name": "BTCB-copycat",
+    "usd": 10000,
+    "verdict": "avoid",
+    "tx": "0x88e54c6646597fb71f9c93846778455552ab4b02cb75d5ed3630b54dc997334f",
+    "evidenceHash": "0xac9ad784ff76dcc2a3055ad5f2e1f41f6f8e7f3ebd208970f04c3c85dfdb2dc3",
+    "memoryHits": 3,
+    "at": "2026-11-26T23:29:14.671Z"
+  },
+  {
+    "name": "TRX",
+    "usd": 1000,
+    "verdict": "proceed",
+    "tx": "0x449fa1702c4aeaf309939bc6a125df5af490442c6df1564866200f5becab420c",
+    "evidenceHash": "0x26bc17b2d252c10f637fc80abe71acb52ac099e76c859807677caf4eed9dd031",
+    "memoryHits": 3,
+    "at": "2026-11-26T23:29:20.282Z"
+  }
+]

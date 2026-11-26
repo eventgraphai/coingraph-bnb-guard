@@ -154,7 +154,7 @@ fetch("/api/records").then((r) => r.json()).then((d) => {
   for (const r of d.records.slice(0, 16)) {
     const a = el("a", "rec"); a.href = "/proof?tx=" + r.tx;
     a.onclick = (e) => { e.preventDefault(); $("#tx").value = r.tx; verify(r.tx); scrollTo({ top: 0, behavior: "smooth" }); };
-    a.append(pill(r.verdict), el("b", null, r.kind === "demo" ? r.token + " · guarded buy" : short(r.token) + " · live check"), el("code", null, short(r.tx)));
+    a.append(pill(r.verdict), el("b", null, r.kind === "demo" ? r.token + " · guarded buy" : r.kind === "memory" ? short(r.token) + " · with Living Brain memory" : short(r.token) + " · live check"), el("code", null, short(r.tx)));
     box.append(a);
   }
 }).catch(() => {});
