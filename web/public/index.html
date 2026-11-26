@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="stylesheet" href="/theme.css?v=23">
+<link rel="stylesheet" href="/theme.css?v=24">
 </head>
 <body>
 <div class="progress" id="progress"></div>
@@ -68,23 +68,39 @@
   <div id="out"></div>
   <div class="mstrip fade-up" id="mstrip" style="animation-delay:1s"></div>
 
+</div>
+
+<section id="demo" class="demo">
+  <div class="center reveal"><div class="eyebrow">See one check, start to finish</div><h2>From question to on-chain proof in seconds.</h2><p class="lead">An AI agent asks before it buys. CoinGraph checks the token, signs a verdict, records it on BNB Smart Chain, and the guard contract enforces it. These are real mainnet runs: every link opens the transaction.</p></div>
+  <div class="dm-tabs reveal" id="dmTabs" role="tablist"></div>
+  <div class="dm-steps reveal" id="dmSteps">
+    <div class="dm-step" data-i="0"><span>1</span><b>Agent asks</b></div>
+    <div class="dm-step" data-i="1"><span>2</span><b>CoinGraph checks</b></div>
+    <div class="dm-step" data-i="2"><span>3</span><b>Verdict signed</b></div>
+    <div class="dm-step" data-i="3"><span>4</span><b>Recorded and enforced</b></div>
+    <i class="dm-bar"><u id="dmBar"></u></i>
+  </div>
   <div class="stage reveal">
-    <div class="app" aria-label="Example: an AI agent asks CoinGraph before a buy">
-      <div class="app-top"><i></i><i></i><i></i><span class="ttl">CoinGraph · agent check</span><span class="net">BNB Smart Chain</span></div>
+    <div class="app" aria-label="A real check replayed step by step">
+      <div class="app-top"><i></i><i></i><i></i><span class="ttl">CoinGraph · agent check</span><span class="net">BNB Smart Chain mainnet</span></div>
       <div class="app-body">
         <div class="app-l">
-          <div class="ask-line"><span id="mkAsk">Can I buy $500 of TRX?</span></div>
+          <div class="who">AI agent <code>0xb15b…6710</code></div>
+          <div class="ask-line"><span id="mkAsk"></span></div>
+          <div class="who">CoinGraph is checking</div>
           <div id="mkChecks"></div>
         </div>
         <div class="app-r">
-          <div class="vcard" id="mkCard"><div class="lbl">CoinGraph verdict</div><div class="v" id="mkV">Proceed</div><p id="mkP">Signed for this agent, this token, this amount. Valid 5 minutes.</p></div>
-          <div class="chain" id="mkChain">Recorded on chain <code id="mkTx">0x00d2…f723</code></div>
+          <div class="vcard" id="mkCard"><div class="lbl">CoinGraph verdict</div><div class="v" id="mkV"></div><p id="mkP"></p></div>
+          <pre class="signed" id="mkSigned"></pre>
+          <div class="chain" id="mkChain"></div>
           <div class="guardrow" id="mkGuard"></div>
         </div>
       </div>
     </div>
+    <p class="dm-cap" id="dmCap"></p>
   </div>
-</div>
+</section>
 
 <p class="marquee-l">Built on and integrated with</p>
 <div class="marquee" aria-label="Data and infrastructure: BNB Smart Chain, PancakeSwap, CoinMarketCap, Atlas Oracle, Cournot, BscScan">
@@ -172,7 +188,7 @@
 </footer>
 </main>
 
-<script src="/theme.js?v=23"></script>
+<script src="/theme.js?v=24"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -420,32 +436,51 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
   if (!Array.isArray(items) || !items.length) { box.textContent = "See coingraph.ai/agents"; return; }
   for (const a of items) box.append(el("span", null, a.name ?? a.id));
 }).catch(() => { $("#agentsList").textContent = "See coingraph.ai/agents"; });
-// Product stage: replays two real mainnet runs, one approved and one refused.
+// "See one check": three real mainnet runs replayed step by step. Tabs switch runs; it auto-advances.
 (() => {
+  const box = $("#mkChecks"); if (!box) return;
   const tick = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg>';
   const cross = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg>';
   const runs = [
-    { ask: "Can I buy $500 of TRX?", checks: [["Buy and sell work", "0% tax", 1], ["Official contract", "CoinMarketCap #8", 1], ["Liquidity", "$3.8M across DEXs", 1], ["Price vs Atlas Oracle", "0.15% apart", 1], ["Owner powers", "renounced", 1]], v: "Proceed", ok: 1, p: "Signed for this agent, token and amount. Valid 5 minutes, one use.", tx: "0x00d2…f723", guard: [["p-proceed", "Guard: trade goes through"]] },
-    { ask: "Can I buy $500 of BTCB?", checks: [["Buy and sell work", "0% tax", 1], ["Official contract", "copies the name", 0], ["Liquidity", "$3.19", 0], ["Price vs Atlas Oracle", "99.99% apart", 0], ["Owner powers", "renounced", 1]], v: "Avoid", ok: 0, p: "Not the real BTCB. The guard refuses the buy on chain, even with a signature.", tx: "0x4717…78ab", guard: [["p-avoid", "Guard: OracleDeviation, refused"]] },
+    { tab: "ASTER", verdict: "proceed", ask: "Can I buy $1 of ASTER?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #45", 1, "CoinMarketCap"], ["Liquidity", "$3.3M across DEX pools", 1, "CoinMarketCap DEX data"], ["Holders", "255,067 wallets", 1, "CoinMarketCap DEX data"], ["Owner powers", "renounced", 1, "BscScan"]],
+      v: "Proceed", p: "Every check passed. Signed for this agent, this token and this amount, valid 5 minutes, one use.", signed: { verdict: "proceed", token: "ASTER", maxAmountIn: "$1 of BNB", validFor: "5 min, one use" },
+      proof: "0x96bab07f0d8dc7567995d8788a447c81e8f529a5e9b4206f6c7824a02cceb135", buy: "0x21f574b6aff2a2de746276b898339cd699bfa8be33e6d71eee4c918d45d82e65", guard: ["p-proceed", "Guard: trade went through"] },
+    { tab: "TRX", verdict: "proceed", ask: "Can I buy $0.50 of TRX?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #8", 1, "CoinMarketCap"], ["Liquidity", "$3.8M across DEX pools", 1, "CoinMarketCap DEX data"], ["Price vs Atlas Oracle", "0.15% apart", 1, "Atlas Oracle, signed"], ["Owner powers", "renounced", 1, "BscScan"]],
+      v: "Proceed", p: "Signed, and the guard re-checks Atlas Oracle's price inside the same transaction.", signed: { verdict: "proceed", token: "TRX", maxAmountIn: "0.000909 BNB", atlasFeed: "TRX/USD", evidenceHash: "0x1403…8db7" },
+      proof: "0x00d28a53c6b7711eb01e0abcb12b0deb23a99f64628bbf572b703af3404f6723", buy: "0xc1278e5ba8389cc7de019765394d8aa3e5d649e1c77b89f2bdf100caa2331cf8", guard: ["p-proceed", "Guard: trade went through"] },
+    { tab: "Copycat BTCB", verdict: "avoid", ask: "Can I buy $0.50 of BTCB?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "copies the name only", 0, "CoinMarketCap"], ["Liquidity", "$3.19", 0, "PancakeSwap pool"], ["Price vs Atlas Oracle", "99.99% apart", 0, "Atlas Oracle, signed"], ["Owner powers", "renounced", 1, "BscScan"]],
+      v: "Avoid", p: "Not the real BTCB. Even with a signed answer, the guard refuses the buy on chain.", signed: { verdict: "avoid", token: "BTCB (copycat)", atlasFeed: "BTC/USD", evidenceHash: "0x40b6…e12d" },
+      proof: "0x47172a1b27c76a1ebf3a2b5b02d8eac83e82b35b87963472d68f6f92503978ab", buy: "0x56a8e669729405756850de65d83af8dc3efab9f918f884ab169370d1a901b64e", guard: ["p-avoid", "Guard: refused (OracleDeviation)"] },
   ];
-  const box = $("#mkChecks"); if (!box) return;
-  let k = 0, timers = [];
+  const caps = ["The agent sends the token and the order size. No trade happens yet.", "CoinGraph reads the token from every side: a simulated buy and sell, the official listing, liquidity, the signed Atlas price and owner powers.", "CoinGraph signs the verdict for this exact agent, token and amount. It expires in 5 minutes and works once.", "The answer is recorded on BNB Smart Chain, then the guard contract lets the buy through only on a signed proceed."];
+  const tabs = $("#dmTabs"), steps = [...document.querySelectorAll(".dm-step")], bar = $("#dmBar"), cap = $("#dmCap");
+  let cur = 0, timers = [], cycle = 0;
   const later = (ms, f) => timers.push(setTimeout(f, ms));
-  const play = () => {
-    timers.forEach(clearTimeout); timers = [];
-    const r = runs[k++ % runs.length];
-    $("#mkAsk").textContent = r.ask; box.innerHTML = "";
-    ["#mkCard", "#mkChain", "#mkGuard"].forEach((s) => $(s).classList.remove("show"));
-    const rows = r.checks.map(([a, b, ok]) => { const d = el("div", "ck " + (ok ? "ok" : "bad")); d.innerHTML = `<span class="ic">${ok ? tick : cross}</span><span></span><small></small>`; d.children[1].textContent = a; d.children[2].textContent = b; box.append(d); return d; });
-    rows.forEach((d, i) => { later(500 + i * 520, () => d.classList.add("busy")); later(900 + i * 520, () => { d.classList.remove("busy"); d.classList.add("on"); }); });
-    const t = 900 + rows.length * 520;
-    later(t, () => { const v = $("#mkV"); v.textContent = r.v; v.className = "v " + (r.ok ? "ok" : "bad"); $("#mkP").textContent = r.p; $("#mkCard").classList.add("show"); });
-    later(t + 500, () => { $("#mkTx").textContent = r.tx; $("#mkChain").classList.add("show"); });
-    later(t + 900, () => { const g = $("#mkGuard"); g.innerHTML = ""; for (const [c, txt] of r.guard) g.append(el("span", "pill " + c, txt)); g.classList.add("show"); });
-    later(t + 4200, play);
+  const short = (h) => h.slice(0, 6) + "…" + h.slice(-4);
+  const step = (i) => { steps.forEach((s, k) => { s.classList.toggle("on", k === i); s.classList.toggle("done", k < i); }); bar.style.width = (i / 3) * 100 + "%"; cap.textContent = caps[i]; cap.classList.remove("in"); void cap.offsetWidth; cap.classList.add("in"); };
+  runs.forEach((r, i) => { const b = el("button", "dm-tab"); b.type = "button"; b.setAttribute("role", "tab"); const d = el("i"); b.append(d, r.tab, el("span", "pill p-" + r.verdict, r.verdict)); b.onclick = () => play(i, true); tabs.append(b); });
+  const play = (i, manual) => {
+    timers.forEach(clearTimeout); timers = []; cur = i; const r = runs[i], my = ++cycle;
+    [...tabs.children].forEach((t, k) => t.classList.toggle("on", k === i));
+    ["#mkCard", "#mkChain", "#mkGuard", "#mkSigned"].forEach((s) => $(s).classList.remove("show"));
+    box.innerHTML = ""; $("#mkAsk").textContent = ""; $("#mkSigned").textContent = "";
+    step(0);
+    let t = 0; for (let c = 1; c <= r.ask.length; c++) later(t += 28, () => { $("#mkAsk").textContent = r.ask.slice(0, c); });
+    const rows = r.checks.map(([a, b, ok, src]) => { const d = el("div", "ck " + (ok ? "ok" : "bad")); d.innerHTML = `<span class="ic">${ok ? tick : cross}</span><span><span class="nm"></span><em></em></span><small></small>`; d.querySelector(".nm").textContent = a; d.querySelector("em").textContent = src; d.children[2].textContent = b; box.append(d); return d; });
+    t += 350; later(t, () => step(1));
+    rows.forEach((d, k) => { later(t + 150 + k * 420, () => d.classList.add("busy")); later(t + 450 + k * 420, () => { d.classList.remove("busy"); d.classList.add("on"); }); });
+    t += 450 + rows.length * 420 + 200;
+    later(t, () => { step(2); const v = $("#mkV"); v.textContent = r.v; v.className = "v " + (r.verdict === "proceed" ? "ok" : "bad"); $("#mkP").textContent = r.p; $("#mkCard").classList.add("show"); });
+    const json = JSON.stringify(r.signed, null, 2); const sg = $("#mkSigned");
+    later(t + 300, () => sg.classList.add("show"));
+    for (let c = 1; c <= json.length; c += 3) later(t + 300 + c * 6, () => { sg.textContent = "Signed answer\n" + json.slice(0, c); });
+    t += 300 + json.length * 6 + 400;
+    later(t, () => { step(3); const ch = $("#mkChain"); ch.innerHTML = ""; ch.append("Recorded on chain ", link("https://bscscan.com/tx/" + r.proof, short(r.proof))); ch.classList.add("show"); });
+    later(t + 500, () => { const g = $("#mkGuard"); g.innerHTML = ""; g.append(el("span", "pill " + r.guard[0], r.guard[1]), link("https://bscscan.com/tx/" + r.buy, r.verdict === "proceed" ? "See the buy" : "See the refused buy")); g.classList.add("show"); });
+    later(t + 4200, () => { if (my === cycle) play((cur + 1) % runs.length); });
   };
-  const stage = document.querySelector(".stage");
-  if ("IntersectionObserver" in window) { let started = false; new IntersectionObserver((es) => { if (es[0].isIntersecting && !started) { started = true; play(); } }, { threshold: 0.3 }).observe(stage); } else play();
+  const stage = document.querySelector("#demo .stage");
+  if ("IntersectionObserver" in window) { let started = false; new IntersectionObserver((es) => { if (es[0].isIntersecting && !started) { started = true; play(0); } }, { threshold: 0.3 }).observe(stage); } else play(0);
 })();
 
 // How it works: highlight the step whose panel is in view.
