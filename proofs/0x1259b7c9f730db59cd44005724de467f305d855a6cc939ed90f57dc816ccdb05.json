@@ -1,0 +1,86 @@
+{
+  "answerHash": "0x1259b7c9f730db59cd44005724de467f305d855a6cc939ed90f57dc816ccdb05",
+  "evidenceHash": "0x2cb6c9152fe4ff4da772b72a76e554a530acec433abaca46ec5385352da6f906",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0x4B0F1812e5Df2A09796481Ff14017e6005508003",
+    "maxAmountIn": "1814823197371923",
+    "verdict": 1,
+    "issuedAt": "1795695262",
+    "evidenceHash": "0x2cb6c9152fe4ff4da772b72a76e554a530acec433abaca46ec5385352da6f906"
+  },
+  "signature": "0x63f02a7e4a1e9906ae1f48a5ef5ad8154c333ee5472bafb13045f4050040a3d16222a29fe025265e77a13d0ffc39c2a9fa4338683c9f20fd5840d825701cec401b",
+  "check": {
+    "chain": "bsc",
+    "token": "0x4B0F1812e5Df2A09796481Ff14017e6005508003",
+    "name": "Trust Wallet",
+    "symbol": "TWT",
+    "orderUsd": 1,
+    "verdict": "proceed",
+    "findings": [
+      {
+        "level": "ok",
+        "check": "identity",
+        "text": "Listed on CoinMarketCap as Trust Wallet Token (TWT), rank #138, $2,208,984 traded in 24h."
+      },
+      {
+        "level": "ok",
+        "check": "owner",
+        "text": "The contract has an owner wallet 0xb2Df0829ff3E1F0D9ecfB2B4784c00BB09f3D1cd; no risky owner functions were found in its code."
+      },
+      {
+        "level": "ok",
+        "check": "liquidity",
+        "text": "$234,985 of liquidity in its PancakeSwap BNB pool."
+      },
+      {
+        "level": "ok",
+        "check": "lp_burned",
+        "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+      },
+      {
+        "level": "ok",
+        "check": "price_impact",
+        "text": "A $1.00 buy moves the price 0%."
+      },
+      {
+        "level": "ok",
+        "check": "market_price",
+        "text": "PancakeSwap price $0.313 vs CoinMarketCap $0.313: 0.01% apart."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 551.0178630337749,
+      "liquidityUsd": 234985,
+      "pool": "0x3DcB1787a95D2ea0Eb7d00887704EeBF0D79bb13",
+      "poolQuote": "BNB",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 0,
+      "lpBurnedPct": 0,
+      "owner": "0xb2Df0829ff3E1F0D9ecfB2B4784c00BB09f3D1cd",
+      "isProxy": false,
+      "poolPriceUsd": 0.31272865744898226,
+      "cmc": {
+        "id": 5964,
+        "name": "Trust Wallet Token",
+        "symbol": "TWT",
+        "slug": "trust-wallet-token",
+        "rank": 138,
+        "priceUsd": 0.31269881666744015,
+        "volume24hUsd": 2208984.0455402783,
+        "marketCapUsd": 134416874.51639786,
+        "change24hPct": 5.548755431725,
+        "dateAdded": "2020-07-30T00:00:00.000Z"
+      },
+      "atlas": null
+    },
+    "checkedAt": "2026-11-26T12:14:23.180Z",
+    "block": "135844844"
+  }
+}

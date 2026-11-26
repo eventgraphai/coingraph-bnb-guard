@@ -5,7 +5,11 @@
     "signer": "0x5c514443a2e40F74960822851aF3fab75C44F4C6"
   },
   "runs": [
+    { "token": "ASTER", "address": "0x000Ae314E2A2172a039B26378814C252734f556A", "verdict": "proceed", "outcome": "Bought through the guard", "proofTx": "0x96bab07f0d8dc7567995d8788a447c81e8f529a5e9b4206f6c7824a02cceb135", "buyTx": "0x21f574b6aff2a2de746276b898339cd699bfa8be33e6d71eee4c918d45d82e65" },
+    { "token": "TWT", "address": "0x4B0F1812e5Df2A09796481Ff14017e6005508003", "verdict": "proceed", "outcome": "Bought through the guard", "proofTx": "0xf8f678ebfeb723275e7c8eb2c87010a02a435ded969c69633a19b2afe884e36e", "buyTx": "0x8a9917d558dd816ec8410edae67890c3c97b24a2f125cfcb279d6b751bb122df" },
+    { "token": "SFP", "address": "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb", "verdict": "proceed", "outcome": "Bought through the guard", "proofTx": "0xf0a60d9f84d79f3f8b8fff9e30237d05076309f3861acd026404259a39465b01", "buyTx": "0x35790feced6b5bbe4476e9dcfe817c64386ba3b840f89f17de65bd2277882d47" },
     { "token": "CAKE", "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82", "verdict": "proceed", "outcome": "Bought through the guard", "proofTx": "0xc658181593f990e4d6cd0aa5a391618cc2129dc78585f19706a74d4fdc8f308c", "buyTx": "0x03e5021db14c948b6c3b8425ede04c27a8f33b5394546117128f4aa0fa0a9c09" },
-    { "token": "Copycat \"BTCB\"", "address": "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26", "verdict": "avoid", "outcome": "Refused on chain (NotProceed)", "proofTx": "0x340c4adf9d5fbb85fffb169ca96d5da444607668b677cfd610ac388ad419f871", "buyTx": "0x3778d8c4a28a3faeb5ce5f4e2788360e86a8b0a3ba9117c5ca184861701f39b6" }
+    { "token": "NVDAB", "address": "0x02Fca66C1D1aFB4E2A7884261eB00F63598a7436", "verdict": "caution", "outcome": "Held back: thin liquidity ($20,759)", "proofTx": "0x46d06b40acafaa6b63d6a58f0c54b0f6b45eedee1016cc980ea8a4608f41e61b", "buyTx": "0xbf1dcd51ef697e34fe27bf309d5ad8e6ed69d82dd25a284482cbbf917d0fa5c6" },
+    { "token": "Copycat \"BTCB\"", "address": "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26", "verdict": "avoid", "outcome": "Stopped: not the real BTCB", "proofTx": "0x340c4adf9d5fbb85fffb169ca96d5da444607668b677cfd610ac388ad419f871", "buyTx": "0x3778d8c4a28a3faeb5ce5f4e2788360e86a8b0a3ba9117c5ca184861701f39b6" }
   ]
 }

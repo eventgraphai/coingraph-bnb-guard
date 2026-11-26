@@ -10,7 +10,7 @@ if (rc.status !== "success") {
   try {
     await client.call({ account: tx.from, to: tx.to!, data: tx.input, value: tx.value, blockNumber: rc.blockNumber - 1n });
   } catch (e) {
-    const raw = (e as Error).message.match(/(0x[0-9a-fA-F]{8,})/)?.[1] as Hex | undefined;
+    const raw = ((e as Error).message.match(/reason: (0x[0-9a-fA-F]{8,})/) ?? (e as Error).message.match(/data: (0x[0-9a-fA-F]{8,})/))?.[1] as Hex | undefined;
     try { reason = raw ? decodeErrorResult({ abi: CoinGraphGuard.abi, data: raw }).errorName : ""; } catch { reason = raw ?? ""; }
   }
 }

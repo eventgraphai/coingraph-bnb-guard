@@ -18,13 +18,18 @@ Live site: https://guard.coingraph.ai
 
 ### Live demo on mainnet (26 Nov 2026)
 
-An AI agent asked CoinGraph before each $1 buy, recorded the signed answer, then bought through the guard.
+An AI agent asked CoinGraph before each $1 buy, recorded the signed answer on BNB Smart Chain, then bought through the guard. Only "proceed" goes through.
 
-| Token | CoinGraph verdict | Answer recorded | Buy through the guard |
+| Token | Verdict | Answer recorded | What the guard did |
 | --- | --- | --- | --- |
-| CAKE | proceed | [record](https://bscscan.com/tx/0xc658181593f990e4d6cd0aa5a391618cc2129dc78585f19706a74d4fdc8f308c) | [went through](https://bscscan.com/tx/0x03e5021db14c948b6c3b8425ede04c27a8f33b5394546117128f4aa0fa0a9c09) |
-| Copycat "BTCB" (0x6583…fd26) | avoid | [record](https://bscscan.com/tx/0x340c4adf9d5fbb85fffb169ca96d5da444607668b677cfd610ac388ad419f871) | [refused on chain: NotProceed](https://bscscan.com/tx/0x3778d8c4a28a3faeb5ce5f4e2788360e86a8b0a3ba9117c5ca184861701f39b6) |
+| ASTER | proceed | [record](https://bscscan.com/tx/0x96bab07f0d8dc7567995d8788a447c81e8f529a5e9b4206f6c7824a02cceb135) | [bought](https://bscscan.com/tx/0x21f574b6aff2a2de746276b898339cd699bfa8be33e6d71eee4c918d45d82e65) |
+| TWT | proceed | [record](https://bscscan.com/tx/0xf8f678ebfeb723275e7c8eb2c87010a02a435ded969c69633a19b2afe884e36e) | [bought](https://bscscan.com/tx/0x8a9917d558dd816ec8410edae67890c3c97b24a2f125cfcb279d6b751bb122df) |
+| SFP | proceed | [record](https://bscscan.com/tx/0xf0a60d9f84d79f3f8b8fff9e30237d05076309f3861acd026404259a39465b01) | [bought](https://bscscan.com/tx/0x35790feced6b5bbe4476e9dcfe817c64386ba3b840f89f17de65bd2277882d47) |
+| CAKE | proceed | [record](https://bscscan.com/tx/0xc658181593f990e4d6cd0aa5a391618cc2129dc78585f19706a74d4fdc8f308c) | [bought](https://bscscan.com/tx/0x03e5021db14c948b6c3b8425ede04c27a8f33b5394546117128f4aa0fa0a9c09) |
+| NVDAB | caution | [record](https://bscscan.com/tx/0x46d06b40acafaa6b63d6a58f0c54b0f6b45eedee1016cc980ea8a4608f41e61b) | [held back](https://bscscan.com/tx/0xbf1dcd51ef697e34fe27bf309d5ad8e6ed69d82dd25a284482cbbf917d0fa5c6) |
+| Copycat "BTCB" (0x6583…fd26) | avoid | [record](https://bscscan.com/tx/0x340c4adf9d5fbb85fffb169ca96d5da444607668b677cfd610ac388ad419f871) | [stopped](https://bscscan.com/tx/0x3778d8c4a28a3faeb5ce5f4e2788360e86a8b0a3ba9117c5ca184861701f39b6) |
 
+A held or stopped buy shows as "Fail" on BscScan: the guard reverted it, the BNB never left the wallet, and only gas was paid. The signed verdict inside each transaction can be decoded with `scripts/answer-in-tx.ts`.
 The full evidence for each answer is in [`proofs/`](proofs). Its keccak256 hash matches the `evidenceHash` recorded on chain.
 Each answer record costs about 26,000 gas (about $0.0007 at 0.05 gwei). Every check served on guard.coingraph.ai is recorded the same way.
 

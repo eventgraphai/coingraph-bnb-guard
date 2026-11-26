@@ -1,0 +1,97 @@
+{
+  "answerHash": "0x5b07f6296ca158c2b91c5e689960856a06eacf31cbc5a90277442a530bf94931",
+  "evidenceHash": "0xea8444db7434347142bea21887545912bd4393e64de71f92236e6e17ce750edd",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0x02Fca66C1D1aFB4E2A7884261eB00F63598a7436",
+    "maxAmountIn": "1814775363087093",
+    "verdict": 2,
+    "issuedAt": "1795695291",
+    "evidenceHash": "0xea8444db7434347142bea21887545912bd4393e64de71f92236e6e17ce750edd"
+  },
+  "signature": "0x0626ab27c1a95ff886e1de69e74be480065d0e6de3a345b24dcf1d3a7bc4fbe058f4dee67ee4f9e8ddfda97e8f19018951243f4cd6235ada2d68af1185080fba1b",
+  "check": {
+    "chain": "bsc",
+    "token": "0x02Fca66C1D1aFB4E2A7884261eB00F63598a7436",
+    "name": "NVIDIA Corp",
+    "symbol": "NVDAB",
+    "orderUsd": 1,
+    "verdict": "caution",
+    "findings": [
+      {
+        "level": "caution",
+        "check": "liquidity",
+        "text": "$20,759 of liquidity in its PancakeSwap pool: thin."
+      },
+      {
+        "level": "caution",
+        "check": "lp_burned",
+        "text": "Only 0% of the pool's liquidity tokens are burned; the rest could be withdrawn (it may be locked elsewhere, which this check does not see)."
+      },
+      {
+        "level": "ok",
+        "check": "identity",
+        "text": "Listed on CoinMarketCap as NVIDIA Tokenized bStocks (NVDAB), rank #225, $142,498,901 traded in 24h."
+      },
+      {
+        "level": "ok",
+        "check": "owner",
+        "text": "Ownership is renounced: no one can change the contract's rules."
+      },
+      {
+        "level": "ok",
+        "check": "price_impact",
+        "text": "A $1.00 buy moves the price 0.01%."
+      },
+      {
+        "level": "ok",
+        "check": "market_price",
+        "text": "PancakeSwap price $150.97 vs CoinMarketCap $150.81: 0.11% apart."
+      },
+      {
+        "level": "ok",
+        "check": "oracle_price",
+        "text": "PancakeSwap price $150.97 vs Atlas Oracle NVIDIA (NVDAB/USD) $150.99: 0.01% apart."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 551.0323868949333,
+      "liquidityUsd": 20759,
+      "pool": "0x217e9ed14C797dF4597512D2245c00cA93e5a567",
+      "poolQuote": "BNB",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 0.01,
+      "lpBurnedPct": 0,
+      "owner": null,
+      "isProxy": false,
+      "poolPriceUsd": 150.972984353155,
+      "cmc": {
+        "id": 40215,
+        "name": "NVIDIA Tokenized bStocks",
+        "symbol": "NVDAB",
+        "slug": "nvidia-tokenized-bstocks",
+        "rank": 225,
+        "priceUsd": 150.81059215402186,
+        "volume24hUsd": 142498901.45614973,
+        "marketCapUsd": 198240112.47004223,
+        "change24hPct": 2.485808054751,
+        "dateAdded": "2026-06-11T03:04:13.000Z"
+      },
+      "atlas": {
+        "feedId": "1005",
+        "label": "NVIDIA (NVDAB/USD)",
+        "priceUsd": 150.990093,
+        "timestamp": 1795695291,
+        "signature": "0xce180febe090b26592caecb434dc420dcc055df4aa8d67af5faef4240b68c84e7389a775bbef76fa44f0be9aef19e534f45cf6053a0e092150261447c52bb8141c"
+      }
+    },
+    "checkedAt": "2026-11-26T12:14:52.151Z",
+    "block": "135844905"
+  }
+}

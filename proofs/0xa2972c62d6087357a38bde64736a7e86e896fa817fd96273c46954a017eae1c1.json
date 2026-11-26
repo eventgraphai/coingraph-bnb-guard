@@ -1,0 +1,86 @@
+{
+  "answerHash": "0xa2972c62d6087357a38bde64736a7e86e896fa817fd96273c46954a017eae1c1",
+  "evidenceHash": "0x9f4896f8bab60ecb9eaba7495d7d24e2f9107bf7d4d2a782557a3bdc5b8f2b9a",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb",
+    "maxAmountIn": "1814803896525526",
+    "verdict": 1,
+    "issuedAt": "1795695276",
+    "evidenceHash": "0x9f4896f8bab60ecb9eaba7495d7d24e2f9107bf7d4d2a782557a3bdc5b8f2b9a"
+  },
+  "signature": "0xfad97d2a0cb622997bf028ac72cf7d89e072f12523e663a995ee7c2a79ff31c3050dfa7cc47c0deb55c947a16bf6638647fa1db3b7682ec91e5666869e167cfa1b",
+  "check": {
+    "chain": "bsc",
+    "token": "0xD41FDb03Ba84762dD66a0af1a6C8540FF1ba5dfb",
+    "name": "SafePal Token",
+    "symbol": "SFP",
+    "orderUsd": 1,
+    "verdict": "proceed",
+    "findings": [
+      {
+        "level": "ok",
+        "check": "identity",
+        "text": "Listed on CoinMarketCap as SafePal (SFP), rank #171, $793,942 traded in 24h."
+      },
+      {
+        "level": "ok",
+        "check": "owner",
+        "text": "Ownership is renounced: no one can change the contract's rules."
+      },
+      {
+        "level": "ok",
+        "check": "liquidity",
+        "text": "$193,967 of liquidity in its PancakeSwap BNB pool."
+      },
+      {
+        "level": "ok",
+        "check": "lp_burned",
+        "text": "Liquidity is spread across many providers (0.01% burned), as usual for an established token."
+      },
+      {
+        "level": "ok",
+        "check": "price_impact",
+        "text": "A $1.00 buy moves the price 0%."
+      },
+      {
+        "level": "ok",
+        "check": "market_price",
+        "text": "PancakeSwap price $0.172 vs CoinMarketCap $0.172: 0.16% apart."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 551.0237232323103,
+      "liquidityUsd": 193967,
+      "pool": "0x942b294e59a8c47a0F7F20DF105B082710F7C305",
+      "poolQuote": "BNB",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 0,
+      "lpBurnedPct": 0.01,
+      "owner": null,
+      "isProxy": false,
+      "poolPriceUsd": 0.17245984234511896,
+      "cmc": {
+        "id": 8119,
+        "name": "SafePal",
+        "symbol": "SFP",
+        "slug": "safepal",
+        "rank": 171,
+        "priceUsd": 0.1721817323938035,
+        "volume24hUsd": 793942.3472607908,
+        "marketCapUsd": 86090866.19690175,
+        "change24hPct": 7.934820648075,
+        "dateAdded": "2020-12-28T00:00:00.000Z"
+      },
+      "atlas": null
+    },
+    "checkedAt": "2026-11-26T12:14:36.814Z",
+    "block": "135844878"
+  }
+}

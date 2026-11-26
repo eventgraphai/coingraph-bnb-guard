@@ -1,0 +1,86 @@
+{
+  "answerHash": "0xf72ad5dc1351430f22ccb10afb6e0b71a31a6a25603bbfa765d075e5e6b93dbf",
+  "evidenceHash": "0x8ddc0047f48955e6d246b1baf83a24a0992f0900f6427366ab2eec2a78c93a1d",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0x000Ae314E2A2172a039B26378814C252734f556A",
+    "maxAmountIn": "1814823715085452",
+    "verdict": 1,
+    "issuedAt": "1795695251",
+    "evidenceHash": "0x8ddc0047f48955e6d246b1baf83a24a0992f0900f6427366ab2eec2a78c93a1d"
+  },
+  "signature": "0x2f136da75b9684127f7adbbbceaece16862959e41ee37d4f374ddeea25ab570319fdad360d607380072ed3e847e7f992dda050f18d570720b1625422b841ebed1c",
+  "check": {
+    "chain": "bsc",
+    "token": "0x000Ae314E2A2172a039B26378814C252734f556A",
+    "name": "Aster",
+    "symbol": "ASTER",
+    "orderUsd": 1,
+    "verdict": "proceed",
+    "findings": [
+      {
+        "level": "ok",
+        "check": "identity",
+        "text": "CoinMarketCap lists this contract as the official BNB Chain version of Aster (ASTER), rank #46, $106,047,475 traded in 24h."
+      },
+      {
+        "level": "ok",
+        "check": "owner",
+        "text": "Ownership is renounced: no one can change the contract's rules."
+      },
+      {
+        "level": "ok",
+        "check": "liquidity",
+        "text": "$63,419 of liquidity in its PancakeSwap BNB pool."
+      },
+      {
+        "level": "ok",
+        "check": "lp_burned",
+        "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+      },
+      {
+        "level": "ok",
+        "check": "price_impact",
+        "text": "A $1.00 buy moves the price 0%."
+      },
+      {
+        "level": "ok",
+        "check": "market_price",
+        "text": "PancakeSwap price $0.499 vs CoinMarketCap $0.497: 0.34% apart."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 551.0177058452833,
+      "liquidityUsd": 63419,
+      "pool": "0x8A71e31Fd7259b52b5B59317dA8A45D3612ED42b",
+      "poolQuote": "BNB",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 0,
+      "lpBurnedPct": 0,
+      "owner": null,
+      "isProxy": false,
+      "poolPriceUsd": 0.4986888922526162,
+      "cmc": {
+        "id": 36341,
+        "name": "Aster",
+        "symbol": "ASTER",
+        "slug": "",
+        "rank": 46,
+        "priceUsd": 0.4970168176182799,
+        "volume24hUsd": 106047475.13674794,
+        "marketCapUsd": 1376815355.1830742,
+        "change24hPct": 4.177087233764,
+        "dateAdded": ""
+      },
+      "atlas": null
+    },
+    "checkedAt": "2026-11-26T12:14:12.290Z",
+    "block": "135844820"
+  }
+}
