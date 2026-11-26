@@ -1,0 +1,172 @@
+{
+  "guard": "CoinGraphGuardAtlas",
+  "answerHash": "0x1403aeb131887148074faadfa3fc189f3a21272dfb724b851e3cf6423a288db7",
+  "evidenceHash": "0x16ccd8f9268cecac01f8d56b571552d9aa3161e027523a276ec7783830ec616b",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3",
+    "maxAmountIn": "909174639247852",
+    "verdict": 1,
+    "issuedAt": "1795713037",
+    "evidenceHash": "0x16ccd8f9268cecac01f8d56b571552d9aa3161e027523a276ec7783830ec616b",
+    "atlasFeedId": "0x00000273",
+    "maxDevBps": 300
+  },
+  "signature": "0x3f0825e8f1e91e2e8973daab9deb78cdea800d2747badf12e1d95971cc17595031ab018398372458301604499d636d6baf7f9d840a13d63774d3899406387b331c",
+  "check": {
+    "chain": "bsc",
+    "token": "0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3",
+    "name": "TRON",
+    "symbol": "TRX",
+    "orderUsd": 0.5,
+    "verdict": "proceed",
+    "findings": [
+      {
+        "level": "ok",
+        "check": "identity",
+        "text": "CoinMarketCap lists this contract as the official BNB Chain version of TRON (TRX), rank #8, $269,225,394 traded in 24h."
+      },
+      {
+        "level": "ok",
+        "check": "holders",
+        "text": "109,680 wallets hold it (CoinMarketCap DEX data)."
+      },
+      {
+        "level": "ok",
+        "check": "owner",
+        "text": "Ownership is renounced: no one can change the contract's rules."
+      },
+      {
+        "level": "ok",
+        "check": "liquidity",
+        "text": "$276,454 of liquidity in its PancakeSwap USDT pool."
+      },
+      {
+        "level": "ok",
+        "check": "dex_liquidity",
+        "text": "$3,759,821 of liquidity across 5+ DEX pools (largest: PancakeSwap v2), per CoinMarketCap DEX data."
+      },
+      {
+        "level": "ok",
+        "check": "lp_burned",
+        "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+      },
+      {
+        "level": "ok",
+        "check": "price_impact",
+        "text": "A $0.50 buy moves the price -0.02%."
+      },
+      {
+        "level": "ok",
+        "check": "market_price",
+        "text": "PancakeSwap price $0.303 vs CoinMarketCap $0.302: 0.15% apart."
+      },
+      {
+        "level": "ok",
+        "check": "oracle_quality",
+        "text": "Atlas Oracle sources agree: consensus 0.94, healthy. Signature verified against Atlas's official signer; the signed price is part of this answer's on-chain record."
+      },
+      {
+        "level": "ok",
+        "check": "oracle_price",
+        "text": "PancakeSwap price $0.303 vs Atlas Oracle TRX/USD $0.302: 0.15% apart."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 549.9493479202667,
+      "liquidityUsd": 276454,
+      "pool": "0x1F7DF58C60a56BC8322D3E42D7D37A0383d42746",
+      "poolQuote": "USDT",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 0,
+      "lpBurnedPct": 0,
+      "owner": null,
+      "isProxy": false,
+      "poolPriceUsd": 0.3028467595393891,
+      "cmc": {
+        "id": 1958,
+        "name": "TRON",
+        "symbol": "TRX",
+        "slug": "",
+        "rank": 8,
+        "priceUsd": 0.30239126519210313,
+        "volume24hUsd": 269225393.51342416,
+        "marketCapUsd": 28744972028.145885,
+        "change24hPct": -0.449826339281,
+        "dateAdded": "",
+        "tags": [
+          "Media",
+          "Payments",
+          "Layer 1",
+          "2017/18 Alt season"
+        ]
+      },
+      "atlas": {
+        "feedId": "627",
+        "label": "TRX/USD",
+        "priceUsd": 0.302403,
+        "timestamp": 1795713032,
+        "signature": "0x7dbb07a5d7e6a3a6b73b142db897b3eb85066d5ab55aaed8293153a68462240b5370de6d0694d964dcf00ed5fc5e6e944be6555a2edf3cd52ad115c141bbf4381c",
+        "signatureValid": true,
+        "consensusScore": 0.9433735658,
+        "consensusStatus": "HEALTHY",
+        "twapUsd": 0.3024065064784026,
+        "volatility": 0.0001006937228605985
+      },
+      "dex": {
+        "liquidityUsd": 3759820.7584771607,
+        "pools": [
+          {
+            "dex": "PancakeSwap v2",
+            "liquidityUsd": 3181955.7219771254,
+            "volume24hUsd": 1503.0306644304005,
+            "address": "0x92a94b65b7979f6240dbae2490ddcad3c437998e"
+          },
+          {
+            "dex": "PancakeSwap v2",
+            "liquidityUsd": 275829.2127915967,
+            "volume24hUsd": 5681.052293049526,
+            "address": "0x1f7df58c60a56bc8322d3e42d7d37a0383d42746"
+          },
+          {
+            "dex": "PancakeSwap v3",
+            "liquidityUsd": 195945.3403919499,
+            "volume24hUsd": 53682.235727756706,
+            "address": "0xf683113764e4499c473acd38fc4b37e71554e4ad"
+          },
+          {
+            "dex": "PancakeSwap v3",
+            "liquidityUsd": 47726.68996842341,
+            "volume24hUsd": 6827.146892625935,
+            "address": "0xa98d8a5867d664b7a758652146fd93a7de40ee82"
+          },
+          {
+            "dex": "PancakeSwap v3",
+            "liquidityUsd": 36589.02444208977,
+            "volume24hUsd": 621.4950051588686,
+            "address": "0xefebf4d137dd22da6b797b987329aba9181ef6f5"
+          }
+        ],
+        "holders": 109680,
+        "creator": null
+      },
+      "tags": [
+        "Media",
+        "Payments",
+        "Layer 1",
+        "2017/18 Alt season"
+      ],
+      "cournot": {
+        "error": "Cournot allowance used up (add a prepaid key)"
+      }
+    },
+    "checkedAt": "2026-11-26T17:10:33.915Z",
+    "block": "135884253"
+  }
+}

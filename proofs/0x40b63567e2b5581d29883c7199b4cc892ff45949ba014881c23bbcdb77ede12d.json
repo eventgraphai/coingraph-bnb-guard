@@ -1,0 +1,113 @@
+{
+  "guard": "CoinGraphGuardAtlas",
+  "answerHash": "0x40b63567e2b5581d29883c7199b4cc892ff45949ba014881c23bbcdb77ede12d",
+  "evidenceHash": "0xd4901cbfc5ecb394ef9d4aa08a34b4b1646e5d17b01e74a38063b58febee38ec",
+  "answer": {
+    "agent": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+    "token": "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26",
+    "maxAmountIn": "909175295708582",
+    "verdict": 3,
+    "issuedAt": "1795713071",
+    "evidenceHash": "0xd4901cbfc5ecb394ef9d4aa08a34b4b1646e5d17b01e74a38063b58febee38ec",
+    "atlasFeedId": "0x00000272",
+    "maxDevBps": 300
+  },
+  "signature": "0xf8247858d874897985c9fac5cc2d9ef5015a2de67973d73bb7f81739e473a480558518c49c9aa8a5068bb53de8fae41d258b5366cd3be914130b3c7a9ea8f1001c",
+  "check": {
+    "chain": "bsc",
+    "token": "0x6583a27d7c7C0d755414b9471BD55EF9a39afd26",
+    "name": "BTCB",
+    "symbol": "BTCB",
+    "orderUsd": 0.5,
+    "verdict": "avoid",
+    "findings": [
+      {
+        "level": "avoid",
+        "check": "copycat",
+        "text": "This is not the real BTCB. On CoinMarketCap, BTCB is Bitcoin BEP2 (rank #7649) and its official BNB Chain contract is 0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c. This contract only copies the name."
+      },
+      {
+        "level": "avoid",
+        "check": "holders",
+        "text": "Only 9 wallets hold it (CoinMarketCap DEX data), so a handful of people control the market."
+      },
+      {
+        "level": "avoid",
+        "check": "liquidity",
+        "text": "Only $3.19 of liquidity in its PancakeSwap pool; the price can be moved or drained easily."
+      },
+      {
+        "level": "avoid",
+        "check": "price_impact",
+        "text": "A $0.50 buy would move the price 23.82%. Size down a lot or skip."
+      },
+      {
+        "level": "avoid",
+        "check": "oracle_price",
+        "text": "PancakeSwap price $0.00000737 vs Atlas Oracle BTC/USD $60529.62: 100% apart. It does not trade like the asset it represents."
+      },
+      {
+        "level": "caution",
+        "check": "lp_burned",
+        "text": "Only 0% of the pool's liquidity tokens are burned; the rest could be withdrawn (it may be locked elsewhere, which this check does not see)."
+      },
+      {
+        "level": "ok",
+        "check": "owner",
+        "text": "Ownership is renounced: no one can change the contract's rules."
+      },
+      {
+        "level": "ok",
+        "check": "oracle_quality",
+        "text": "Atlas Oracle sources agree: consensus 0.93, healthy. Signature verified against Atlas's official signer; the signed price is part of this answer's on-chain record."
+      },
+      {
+        "level": "ok",
+        "check": "honeypot",
+        "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+      }
+    ],
+    "numbers": {
+      "bnbPriceUsd": 549.9489508349609,
+      "liquidityUsd": 3,
+      "pool": "0xdE21d191E9a10CCb7C63E2222d2c106003e4e7AB",
+      "poolQuote": "BNB",
+      "buyTaxPct": 0,
+      "sellTaxPct": 0,
+      "priceImpactPct": 23.82,
+      "lpBurnedPct": 0,
+      "owner": null,
+      "isProxy": false,
+      "poolPriceUsd": 0.000007372396943675835,
+      "cmc": null,
+      "atlas": {
+        "feedId": "626",
+        "label": "BTC/USD",
+        "priceUsd": 60529.621473,
+        "timestamp": 1795713068,
+        "signature": "0x7c51319e5a7f0004f4e29e667cd664c5662d866ba0cf506d4797ac3ea18d661c5131200668816f2dd22c3f0d261fcdea47e608f4f939d1c10c506d2c7863eb321b",
+        "signatureValid": true,
+        "consensusScore": 0.931736007,
+        "consensusStatus": "HEALTHY",
+        "twapUsd": 60541.250100988225,
+        "volatility": 0.00022310681846060218
+      },
+      "dex": {
+        "liquidityUsd": 1.592436763777515,
+        "pools": [
+          {
+            "dex": "PancakeSwap v2",
+            "liquidityUsd": 1.592436763777515,
+            "volume24hUsd": 3779.032761522324,
+            "address": "0xde21d191e9a10ccb7c63e2222d2c106003e4e7ab"
+          }
+        ],
+        "holders": 9,
+        "creator": "0xdbd7f4dc2a4200d79c5accaab23a4d559bec5a2b"
+      },
+      "tags": []
+    },
+    "checkedAt": "2026-11-26T17:11:11.424Z",
+    "block": "135884340"
+  }
+}
