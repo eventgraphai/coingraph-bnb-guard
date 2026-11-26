@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Developer docs · CoinGraph Guard</title>
-<meta name="description" content="Use CoinGraph Guard from code, MCP, agents or a contract: get a key, check a token, connect your agent, enforce the verdict on BNB Smart Chain.">
+<meta name="description" content="No API key needed: check a BNB Smart Chain token with one request, or connect your AI agent to the CoinGraph Guard MCP server in one line.">
 <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: dark)">
 <script>(()=>{const d=document.documentElement;let t=null;try{t=localStorage.getItem("cg-theme")}catch{}d.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,121 +63,100 @@
     <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
   </button>
   <button class="theme menu" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  <a class="cta" href="https://coingraph.ai/account/keys" target="_blank" rel="noopener">Get an API key</a>
+  <a class="cta" href="#mcp">Connect in one line</a>
 </nav>
 
 <main class="wrap">
 <div class="docs">
   <aside class="toc" id="toc">
-    <b>Start</b>
+    <b>Start, no key</b>
     <a href="#overview">Overview</a>
-    <a href="#key">Get an API key</a>
-    <b>Use it</b>
-    <a href="#guard-api">Guard API (free)</a>
-    <a href="#rest">CoinGraph API</a>
-    <a href="#mcp">MCP for AI agents</a>
-    <a href="#agents">Ready-made agents</a>
+    <a href="#try">Try it in 10 seconds</a>
+    <a href="#mcp">Connect your AI agent</a>
+    <a href="#code">Use it from code</a>
+    <b>On chain</b>
     <a href="#contract">Guard contract</a>
     <b>Reference</b>
     <a href="#response">Reading a response</a>
-    <a href="#limits">Limits and pricing</a>
+    <a href="#limits">Limits</a>
     <a href="#verify">Verify an answer</a>
+    <b>Optional</b>
+    <a href="#more">More with a CoinGraph key</a>
   </aside>
 
   <div class="dc">
     <div class="hero-d fade-up" id="overview">
       <div class="eyebrow">Developer docs</div>
-      <h1>Check before your agent trades.</h1>
-      <p>Four ways to use CoinGraph Guard. Start with the free Guard API to try it in seconds, then pick what fits your product.</p>
+      <h1>No API key. Connect in one line.</h1>
+      <p>Everything below works without an account or key, built for BNB Hack Bangkok. Check a token with one request, or give your AI agent the guard in one line.</p>
       <div class="paths">
-        <a class="path" href="#guard-api"><span>Free, no key</span><b>Guard API</b><em>One GET request per token</em><small><strong>Best for:</strong> trying it now</small></a>
-        <a class="path" href="#rest"><span>API key</span><b>CoinGraph API</b><em>Top 1,000 tokens, any chain</em><small><strong>Best for:</strong> your backend</small></a>
-        <a class="path" href="#mcp"><span>Sign in once</span><b>MCP</b><em>Claude, Cursor, ChatGPT</em><small><strong>Best for:</strong> AI assistants</small></a>
-        <a class="path" href="#contract"><span>On chain</span><b>Guard contract</b><em>No signed proceed, no trade</em><small><strong>Best for:</strong> trading agents</small></a>
+        <a class="path" href="#try"><span>No key</span><b>Try it</b><em>One request, one verdict</em><small><strong>Best for:</strong> a first look</small></a>
+        <a class="path" href="#mcp"><span>No key</span><b>MCP</b><em>Claude, Cursor, VS Code</em><small><strong>Best for:</strong> AI agents</small></a>
+        <a class="path" href="#code"><span>No key</span><b>From code</b><em>TypeScript or Python</em><small><strong>Best for:</strong> your bot</small></a>
+        <a class="path" href="#contract"><span>On chain</span><b>Guard contract</b><em>No signed proceed, no trade</em><small><strong>Best for:</strong> enforcing it</small></a>
       </div>
     </div>
 
-    <section id="key" class="reveal">
-      <div class="eyebrow">Step 1</div>
-      <h2>Get an API key</h2>
-      <p>The Guard API on this site needs no key. For the CoinGraph API, MCP and agents you need a free CoinGraph account:</p>
-      <ol class="steps-d">
-        <li>Open <a href="https://coingraph.ai/account/keys" target="_blank" rel="noopener">coingraph.ai/account/keys</a> and sign in with Google or email.</li>
-        <li>Click <b>Create key</b> and copy it. It starts with <code>cg_live_</code> and is shown once.</li>
-        <li>Store it as an environment variable, never in your code:</li>
-      </ol>
-      <div class="cb"><span class="lbl">Terminal</span><pre><code>export COINGRAPH_KEY="cg_live_…"</code></pre><button class="cp" type="button">Copy</button></div>
-      <div class="note"><b>Credits:</b>new accounts start with 500 free credits (1 credit = $0.01). See <a href="https://coingraph.ai/pricing" target="_blank" rel="noopener">pricing</a> or the full <a href="https://coingraph.ai/docs/keys" target="_blank" rel="noopener">keys guide</a>.</div>
-    </section>
-
-    <section id="guard-api" class="reveal">
-      <div class="eyebrow">Free · no key</div>
-      <h2>Guard API</h2>
-      <p>Check any BNB Smart Chain token for an order size. CoinGraph simulates the buy and sell on PancakeSwap, reads CoinMarketCap data, compares the price with Atlas Oracle, weighs Cournot market risk, and records the answer on BNB Smart Chain.</p>
-      <div class="cb"><span class="lbl">curl</span><pre><code>curl "https://guard.coingraph.ai/api/check?token=0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3&amp;usd=1000"</code></pre><button class="cp" type="button">Copy</button></div>
-      <div class="cb"><span class="lbl">TypeScript</span><pre><code>const res = await fetch(
-  "https://guard.coingraph.ai/api/check?token=" + token + "&amp;usd=1000"
-);
-const check = await res.json();
-if (check.verdict !== "proceed") throw new Error(check.findings[0].text);
-// check.proof.explorer is the on-chain record of this answer</code></pre><button class="cp" type="button">Copy</button></div>
-      <h3>Parameters</h3>
-      <table class="tbl"><tr><th>Name</th><th>Description</th></tr>
-        <tr><td><code>token</code></td><td>The token's BNB Smart Chain contract address (0x…).</td></tr>
-        <tr><td><code>usd</code></td><td>Order size in US dollars, 1 to 100,000. Default 500. Price impact and liquidity are judged for this size.</td></tr></table>
-      <h3>Other free endpoints</h3>
-      <table class="tbl"><tr><th>Endpoint</th><th>Returns</th></tr>
-        <tr><td><code>GET /api/board</code></td><td>BNB Chain top 50 by market cap, each with a CoinGraph verdict for a $500 buy.</td></tr>
-        <tr><td><code>GET /api/top10</code></td><td>The top 10 with full findings.</td></tr>
-        <tr><td><code>GET /api/market-risk</code></td><td>Cournot's current probability of a sharp BNB drop, with its evidence.</td></tr>
-        <tr><td><code>GET /api/proofs</code></td><td>How many answers are recorded on chain, and what that cost.</td></tr>
-        <tr><td><code>GET /api/search?q=solana</code></td><td>Find a token in CoinGraph's top 1,000.</td></tr></table>
-    </section>
-
-    <section id="rest" class="reveal">
-      <div class="eyebrow">API key</div>
-      <h2>CoinGraph API</h2>
-      <p>The full CoinGraph API covers the top 1,000 tokens across chains: market, on-chain flows, order books, futures, holders, contract security and supply. Base URL: <code>https://coingraph.ai/api/v1</code>.</p>
-      <h3>Standard check (free, no key)</h3>
-      <div class="cb"><span class="lbl">curl</span><pre><code>curl https://coingraph.ai/api/v1/evaluate/chainlink</code></pre><button class="cp" type="button">Copy</button></div>
-      <h3>Check sized to your order (25 credits)</h3>
-      <div class="cb"><span class="lbl">curl</span><pre><code>curl -X POST https://coingraph.ai/api/v1/evaluate \
-  -H "Authorization: Bearer $COINGRAPH_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"token": "chainlink", "size_usd": 1000}'</code></pre><button class="cp" type="button">Copy</button></div>
-      <p>Every answer has an id; <code>GET /verify/{id}</code> returns its proof. All 13 endpoints with real examples: <a href="https://coingraph.ai/docs/api" target="_blank" rel="noopener">coingraph.ai/docs/api</a>.</p>
+    <section id="try" class="reveal">
+      <div class="eyebrow">Step 1 · no key</div>
+      <h2>Try it in 10 seconds</h2>
+      <p>Paste this in a terminal. It checks TRX for a $1,000 buy on BNB Smart Chain and records the answer on chain.</p>
+      <div class="cb"><span class="lbl">Terminal</span><pre><code>curl "https://guard.coingraph.ai/api/check?token=0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3&amp;usd=1000"</code></pre><button class="cp" type="button">Copy</button></div>
+      <p>Change <code>token</code> to any BNB Smart Chain contract address and <code>usd</code> to your order size (1 to 100,000). You get back <code>proceed</code>, <code>caution</code> or <code>avoid</code>, every reason, and a BscScan link to the record. Prefer clicking? Use the <a href="/">check box on the homepage</a>.</p>
     </section>
 
     <section id="mcp" class="reveal">
-      <div class="eyebrow">Sign in once</div>
-      <h2>MCP for AI agents</h2>
-      <p>Connect CoinGraph to any MCP client and ask in plain words. The first call opens a CoinGraph sign-in; calls then spend your account's credits at the same prices as the API.</p>
+      <div class="eyebrow">Step 2 · no key, no sign-in</div>
+      <h2>Connect your AI agent</h2>
+      <p>The guard is an MCP server. Add it to your AI tool and it can check any token before it buys.</p>
       <h3>Claude Code</h3>
-      <div class="cb"><span class="lbl">Terminal</span><pre><code>claude mcp add --transport http coingraph https://coingraph.ai/mcp</code></pre><button class="cp" type="button">Copy</button></div>
-      <h3>Cursor, Windsurf, VS Code and other clients</h3>
+      <div class="cb"><span class="lbl">Terminal</span><pre><code>claude mcp add --transport http coingraph-guard https://guard.coingraph.ai/mcp</code></pre><button class="cp" type="button">Copy</button></div>
+      <h3>Cursor, Windsurf, VS Code and other MCP clients</h3>
       <div class="cb"><span class="lbl">mcp.json</span><pre><code>{
   "mcpServers": {
-    "coingraph": { "url": "https://coingraph.ai/mcp" }
+    "coingraph-guard": { "url": "https://guard.coingraph.ai/mcp" }
   }
 }</code></pre><button class="cp" type="button">Copy</button></div>
-      <p>Then ask: <em>"Is it safe to buy $1,000 of CAKE on BNB Chain right now? Use CoinGraph."</em> One page per client, including Claude.ai and ChatGPT: <a href="https://coingraph.ai/docs/mcp" target="_blank" rel="noopener">coingraph.ai/docs/mcp</a>.</p>
+      <h3>Then just ask</h3>
+      <div class="note"><b>Example:</b>"Before buying, check $1,000 of CAKE on BNB Chain with coingraph-guard. Only buy if it says proceed."</div>
+      <table class="tbl"><tr><th>Tool</th><th>What it does</th></tr>
+        <tr><td><code>check_token</code></td><td>Checks a token for an order size: buy and sell simulated on PancakeSwap, CoinMarketCap data, Atlas Oracle price, Cournot market risk. Returns the verdict with reasons and records it on BNB Smart Chain.</td></tr>
+        <tr><td><code>bnb_top50</code></td><td>The 50 largest assets on BNB Chain with a verdict for each and their contract addresses.</td></tr>
+        <tr><td><code>market_risk</code></td><td>Cournot's current probability of a sharp BNB drop, with its evidence.</td></tr></table>
     </section>
 
-    <section id="agents" class="reveal">
-      <div class="eyebrow">One call, one job</div>
-      <h2>Ready-made agents</h2>
-      <p>Each agent does a whole job in one call and answers with its reasons. A run costs 25 credits; try any of them free in the <a href="https://coingraph.ai/agents" target="_blank" rel="noopener">playground</a>.</p>
-      <table class="tbl"><tr><th>Agent</th><th>What it answers</th></tr>
-        <tr><td><b>Trade Gatekeeper</b></td><td>Should this trade go ahead? ALLOW, REDUCE (with a safe size) or BLOCK.</td></tr>
-        <tr><td><b>Wallet Guard</b></td><td>Before a swap or send: checks the token and the destination address (sanctions lists, scam flags). SAFE or STOP.</td></tr>
-        <tr><td><b>Due Diligence Analyst</b></td><td>A written memo on a token, with sources.</td></tr>
-        <tr><td><b>Portfolio Checkup</b></td><td>Risk across a wallet's holdings, with your rules.</td></tr>
-        <tr><td><b>Daily Market Brief</b></td><td>What changed in the market today.</td></tr></table>
-      <div class="cb"><span class="lbl">curl</span><pre><code>curl -X POST https://coingraph.ai/api/v1/agents/trade-gatekeeper \
-  -H "Authorization: Bearer $COINGRAPH_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"token": "solana", "size_usd": 5000, "side": "buy"}'</code></pre><button class="cp" type="button">Copy</button></div>
-      <p>Details for all five: <a href="https://coingraph.ai/docs/agents" target="_blank" rel="noopener">coingraph.ai/docs/agents</a>.</p>
+    <section id="code" class="reveal">
+      <div class="eyebrow">Step 3 · no key</div>
+      <h2>Use it from code</h2>
+      <p>Call the check before every buy, and stop unless it says proceed.</p>
+      <div class="cb"><span class="lbl">TypeScript</span><pre><code>async function safeToBuy(token: string, usd: number) {
+  const url = `https://guard.coingraph.ai/api/check?token=${token}&amp;usd=${usd}`;
+  const check = await (await fetch(url)).json();
+  if (check.verdict !== "proceed") {
+    console.log("Stopped:", check.findings[0].text);
+    return false;
+  }
+  console.log("OK. Record:", check.proof?.explorer);
+  return true;
+}</code></pre><button class="cp" type="button">Copy</button></div>
+      <div class="cb"><span class="lbl">Python</span><pre><code>import requests
+
+def safe_to_buy(token: str, usd: int) -&gt; bool:
+    check = requests.get("https://guard.coingraph.ai/api/check",
+                         params={"token": token, "usd": usd}, timeout=120).json()
+    if check["verdict"] != "proceed":
+        print("Stopped:", check["findings"][0]["text"])
+        return False
+    return True</code></pre><button class="cp" type="button">Copy</button></div>
+      <h3>All free endpoints</h3>
+      <table class="tbl"><tr><th>Endpoint</th><th>Returns</th></tr>
+        <tr><td><code>GET /api/check?token=&amp;usd=</code></td><td>The full check for one token and order size, recorded on chain.</td></tr>
+        <tr><td><code>GET /api/board</code></td><td>BNB Chain top 50, each with a verdict for a $500 buy.</td></tr>
+        <tr><td><code>GET /api/top10</code></td><td>The top 10 with full findings.</td></tr>
+        <tr><td><code>GET /api/market-risk</code></td><td>Cournot's probability of a sharp BNB drop, with evidence.</td></tr>
+        <tr><td><code>GET /api/proofs</code></td><td>How many answers are recorded on chain, and the cost.</td></tr>
+        <tr><td><code>POST /mcp</code></td><td>The MCP server (tools above).</td></tr></table>
+      <p>All on <code>https://guard.coingraph.ai</code>.</p>
     </section>
 
     <section id="contract" class="reveal">
@@ -207,7 +186,7 @@ function buy(Answer calldata a, bytes calldata sig,
         <tr><td><code>AmountTooLarge</code></td><td>More BNB than the answer covers.</td></tr>
         <tr><td><code>AnswerExpired</code> / <code>AnswerUsed</code></td><td>Older than 5 minutes, or already used.</td></tr>
         <tr><td><code>NotYourAnswer</code> / <code>WrongToken</code> / <code>WrongSigner</code></td><td>Signed for another agent or token, or not by CoinGraph.</td></tr></table>
-      <div class="note warn"><b>Using the guard with your own agent:</b>signed answers are issued for your agent's wallet address. During the hackathon this is set up per team: open an issue on <a href="https://github.com/eventgraphai/coingraph-bnb-guard/issues" target="_blank" rel="noopener">GitHub</a> or email support@coingraph.ai. Decode any refused buy with <code>npx tsx scripts/revert-reason.ts &lt;txHash&gt;</code>.</div>
+      <div class="note warn"><b>Using the guard with your own agent:</b>signed answers are issued for your agent's wallet address. During the hackathon this is set up per team: open an issue on <a href="https://github.com/eventgraphai/coingraph-bnb-guard/issues" target="_blank" rel="noopener">GitHub</a> or email support@coingraph.ai.</div>
     </section>
 
     <section id="response" class="reveal">
@@ -229,13 +208,10 @@ function buy(Answer calldata a, bytes calldata sig,
 
     <section id="limits" class="reveal">
       <div class="eyebrow">Reference</div>
-      <h2>Limits and pricing</h2>
-      <table class="tbl"><tr><th>Surface</th><th>Cost</th><th>Limit</th></tr>
-        <tr><td>Guard API (this site)</td><td>Free</td><td>12 checks per minute per IP</td></tr>
-        <tr><td>CoinGraph standard check</td><td>Free</td><td>No key needed</td></tr>
-        <tr><td>Sized check, agent run</td><td>25 credits</td><td>API key or MCP sign-in</td></tr>
-        <tr><td>MCP</td><td>Same as the API</td><td>Sign in once</td></tr></table>
-      <p>1 credit = $0.01. New accounts get 500 free credits. Full table: <a href="https://coingraph.ai/pricing" target="_blank" rel="noopener">coingraph.ai/pricing</a>.</p>
+      <h2>Limits</h2>
+      <table class="tbl"><tr><th>Surface</th><th>Key</th><th>Limit</th></tr>
+        <tr><td>Guard API and MCP</td><td>None</td><td>12 checks per minute per connection</td></tr>
+        <tr><td>Board, Top 10, market risk</td><td>None</td><td>Cached, refreshed in the background</td></tr></table>
     </section>
 
     <section id="verify" class="reveal">
@@ -246,7 +222,21 @@ function buy(Answer calldata a, bytes calldata sig,
         <li>Hash the file with keccak256.</li>
         <li>Open the record on BscScan and compare it with the <code>evidenceHash</code> in the transaction.</li>
       </ol>
-      <p>The signed verdict inside any guarded buy can be decoded with <code>scripts/answer-in-tx.ts</code> in the <a href="https://github.com/eventgraphai/coingraph-bnb-guard" target="_blank" rel="noopener">source code</a>.</p>
+    </section>
+
+    <section id="more" class="reveal">
+      <div class="eyebrow">Optional · free CoinGraph account</div>
+      <h2>More with a CoinGraph key</h2>
+      <p>You don't need this for the hackathon. With a free account, the wider CoinGraph platform adds the top 1,000 tokens on every chain, sized checks with your own rules, and five ready-made agents (Trade Gatekeeper, Wallet Guard, Due Diligence Analyst, Portfolio Checkup, Daily Market Brief).</p>
+      <ol class="steps-d">
+        <li>Get a key at <a href="https://coingraph.ai/account/keys" target="_blank" rel="noopener">coingraph.ai/account/keys</a> (Google or email). New accounts get 500 free credits.</li>
+        <li>Call the API with it:</li>
+      </ol>
+      <div class="cb"><span class="lbl">curl</span><pre><code>curl -X POST https://coingraph.ai/api/v1/evaluate \
+  -H "Authorization: Bearer $COINGRAPH_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"token": "chainlink", "size_usd": 1000}'</code></pre><button class="cp" type="button">Copy</button></div>
+      <p>Full reference: <a href="https://coingraph.ai/docs" target="_blank" rel="noopener">coingraph.ai/docs</a> · agents playground: <a href="https://coingraph.ai/agents" target="_blank" rel="noopener">coingraph.ai/agents</a>.</p>
     </section>
   </div>
 </div>

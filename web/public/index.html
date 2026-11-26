@@ -173,17 +173,17 @@
 <section id="agents" class="sec">
   <div class="center reveal"><div class="eyebrow">For humans and AI agents</div><h2>One check, wherever your agent runs.</h2><p class="lead">Call it from code, connect it to any agent, or enforce it in a contract. <a href="/docs">Read the docs →</a></p></div>
   <div class="cols">
-    <div class="card reveal d1"><div class="layer">API</div><b class="t">Check a token</b><p class="cd">One request returns the verdict, every reason and the on-chain record.</p>
+    <div class="card reveal d1"><div class="layer">API</div><b class="t">Check a token</b><p class="cd">One request, no key: the verdict, every reason and the on-chain record.</p>
       <pre><code>GET guard.coingraph.ai/api/check
   ?token=0x…&amp;usd=1000</code></pre></div>
-    <div class="card reveal d2"><div class="layer">MCP</div><b class="t">Connect any agent</b><p class="cd">Claude, Cursor and other MCP clients. Sign in once; calls spend credits.</p>
-      <pre><code>{ "url": "https://coingraph.ai/mcp" }</code></pre><p class="muted small"><a href="https://coingraph.ai/docs/mcp" target="_blank" rel="noopener">MCP guide →</a></p></div>
+    <div class="card reveal d2"><div class="layer">MCP</div><b class="t">Connect any agent</b><p class="cd">Claude, Cursor, VS Code and other MCP clients. No key, no sign-in.</p>
+      <pre><code>{ "url": "https://guard.coingraph.ai/mcp" }</code></pre><p class="muted small"><a href="/docs#mcp">Setup in one line →</a></p></div>
     <div class="card reveal d3"><div class="layer">Contract</div><b class="t">Enforce on chain</b><p class="cd">The guard swaps only on a recent signed proceed for that agent, token and amount.</p>
       <pre><code>guard.buy(answer, signature,
   minOut, path, deadline)</code></pre></div>
   </div>
   <div class="agentsrow reveal"><span class="layer">Ready-made CoinGraph agents</span><div class="agents" id="agentsList"></div></div>
-  <div class="devrow reveal"><a class="cta" href="/docs">Developer docs</a><a class="ghost" href="https://coingraph.ai/account/keys" target="_blank" rel="noopener">Get an API key</a></div>
+  <div class="devrow reveal"><a class="cta" href="/docs">Developer docs</a><a class="ghost" href="/docs#mcp">Connect your agent, no key</a></div>
 </section>
 
 <section class="sec">

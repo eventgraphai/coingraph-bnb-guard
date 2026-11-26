@@ -113,6 +113,57 @@ app.get("/api/health", (c) => c.json({ ok: true, cmc: !!process.env.CMC_API_KEY,
 // How many answers have been recorded on chain, and what that cost.
 app.get("/api/proofs", (c) => c.json(proofStats(lastBnbPrice)));
 
+// Free MCP server (no key, no sign-in): any MCP client can call the guard's check directly.
+// Streamable HTTP with JSON responses. Tools: check_token, bnb_top50, market_risk.
+const MCP_TOOLS = [
+  { name: "check_token", description: "Check a BNB Smart Chain token before buying it. Simulates the buy and sell on PancakeSwap, reads CoinMarketCap data, compares the price with Atlas Oracle, weighs Cournot market risk, and records the signed answer on BNB Smart Chain. Returns proceed, caution or avoid with every reason.",
+    inputSchema: { type: "object", properties: { token: { type: "string", description: "The token's BNB Smart Chain contract address (0x...)." }, usd: { type: "number", description: "Order size in US dollars, 1 to 100000. Default 1000." } }, required: ["token"] } },
+  { name: "bnb_top50", description: "The 50 largest assets on BNB Chain by market cap, each with a CoinGraph verdict for a $500 buy and its contract address.", inputSchema: { type: "object", properties: {} } },
+  { name: "market_risk", description: "Cournot Intelligence Oracle's current probability of a sharp BNB drop, with its evidence. CoinGraph uses it to size orders.", inputSchema: { type: "object", properties: {} } },
+];
+const mcpText = (obj: unknown, lead: string) => ({ content: [{ type: "text", text: `${lead}\n\n${JSON.stringify(obj, null, 2)}` }] });
+async function mcpCall(name: string, args: Record<string, unknown>, ip: string) {
+  if (name === "check_token") {
+    const token = String(args.token ?? "");
+    if (!isAddress(token)) return { content: [{ type: "text", text: "Give a BNB Smart Chain token contract address (0x...)." }], isError: true };
+    if (limited(ip, 12)) return { content: [{ type: "text", text: "Too many checks from this connection. Wait a minute." }], isError: true };
+    const usd = Math.min(Math.max(Number(args.usd ?? 1000) || 1000, 1), 100_000);
+    const r = await checkToken(token, usd);
+    const proof = await recordProof(r);
+    lastBnbPrice = r.numbers.bnbPriceUsd;
+    const issues = r.findings.filter((f) => f.level !== "ok").map((f) => f.text).slice(0, 3).join(" ");
+    const lead = `${r.symbol ?? "Token"} for $${usd.toLocaleString("en-US")}: ${r.verdict.toUpperCase()}. ${issues || "All checks passed."}${proof?.recorded ? ` Recorded on BNB Smart Chain: ${proof.explorer}` : ""}`;
+    return mcpText({ ...r, proof }, lead);
+  }
+  if (name === "bnb_top50") {
+    const b = getBoard() as { rows?: { rank: number; name: string; symbol: string; address: string; verdict?: string; reason?: string; priceUsd?: number }[] };
+    const rows = (b.rows ?? []).map((x) => ({ rank: x.rank, name: x.name, symbol: x.symbol, address: x.address, verdict: x.verdict ?? "checking", reason: x.reason, priceUsd: x.priceUsd }));
+    return mcpText(rows, `BNB Chain top ${rows.length}, each checked for a $500 buy.`);
+  }
+  if (name === "market_risk") {
+    const m = await marketRisk("BNB", lastBnbPrice || 0).catch((e) => ({ error: String(e) }));
+    return mcpText(m, m && !("error" in m) ? `Cournot: ${Math.round(m.probability * 100)}% chance of "${m.market.title}".` : "Market risk is not available right now.");
+  }
+  return { content: [{ type: "text", text: `Unknown tool ${name}.` }], isError: true };
+}
+app.post("/mcp", async (c) => {
+  const msg = (await c.req.json().catch(() => null)) as { jsonrpc?: string; id?: number | string; method?: string; params?: any } | null;
+  if (!msg || typeof msg.method !== "string") return c.json({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } }, 400);
+  if (msg.id === undefined) return c.body(null, 202);
+  const ok = (result: unknown) => c.json({ jsonrpc: "2.0", id: msg.id, result });
+  try {
+    switch (msg.method) {
+      case "initialize": return ok({ protocolVersion: msg.params?.protocolVersion ?? "2025-06-18", capabilities: { tools: {} }, serverInfo: { name: "coingraph-guard", version: "1.0.0" }, instructions: "Call check_token before buying any BNB Smart Chain token. Only buy on a proceed verdict." });
+      case "ping": return ok({});
+      case "tools/list": return ok({ tools: MCP_TOOLS });
+      case "tools/call": return ok(await mcpCall(String(msg.params?.name), msg.params?.arguments ?? {}, ipOf(c)));
+      default: return c.json({ jsonrpc: "2.0", id: msg.id, error: { code: -32601, message: `Method not found: ${msg.method}` } });
+    }
+  } catch (e) {
+    return ok({ content: [{ type: "text", text: `Check failed: ${(e as Error).message}` }], isError: true });
+  }
+});
+app.get("/mcp", (c) => c.json({ name: "coingraph-guard", transport: "streamable-http", tools: MCP_TOOLS.map((t) => t.name), auth: "none", docs: "https://guard.coingraph.ai/docs#mcp" }, 405, { Allow: "POST" }));
 app.get("/logo.png", (c) => c.body(readFileSync(new URL("public/logo.png", root)), 200, { "content-type": "image/png", "cache-control": "public, max-age=86400" }));
 app.get("/theme.css", (c) => c.body(readFileSync(new URL("public/theme.css", root), "utf8"), 200, { "content-type": "text/css; charset=utf-8", "cache-control": "public, max-age=300" }));
 app.get("/theme.js", (c) => c.body(readFileSync(new URL("public/theme.js", root), "utf8"), 200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "public, max-age=300" }));
