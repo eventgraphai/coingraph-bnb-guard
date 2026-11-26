@@ -20,13 +20,13 @@
 .toc a:hover{color:var(--ink);background:var(--line)}
 .toc a.on{color:var(--ink);background:var(--surface);box-shadow:var(--shadow);font-weight:600}
 .dc{max-width:820px;min-width:0}
-.dc .hero-d h1{font-size:clamp(34px,3.6vw,50px);margin:12px 0 10px;line-height:1.08}
-.dc .hero-d p{font-size:16.5px;color:var(--ink2);margin:0 0 22px;max-width:640px}
+.dc .hero-d h1{font-size:clamp(30px,3vw,42px);margin:10px 0 8px;line-height:1.1}
+.dc .hero-d p{font-size:16px;color:var(--ink2);margin:0 0 20px;max-width:640px}
 .paths{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
 .path{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);text-decoration:none;color:inherit;transition:transform .25s}
 .path:hover{transform:translateY(-2px)}
 .path span{font-family:var(--eyeFont);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:700}
-.path b{font-size:15px}.path em{font-style:normal;font-size:12.5px;color:var(--muted)}
+.path b{font-size:15px}.path em{font-style:normal;font-size:12.5px;color:var(--muted)}.path small{margin-top:auto;padding-top:8px;border-top:1px solid var(--line);font-size:12px;color:var(--ink2)}.path small strong{color:var(--accent)}
 .dc section{margin:56px 0;scroll-margin-top:100px}
 .dc h2{font-size:clamp(24px,2.3vw,30px);margin:6px 0 10px}
 .dc h3{font-family:var(--fb);font-weight:650;letter-spacing:-.01em;font-size:16px;margin:22px 0 8px}
@@ -40,8 +40,8 @@
 .cb .lbl+pre{padding-top:30px}
 .cp{position:absolute;top:8px;right:8px;font-size:11.5px;padding:4px 10px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#dfe8df}
 .cp:hover{background:rgba(255,255,255,.16)}
-.note{display:flex;gap:10px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-size:14px;color:var(--ink2);margin:12px 0}
-.note b{color:var(--ink)}
+.note{display:block;padding:12px 16px;line-height:1.6;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-size:14px;color:var(--ink2);margin:12px 0}
+.note b{color:var(--ink);margin-right:4px}
 .note.warn{background:var(--warnbg);border-color:transparent}
 .tbl{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .tbl th,.tbl td{padding:10px 12px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
@@ -88,12 +88,12 @@
     <div class="hero-d fade-up" id="overview">
       <div class="eyebrow">Developer docs</div>
       <h1>Check before your agent trades.</h1>
-      <p>Four ways to use CoinGraph Guard, from a single free request to a contract that refuses unsafe buys on BNB Smart Chain. Pick one:</p>
+      <p>Four ways to use CoinGraph Guard. Start with the free Guard API to try it in seconds, then pick what fits your product.</p>
       <div class="paths">
-        <a class="path" href="#guard-api"><span>Free, no key</span><b>Guard API</b><em>One GET request per token</em></a>
-        <a class="path" href="#rest"><span>API key</span><b>CoinGraph API</b><em>Top 1,000 tokens, sized checks</em></a>
-        <a class="path" href="#mcp"><span>Sign in once</span><b>MCP</b><em>Claude, Cursor, ChatGPT…</em></a>
-        <a class="path" href="#contract"><span>On chain</span><b>Guard contract</b><em>No signed proceed, no trade</em></a>
+        <a class="path" href="#guard-api"><span>Free, no key</span><b>Guard API</b><em>One GET request per token</em><small><strong>Best for:</strong> trying it now</small></a>
+        <a class="path" href="#rest"><span>API key</span><b>CoinGraph API</b><em>Top 1,000 tokens, any chain</em><small><strong>Best for:</strong> your backend</small></a>
+        <a class="path" href="#mcp"><span>Sign in once</span><b>MCP</b><em>Claude, Cursor, ChatGPT</em><small><strong>Best for:</strong> AI assistants</small></a>
+        <a class="path" href="#contract"><span>On chain</span><b>Guard contract</b><em>No signed proceed, no trade</em><small><strong>Best for:</strong> trading agents</small></a>
       </div>
     </div>
 
@@ -107,7 +107,7 @@
         <li>Store it as an environment variable, never in your code:</li>
       </ol>
       <div class="cb"><span class="lbl">Terminal</span><pre><code>export COINGRAPH_KEY="cg_live_…"</code></pre><button class="cp" type="button">Copy</button></div>
-      <div class="note"><b>Credits.</b> New accounts start with 500 free credits. 1 credit = $0.01. Plans and prices: <a href="https://coingraph.ai/pricing" target="_blank" rel="noopener">coingraph.ai/pricing</a>. Full guide: <a href="https://coingraph.ai/docs/keys" target="_blank" rel="noopener">Keys and pricing</a>.</div>
+      <div class="note"><b>Credits:</b>new accounts start with 500 free credits (1 credit = $0.01). See <a href="https://coingraph.ai/pricing" target="_blank" rel="noopener">pricing</a> or the full <a href="https://coingraph.ai/docs/keys" target="_blank" rel="noopener">keys guide</a>.</div>
     </section>
 
     <section id="guard-api" class="reveal">
@@ -207,7 +207,7 @@ function buy(Answer calldata a, bytes calldata sig,
         <tr><td><code>AmountTooLarge</code></td><td>More BNB than the answer covers.</td></tr>
         <tr><td><code>AnswerExpired</code> / <code>AnswerUsed</code></td><td>Older than 5 minutes, or already used.</td></tr>
         <tr><td><code>NotYourAnswer</code> / <code>WrongToken</code> / <code>WrongSigner</code></td><td>Signed for another agent or token, or not by CoinGraph.</td></tr></table>
-      <div class="note warn"><b>Using the guard with your own agent:</b>&nbsp;signed answers are issued for your agent's wallet address. During the hackathon this is set up per team: open an issue on <a href="https://github.com/eventgraphai/coingraph-bnb-guard/issues" target="_blank" rel="noopener">GitHub</a> or email support@coingraph.ai. Decode any refused buy with <code>npx tsx scripts/revert-reason.ts &lt;txHash&gt;</code>.</div>
+      <div class="note warn"><b>Using the guard with your own agent:</b>signed answers are issued for your agent's wallet address. During the hackathon this is set up per team: open an issue on <a href="https://github.com/eventgraphai/coingraph-bnb-guard/issues" target="_blank" rel="noopener">GitHub</a> or email support@coingraph.ai. Decode any refused buy with <code>npx tsx scripts/revert-reason.ts &lt;txHash&gt;</code>.</div>
     </section>
 
     <section id="response" class="reveal">
