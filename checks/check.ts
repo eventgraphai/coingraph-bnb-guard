@@ -5,7 +5,7 @@ import { ADDR, KNOWN, QUOTES, STABLES, client } from "./chain.js";
 import { simulatorAbi, simulatorCode } from "./simulator.generated.js";
 import { atlasEnabled, atlasPrices } from "./atlas.js";
 import { atlasFeedFor } from "./atlas-feeds.js";
-import { cmcEnabled, listingByAddress, topAssetForSymbol, type CmcListing } from "./cmc.js";
+import { cmcEnabled, identify, type CmcListing } from "./cmc.js";
 
 export type Level = "ok" | "caution" | "avoid";
 export type Verdict = "proceed" | "caution" | "avoid";
@@ -104,22 +104,23 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
   if (!code || code === "0x") throw new Error("No contract at this address on BNB Chain.");
   if (decimals === null) throw new Error("This contract does not behave like a token (no decimals).");
 
-  // Identity. With a CoinMarketCap key: is this exact contract listed, and if not, does its symbol belong to a
-  // well-known listed asset (a copycat)? Without a key: a built-in list of major BNB Chain tokens.
+  // Identity. With a CoinMarketCap key: is this contract listed (directly, or as the official BNB Chain version of a
+  // listed asset such as Binance-Peg ADA), or does it copy the symbol of one? Without a key: a built-in list.
   let listing: CmcListing | null = null;
+  let official = false; // CoinMarketCap confirms this is the official contract of a top-200 asset
   if (cmcEnabled()) {
-    listing = await safe(listingByAddress(token));
-    if (listing) {
+    const id = await safe(identify(token, symbol));
+    if (id?.kind === "listed") {
+      listing = id.listing;
+      official = !!listing.rank && listing.rank <= 200;
       const vol = listing.volume24hUsd ? `, ${usd(listing.volume24hUsd)} traded in 24h` : "";
-      add("ok", "identity", `Listed on CoinMarketCap as ${listing.name} (${listing.symbol})${listing.rank ? `, rank #${listing.rank}` : ""}${vol}.`);
-    } else {
-      const top = symbol ? await safe(topAssetForSymbol(symbol)) : null;
-      // Copycat when CMC lists a well-known asset under this symbol, or any asset whose BNB Chain contract is a different address.
-      if (top && (top.rank <= 1000 || (top.bscAddress && top.bscAddress.toLowerCase() !== token.toLowerCase()))) {
-        const where = top.bscAddress ? `its BNB Chain contract is ${top.bscAddress}` : `it lives on ${top.chain}`;
-        add("avoid", "copycat", `This is not the real ${top.symbol}. On CoinMarketCap, ${top.symbol} is ${top.name} (rank #${top.rank}) and ${where}. This contract only copies the name.`);
-      } else add("caution", "identity", "Not listed on CoinMarketCap, so there is no independent record of who is behind it (common for new launches).");
-    }
+      const how = id.via === "official_bnb_version" ? `CoinMarketCap lists this contract as the official BNB Chain version of ${listing.name} (${listing.symbol})` : `Listed on CoinMarketCap as ${listing.name} (${listing.symbol})`;
+      add("ok", "identity", `${how}${listing.rank ? `, rank #${listing.rank}` : ""}${vol}.`);
+    } else if (id?.kind === "copycat") {
+      const r = id.real;
+      const where = r.bscAddresses.length ? `its official BNB Chain contract is ${r.bscAddresses[0]}` : `it lives on ${r.chain}`;
+      add("avoid", "copycat", `This is not the real ${r.symbol}. On CoinMarketCap, ${r.symbol} is ${r.name} (rank #${r.rank}) and ${where}. This contract only copies the name.`);
+    } else if (id) add("caution", "identity", "Not listed on CoinMarketCap, so there is no independent record of who is behind it (common for new launches).");
   } else {
     const real = symbol ? KNOWN[symbol.trim().toUpperCase()] : undefined;
     if (real && getAddress(real) !== token) add("avoid", "copycat", `This is not the real ${symbol}. It copies the name of ${symbol} (real contract ${real}) at a different address.`);
@@ -141,11 +142,22 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
   const ownerWho = ownerIsContract ? `owner contract ${owner}` : `owner wallet ${owner}`;
   // Owner findings are added after the pool is known, because a deep, established pool changes how much they matter.
   const ownerFindings = (established: boolean) => {
-    if (isProxy) add(renounced || established ? "caution" : "avoid", "upgradeable", `The contract is upgradeable${renounced ? "" : ` by its ${ownerWho}`}, so its code can be replaced after you buy.`);
-    if (!renounced && powers.length) add(established && ownerIsContract ? "ok" : "caution", "owner_powers", `The ${ownerWho} can ${powers.join(", ")}.${established && ownerIsContract ? " Normal for a large, established token run by a contract." : ""}`);
+    // An official bridged token (Binance-Peg ADA, DOGE, ETH) is issuer-controlled by design: flag it, but as trust in the issuer, not a scam.
+    const issuer = official && !ownerIsContract ? " This is the issuer of an official bridged token: you are trusting the issuer to hold the backing." : "";
+    if (isProxy) add(renounced || established || official ? "caution" : "avoid", "upgradeable", `The contract is upgradeable${renounced ? "" : ` by its ${ownerWho}`}, so its code can be replaced after you buy.${issuer}`);
+    if (!renounced && powers.length) add(established && ownerIsContract ? "ok" : "caution", "owner_powers", `The ${ownerWho} can ${powers.join(", ")}.${established && ownerIsContract ? " Normal for a large, established token run by a contract." : isProxy ? "" : issuer}`);
     else if (!renounced) add(established ? "ok" : "caution", "owner", `The contract has an ${ownerWho}; no risky owner functions were found in its code.`);
     else add("ok", "owner", "Ownership is renounced: no one can change the contract's rules.");
   };
+
+  // BNB itself (as WBNB): the chain's native asset, 1:1 with BNB. There is nothing to buy it with but itself.
+  if (token === ADDR.WBNB) {
+    const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: 0, sellTaxPct: 0, priceImpactPct: 0, lpBurnedPct: null, owner: null, isProxy: false, poolPriceUsd: bnbPriceUsd, cmc: listing, atlas: null };
+    findings.length = 0;
+    add("ok", "native", `This is BNB itself (wrapped 1:1 as WBNB), the native asset of BNB Chain, priced at ${usd(bnbPriceUsd)}. No token risk to check.`);
+    if (listing) add("ok", "identity", `Listed on CoinMarketCap as ${listing.name} (${listing.symbol}), rank #${listing.rank}.`);
+    return { chain: "bsc", token, name: name ?? null, symbol: symbol ?? null, orderUsd, verdict: "proceed", findings, numbers, checkedAt: new Date().toISOString(), block: block.toString() };
+  }
 
   // Deepest PancakeSwap v2 pool against BNB or a stablecoin.
   const pairs = await Promise.all(QUOTES.map((q) => client.readContract({ address: ADDR.pancakeFactoryV2, abi: factoryAbi, functionName: "getPair", args: [token, q] })));
@@ -165,7 +177,7 @@ export async function checkToken(tokenIn: string, orderUsd = 500): Promise<Check
 
   const numbers: CheckResult["numbers"] = { bnbPriceUsd, liquidityUsd: null, pool: null, poolQuote: null, buyTaxPct: null, sellTaxPct: null, priceImpactPct: null, lpBurnedPct: null, owner: owner ?? null, isProxy, poolPriceUsd: null, cmc: listing, atlas: null };
 
-  const established = !!best && best.liquidityUsd >= ESTABLISHED_USD;
+  const established = (!!best && best.liquidityUsd >= ESTABLISHED_USD) || official;
   ownerFindings(established);
 
   const lower = token.toLowerCase();

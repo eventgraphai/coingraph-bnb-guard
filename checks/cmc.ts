@@ -46,20 +46,45 @@ export async function listingByAddress(address: string): Promise<CmcListing | nu
   return { id: entry.id, name: entry.name, symbol: entry.symbol, slug: entry.slug, rank: q?.cmc_rank ?? null, priceUsd: usd?.price ?? null, volume24hUsd: usd?.volume_24h ?? null, marketCapUsd: usd?.market_cap ?? null, change24hPct: usd?.percent_change_24h ?? null, dateAdded: entry.date_added };
 }
 
-/** The best-ranked CoinMarketCap asset using this symbol, and its BNB Chain contract if it has one. */
-export async function topAssetForSymbol(symbol: string): Promise<{ name: string; symbol: string; rank: number; bscAddress: string | null; chain: string | null } | null> {
+type SymbolAsset = { id: number; name: string; symbol: string; rank: number; bscAddresses: string[]; chain: string };
+
+/** The best-ranked CoinMarketCap assets using this symbol, each with every official BNB Chain contract it lists. */
+async function assetsForSymbol(symbol: string): Promise<SymbolAsset[]> {
   const map = await cmc<MapEntry[]>("/v1/cryptocurrency/map", { symbol: symbol.trim().toUpperCase() });
-  const ranked = (map ?? []).filter((m) => m.is_active && m.rank).sort((a, b) => a.rank! - b.rank!);
-  if (!ranked.length) return null;
-  // Several assets can share a symbol. Look at the best-ranked few: a native coin (ADA, DOGE) lists its official
-  // BNB Chain version among its own contract addresses, a BNB Chain token has it as its platform address.
-  const few = ranked.slice(0, 5);
+  const few = (map ?? []).filter((m) => m.is_active && m.rank).sort((a, b) => a.rank! - b.rank!).slice(0, 5);
+  if (!few.length) return [];
+  // A native coin (ADA, DOGE, TRX) lists its official BNB Chain versions among its contract addresses (sometimes
+  // more than one, old and new); a BNB Chain token has it as its platform address.
   const info = await cmc<Record<string, InfoEntry>>("/v2/cryptocurrency/info", { id: few.map((m) => m.id).join(",") });
-  const withBsc = few.map((m) => {
-    const contracts = (info?.[String(m.id)]?.contract_address ?? []).filter((c) => /^0x[0-9a-fA-F]{40}$/.test(c.contract_address));
-    const bsc = contracts.find((c) => isBsc(c.platform?.coin?.slug, c.platform?.name))?.contract_address ?? (isBsc(m.platform?.slug, m.platform?.name) ? m.platform!.token_address : null);
-    return { name: m.name, symbol: m.symbol, rank: m.rank!, bscAddress: bsc, chain: m.platform?.name ?? "its own chain" };
+  return few.map((m) => {
+    const listed = (info?.[String(m.id)]?.contract_address ?? []).filter((c) => /^0x[0-9a-fA-F]{40}$/.test(c.contract_address) && isBsc(c.platform?.coin?.slug, c.platform?.name)).map((c) => c.contract_address.toLowerCase());
+    const own = isBsc(m.platform?.slug, m.platform?.name) && m.platform?.token_address ? [m.platform.token_address.toLowerCase()] : [];
+    return { id: m.id, name: m.name, symbol: m.symbol, rank: m.rank!, bscAddresses: [...new Set([...own, ...listed])], chain: m.platform?.name ?? "its own chain" };
   });
-  // Prefer the asset that actually has a BNB Chain contract: that is the one a copycat on BNB Chain imitates.
-  return withBsc.find((a) => a.bscAddress) ?? withBsc[0];
+}
+
+async function quoteListing(id: number, name: string, symbol: string, slug = "", dateAdded = ""): Promise<CmcListing> {
+  const q = (await cmc<Record<string, Quote>>("/v2/cryptocurrency/quotes/latest", { id: String(id) }))?.[String(id)];
+  const usd = q?.quote.USD;
+  return { id, name, symbol, slug, rank: q?.cmc_rank ?? null, priceUsd: usd?.price ?? null, volume24hUsd: usd?.volume_24h ?? null, marketCapUsd: usd?.market_cap ?? null, change24hPct: usd?.percent_change_24h ?? null, dateAdded };
+}
+
+export type Identity =
+  | { kind: "listed"; listing: CmcListing; via: "address" | "official_bnb_version" }
+  | { kind: "copycat"; real: { name: string; symbol: string; rank: number; bscAddresses: string[]; chain: string } }
+  | { kind: "unlisted" };
+
+/** Who is this contract, according to CoinMarketCap? Listed, the official BNB Chain version of a listed asset, a copycat of one, or unknown. */
+export async function identify(address: string, symbol: string | null): Promise<Identity> {
+  const direct = await listingByAddress(address);
+  if (direct) return { kind: "listed", listing: direct, via: "address" };
+  if (!symbol) return { kind: "unlisted" };
+  const assets = await assetsForSymbol(symbol);
+  const addr = address.toLowerCase();
+  const owner = assets.find((a) => a.bscAddresses.includes(addr));
+  if (owner) return { kind: "listed", listing: await quoteListing(owner.id, owner.name, owner.symbol), via: "official_bnb_version" };
+  // Copycat: a well-known asset uses this symbol, or one whose official BNB Chain contract is somewhere else.
+  const real = assets.find((a) => a.bscAddresses.length) ?? assets.find((a) => a.rank <= 1000);
+  if (real && (real.rank <= 1000 || real.bscAddresses.length)) return { kind: "copycat", real };
+  return { kind: "unlisted" };
 }

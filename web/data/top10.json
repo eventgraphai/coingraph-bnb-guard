@@ -1,0 +1,790 @@
+{
+  "orderUsd": 500,
+  "checkedAt": "2026-11-26T10:15:49.346Z",
+  "results": [
+    {
+      "chain": "bsc",
+      "token": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+      "name": "BTCB Token",
+      "symbol": "BTCB",
+      "orderUsd": 500,
+      "verdict": "caution",
+      "findings": [
+        {
+          "level": "caution",
+          "check": "owner_powers",
+          "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "Listed on CoinMarketCap as Bitcoin BEP2 (BTCB), rank #7648, $112,531,339 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "liquidity",
+          "text": "$2,406,093 of liquidity in its PancakeSwap BNB pool."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "price_impact",
+          "text": "A $500 buy moves the price 0.04%."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $60871.53 vs CoinMarketCap $60886.44: 0.02% apart."
+        },
+        {
+          "level": "ok",
+          "check": "oracle_price",
+          "text": "PancakeSwap price $60871.53 vs Atlas Oracle BTC/USD $60873.86: 0% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9304701758002,
+        "liquidityUsd": 2406093,
+        "pool": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
+        "poolQuote": "BNB",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 0.04,
+        "lpBurnedPct": 0,
+        "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+        "isProxy": false,
+        "poolPriceUsd": 60871.52517325574,
+        "cmc": {
+          "id": 4023,
+          "name": "Bitcoin BEP2",
+          "symbol": "BTCB",
+          "slug": "bitcoin-bep2",
+          "rank": 7648,
+          "priceUsd": 60886.436648015064,
+          "volume24hUsd": 112531339.27296647,
+          "marketCapUsd": 3970783563.0310674,
+          "change24hPct": 3.271052692696,
+          "dateAdded": "2019-06-18T00:00:00.000Z"
+        },
+        "atlas": {
+          "feedId": "626",
+          "label": "BTC/USD",
+          "priceUsd": 60873.858763,
+          "timestamp": 1795688109,
+          "signature": "0x14f1f28f5624ad5292d0d8272c78b695b4cc6842ae9e45109ae698945f4895894f6a85f4ca556a010f467d3241e8f4a24d117c0e77e6da451342de3d1e12f4f11b"
+        }
+      },
+      "checkedAt": "2026-11-26T10:15:09.501Z",
+      "block": "135828952",
+      "cmcRank": 1,
+      "marketCapUsd": 1224910006603.476,
+      "asset": "Bitcoin (BTC)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+      "name": "Ethereum Token",
+      "symbol": "ETH",
+      "orderUsd": 500,
+      "verdict": "caution",
+      "findings": [
+        {
+          "level": "caution",
+          "check": "owner_powers",
+          "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens. This is the issuer of an official bridged token: you are trusting the issuer to hold the backing."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "Listed on CoinMarketCap as Ethereum (ETH), rank #2, $12,847,860,006 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "liquidity",
+          "text": "$2,238,490 of liquidity in its PancakeSwap BNB pool."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "price_impact",
+          "text": "A $500 buy moves the price 0.04%."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $1703.33 vs CoinMarketCap $1702.57: 0.04% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9306568484279,
+        "liquidityUsd": 2238490,
+        "pool": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
+        "poolQuote": "BNB",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 0.04,
+        "lpBurnedPct": 0,
+        "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+        "isProxy": false,
+        "poolPriceUsd": 1703.3286830307843,
+        "cmc": {
+          "id": 1027,
+          "name": "Ethereum",
+          "symbol": "ETH",
+          "slug": "ethereum",
+          "rank": 2,
+          "priceUsd": 1702.5706865186746,
+          "volume24hUsd": 12847860006.234894,
+          "marketCapUsd": 208145518205.06458,
+          "change24hPct": 3.714916359647,
+          "dateAdded": "2015-08-07T00:00:00.000Z"
+        },
+        "atlas": null
+      },
+      "checkedAt": "2026-11-26T10:15:14.107Z",
+      "block": "135828963",
+      "cmcRank": 2,
+      "marketCapUsd": 208145518205.06458,
+      "asset": "Ethereum (ETH)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "name": "Wrapped BNB",
+      "symbol": "WBNB",
+      "orderUsd": 500,
+      "verdict": "proceed",
+      "findings": [
+        {
+          "level": "ok",
+          "check": "native",
+          "text": "This is BNB itself (wrapped 1:1 as WBNB), the native asset of BNB Chain, priced at $553. No token risk to check."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "Listed on CoinMarketCap as Wrapped BNB (WBNB), rank #7658."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9306568484279,
+        "liquidityUsd": null,
+        "pool": null,
+        "poolQuote": null,
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 0,
+        "lpBurnedPct": null,
+        "owner": null,
+        "isProxy": false,
+        "poolPriceUsd": 552.9306568484279,
+        "cmc": {
+          "id": 7192,
+          "name": "Wrapped BNB",
+          "symbol": "WBNB",
+          "slug": "",
+          "rank": 7658,
+          "priceUsd": 553.4796777713852,
+          "volume24hUsd": 282429773.95152587,
+          "marketCapUsd": 876094425.0644006,
+          "change24hPct": 2.496093598267,
+          "dateAdded": ""
+        },
+        "atlas": null
+      },
+      "checkedAt": "2026-11-26T10:15:17.776Z",
+      "block": "135828974",
+      "cmcRank": 4,
+      "marketCapUsd": 72756278043.80081,
+      "asset": "BNB (BNB)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE",
+      "name": "XRP Token",
+      "symbol": "XRP",
+      "orderUsd": 500,
+      "verdict": "caution",
+      "findings": [
+        {
+          "level": "caution",
+          "check": "owner_powers",
+          "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens. This is the issuer of an official bridged token: you are trusting the issuer to hold the backing."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "Listed on CoinMarketCap as XRP (XRP), rank #6, $2,171,550,833 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "liquidity",
+          "text": "$546,469 of liquidity in its PancakeSwap BNB pool."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "price_impact",
+          "text": "A $500 buy moves the price 0.18%."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $0.954 vs CoinMarketCap $0.953: 0.02% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9306568484279,
+        "liquidityUsd": 546469,
+        "pool": "0x03F18135c44C64ebFdCBad8297fe5bDafdBbdd86",
+        "poolQuote": "BNB",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 0.18,
+        "lpBurnedPct": 0,
+        "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+        "isProxy": false,
+        "poolPriceUsd": 0.953623863141891,
+        "cmc": {
+          "id": 52,
+          "name": "XRP",
+          "symbol": "XRP",
+          "slug": "xrp",
+          "rank": 6,
+          "priceUsd": 0.9534633985508308,
+          "volume24hUsd": 2171550833.041081,
+          "marketCapUsd": 60560759929.82471,
+          "change24hPct": 4.276824309555,
+          "dateAdded": "2013-08-04T00:00:00.000Z"
+        },
+        "atlas": null
+      },
+      "checkedAt": "2026-11-26T10:15:21.446Z",
+      "block": "135828982",
+      "cmcRank": 6,
+      "marketCapUsd": 60560759929.82471,
+      "asset": "XRP (XRP)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0xCE7de646e7208a4Ef112cb6ed5038FA6cC6b12e3",
+      "name": "TRON",
+      "symbol": "TRX",
+      "orderUsd": 500,
+      "verdict": "proceed",
+      "findings": [
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "CoinMarketCap lists this contract as the official BNB Chain version of TRON (TRX), rank #8, $348,146,260 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "owner",
+          "text": "Ownership is renounced: no one can change the contract's rules."
+        },
+        {
+          "level": "ok",
+          "check": "liquidity",
+          "text": "$277,205 of liquidity in its PancakeSwap USDT pool."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "price_impact",
+          "text": "A $500 buy moves the price 0.36%."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $0.304 vs CoinMarketCap $0.304: 0.3% apart."
+        },
+        {
+          "level": "ok",
+          "check": "oracle_price",
+          "text": "PancakeSwap price $0.304 vs Atlas Oracle TRX/USD $0.303: 0.32% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9306568484279,
+        "liquidityUsd": 277205,
+        "pool": "0x1F7DF58C60a56BC8322D3E42D7D37A0383d42746",
+        "poolQuote": "USDT",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 0.36,
+        "lpBurnedPct": 0,
+        "owner": null,
+        "isProxy": false,
+        "poolPriceUsd": 0.3044279038616678,
+        "cmc": {
+          "id": 1958,
+          "name": "TRON",
+          "symbol": "TRX",
+          "slug": "",
+          "rank": 8,
+          "priceUsd": 0.30352823572164206,
+          "volume24hUsd": 348146260.37711465,
+          "marketCapUsd": 28853022089.98341,
+          "change24hPct": -1.343591243104,
+          "dateAdded": ""
+        },
+        "atlas": {
+          "feedId": "627",
+          "label": "TRX/USD",
+          "priceUsd": 0.303453,
+          "timestamp": 1795688126,
+          "signature": "0x2548d5e2d4dda712cbb3877a47b030ddf4e9dab6847c9335df70335f5c9946645970d9c99186b9d299c9a347f592b3275357bb125e16615d17a03f2d6bcdb4d21c"
+        }
+      },
+      "checkedAt": "2026-11-26T10:15:27.218Z",
+      "block": "135828990",
+      "cmcRank": 8,
+      "marketCapUsd": 28856220214.78392,
+      "asset": "TRON (TRX)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0x1Ba42e5193dfA8B03D15dd1B86a3113bbBEF8Eeb",
+      "name": "Zcash Token",
+      "symbol": "ZEC",
+      "orderUsd": 500,
+      "verdict": "avoid",
+      "findings": [
+        {
+          "level": "avoid",
+          "check": "liquidity",
+          "text": "Only $320 of liquidity in its PancakeSwap pool; the price can be moved or drained easily."
+        },
+        {
+          "level": "avoid",
+          "check": "price_impact",
+          "text": "A $500 buy would move the price 75.63%. Size down a lot or skip."
+        },
+        {
+          "level": "caution",
+          "check": "owner_powers",
+          "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens. This is the issuer of an official bridged token: you are trusting the issuer to hold the backing."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "Listed on CoinMarketCap as Zcash (ZEC), rank #10, $989,021,767 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $750.55 vs CoinMarketCap $744.55: 0.81% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9180634274563,
+        "liquidityUsd": 320,
+        "pool": "0xFCB75A61c89634b38983Ee366810804a4d760D0e",
+        "poolQuote": "BNB",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 75.63,
+        "lpBurnedPct": 0,
+        "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+        "isProxy": false,
+        "poolPriceUsd": 750.5530451374606,
+        "cmc": {
+          "id": 1437,
+          "name": "Zcash",
+          "symbol": "ZEC",
+          "slug": "zcash",
+          "rank": 10,
+          "priceUsd": 744.552052386118,
+          "volume24hUsd": 989021767.276709,
+          "marketCapUsd": 12645337426.391169,
+          "change24hPct": 2.659306730422,
+          "dateAdded": "2016-10-29T00:00:00.000Z"
+        },
+        "atlas": null
+      },
+      "checkedAt": "2026-11-26T10:15:31.403Z",
+      "block": "135829003",
+      "cmcRank": 10,
+      "marketCapUsd": 12644519674.332756,
+      "asset": "Zcash (ZEC)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
+      "name": "Dogecoin",
+      "symbol": "DOGE",
+      "orderUsd": 500,
+      "verdict": "caution",
+      "findings": [
+        {
+          "level": "caution",
+          "check": "upgradeable",
+          "text": "The contract is upgradeable by its owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d, so its code can be replaced after you buy. This is the issuer of an official bridged token: you are trusting the issuer to hold the backing."
+        },
+        {
+          "level": "caution",
+          "check": "owner_powers",
+          "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "Listed on CoinMarketCap as Dogecoin (DOGE), rank #12, $471,138,570 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "liquidity",
+          "text": "$662,096 of liquidity in its PancakeSwap BNB pool."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "price_impact",
+          "text": "A $500 buy moves the price 0.15%."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $0.0567 vs CoinMarketCap $0.0567: 0.1% apart."
+        },
+        {
+          "level": "ok",
+          "check": "oracle_price",
+          "text": "PancakeSwap price $0.0567 vs Atlas Oracle DOGE/USD $0.0567: 0.12% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9180634274563,
+        "liquidityUsd": 662096,
+        "pool": "0xac109C8025F272414fd9e2faA805a583708A017f",
+        "poolQuote": "BNB",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 0.15,
+        "lpBurnedPct": 0,
+        "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+        "isProxy": true,
+        "poolPriceUsd": 0.05673222096357245,
+        "cmc": {
+          "id": 74,
+          "name": "Dogecoin",
+          "symbol": "DOGE",
+          "slug": "dogecoin",
+          "rank": 12,
+          "priceUsd": 0.05667331995386253,
+          "volume24hUsd": 471138570.3753022,
+          "marketCapUsd": 8892448143.627522,
+          "change24hPct": 5.167527299043,
+          "dateAdded": "2013-12-15T00:00:00.000Z"
+        },
+        "atlas": {
+          "feedId": "628",
+          "label": "DOGE/USD",
+          "priceUsd": 0.056663,
+          "timestamp": 1795688135,
+          "signature": "0x12b7d6703e80e3692ce9989ca8a7d31e4f4d6a59c238131d29301348374f75e81193bb26a0fe77b8cdda1123eecb3dc7980d9470a0ef926b3790f76dfe4c96c71b"
+        }
+      },
+      "checkedAt": "2026-11-26T10:15:36.236Z",
+      "block": "135829012",
+      "cmcRank": 12,
+      "marketCapUsd": 8893263056.116888,
+      "asset": "Dogecoin (DOGE)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD",
+      "name": "ChainLink Token",
+      "symbol": "LINK",
+      "orderUsd": 500,
+      "verdict": "caution",
+      "findings": [
+        {
+          "level": "caution",
+          "check": "owner_powers",
+          "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens. This is the issuer of an official bridged token: you are trusting the issuer to hold the backing."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "Listed on CoinMarketCap as Chainlink (LINK), rank #14, $311,612,907 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "liquidity",
+          "text": "$618,703 of liquidity in its PancakeSwap BNB pool."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "price_impact",
+          "text": "A $500 buy moves the price 0.16%."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $9.25 vs CoinMarketCap $9.24: 0.03% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9182117237127,
+        "liquidityUsd": 618703,
+        "pool": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+        "poolQuote": "BNB",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 0.16,
+        "lpBurnedPct": 0,
+        "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+        "isProxy": false,
+        "poolPriceUsd": 9.24611521819436,
+        "cmc": {
+          "id": 1975,
+          "name": "Chainlink",
+          "symbol": "LINK",
+          "slug": "chainlink",
+          "rank": 14,
+          "priceUsd": 9.242986876067993,
+          "volume24hUsd": 311612907.3128497,
+          "marketCapUsd": 7087984212.550331,
+          "change24hPct": 7.10531618537,
+          "dateAdded": "2017-09-20T00:00:00.000Z"
+        },
+        "atlas": null
+      },
+      "checkedAt": "2026-11-26T10:15:40.431Z",
+      "block": "135829023",
+      "cmcRank": 14,
+      "marketCapUsd": 7091726076.122372,
+      "asset": "Chainlink (LINK)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47",
+      "name": "Cardano Token",
+      "symbol": "ADA",
+      "orderUsd": 500,
+      "verdict": "caution",
+      "findings": [
+        {
+          "level": "caution",
+          "check": "owner_powers",
+          "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens. This is the issuer of an official bridged token: you are trusting the issuer to hold the backing."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "Listed on CoinMarketCap as Cardano (ADA), rank #15, $282,690,092 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "liquidity",
+          "text": "$364,402 of liquidity in its PancakeSwap BNB pool."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "price_impact",
+          "text": "A $500 buy moves the price 0.27%."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $0.149 vs CoinMarketCap $0.149: 0.04% apart."
+        },
+        {
+          "level": "ok",
+          "check": "oracle_price",
+          "text": "PancakeSwap price $0.149 vs Atlas Oracle ADA/USD $0.149: 0.1% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9182117237127,
+        "liquidityUsd": 364402,
+        "pool": "0x28415ff2C35b65B9E5c7de82126b4015ab9d031F",
+        "poolQuote": "BNB",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 0.27,
+        "lpBurnedPct": 0,
+        "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+        "isProxy": false,
+        "poolPriceUsd": 0.148639653285184,
+        "cmc": {
+          "id": 2010,
+          "name": "Cardano",
+          "symbol": "ADA",
+          "slug": "cardano",
+          "rank": 15,
+          "priceUsd": 0.14870034003097948,
+          "volume24hUsd": 282690092.0066933,
+          "marketCapUsd": 5476696644.411382,
+          "change24hPct": 5.530721200442,
+          "dateAdded": "2017-10-01T00:00:00.000Z"
+        },
+        "atlas": {
+          "feedId": "630",
+          "label": "ADA/USD",
+          "priceUsd": 0.148781,
+          "timestamp": 1795688143,
+          "signature": "0xe78736a156f50f58f7b46020f272521e7ff99b74ab20d28779da70fe0244727e452a4216b3a119e1460a05d4f6c01db303a5afa2b14c0d6bd8e4d2322e6714771c"
+        }
+      },
+      "checkedAt": "2026-11-26T10:15:44.124Z",
+      "block": "135829032",
+      "cmcRank": 15,
+      "marketCapUsd": 5475978156.555772,
+      "asset": "Cardano (ADA)"
+    },
+    {
+      "chain": "bsc",
+      "token": "0x8fF795a6F4D97E7887C79beA79aba5cc76444aDf",
+      "name": "Bitcoin Cash Token",
+      "symbol": "BCH",
+      "orderUsd": 500,
+      "verdict": "avoid",
+      "findings": [
+        {
+          "level": "avoid",
+          "check": "liquidity",
+          "text": "Only $4,833 of liquidity in its PancakeSwap pool; the price can be moved or drained easily."
+        },
+        {
+          "level": "avoid",
+          "check": "price_impact",
+          "text": "A $500 buy would move the price 17.09%. Size down a lot or skip."
+        },
+        {
+          "level": "caution",
+          "check": "owner_powers",
+          "text": "The owner wallet 0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d can mint new tokens. This is the issuer of an official bridged token: you are trusting the issuer to hold the backing."
+        },
+        {
+          "level": "ok",
+          "check": "identity",
+          "text": "CoinMarketCap lists this contract as the official BNB Chain version of Bitcoin Cash (BCH), rank #19, $122,022,922 traded in 24h."
+        },
+        {
+          "level": "ok",
+          "check": "lp_burned",
+          "text": "Liquidity is spread across many providers (0% burned), as usual for an established token."
+        },
+        {
+          "level": "ok",
+          "check": "market_price",
+          "text": "PancakeSwap price $207.86 vs CoinMarketCap $208.05: 0.09% apart."
+        },
+        {
+          "level": "ok",
+          "check": "honeypot",
+          "text": "Buy and sell both work. Buy tax 0%, sell tax 0%."
+        }
+      ],
+      "numbers": {
+        "bnbPriceUsd": 552.9183390933048,
+        "liquidityUsd": 4833,
+        "pool": "0x29b839540C07Cc0D4B06611859B01A762Cf94cf4",
+        "poolQuote": "BNB",
+        "buyTaxPct": 0,
+        "sellTaxPct": 0,
+        "priceImpactPct": 17.09,
+        "lpBurnedPct": 0,
+        "owner": "0xF68a4b64162906efF0fF6aE34E2bB1Cd42FEf62d",
+        "isProxy": false,
+        "poolPriceUsd": 207.86009194316165,
+        "cmc": {
+          "id": 1831,
+          "name": "Bitcoin Cash",
+          "symbol": "BCH",
+          "slug": "",
+          "rank": 19,
+          "priceUsd": 208.0495548607656,
+          "volume24hUsd": 122022921.95688987,
+          "marketCapUsd": 4186368591.8243127,
+          "change24hPct": 6.330492855365,
+          "dateAdded": ""
+        },
+        "atlas": null
+      },
+      "checkedAt": "2026-11-26T10:15:49.346Z",
+      "block": "135829040",
+      "cmcRank": 19,
+      "marketCapUsd": 4187426302.9528666,
+      "asset": "Bitcoin Cash (BCH)"
+    }
+  ]
+}
