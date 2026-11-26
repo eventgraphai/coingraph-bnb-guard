@@ -33,17 +33,42 @@ A held or stopped buy shows as "Fail" on BscScan: the guard reverted it, the BNB
 The full evidence for each answer is in [`proofs/`](proofs). Its keccak256 hash matches the `evidenceHash` recorded on chain.
 Each answer record costs about 26,000 gas (about $0.0007 at 0.05 gwei). Every check served on guard.coingraph.ai is recorded the same way.
 
+## Atlas Oracle price, checked inside the contract
+
+`contracts/CoinGraphGuardAtlas.sol` inherits Atlas Oracle's own pull-oracle consumer (`PullOracleConsumerStandard`, vendored unchanged in `contracts/vendor/atlas`). The agent appends Atlas's signed payload to the buy transaction, and in that same transaction the guard:
+
+1. checks CoinGraph's signed answer (agent, token, amount, 5-minute expiry, one use);
+2. verifies Atlas's signature on chain against Atlas's signer and rejects prices older than 180 seconds;
+3. compares the price the agent is about to pay on PancakeSwap with Atlas's price, and reverts with `OracleDeviation` if the gap is larger than the answer allows (3% by default);
+4. only then applies the verdict: proceed buys, caution or avoid reverts.
+
+So even a signed "proceed" cannot buy a token whose pool price is far from the real asset, and nobody, CoinGraph included, can fake the reference price.
+
+Tested against live mainnet state and a live Atlas payload without spending anything (`npx tsx contracts/test-guard-atlas.ts`):
+
+| Case | Result |
+| --- | --- |
+| TRX, proceed, Atlas TRX/USD attached | swap goes through |
+| No Atlas data attached | reverts `InvalidMarker` |
+| One Atlas price byte changed | reverts `UnauthorizedSigner` |
+| TRX checked against the wrong feed (BTC/USD) | reverts `OracleDeviation` |
+| Copycat "BTCB", even with a signed proceed | reverts `OracleDeviation` (pays $0.000012 vs Atlas BTC $60,722) |
+| Feed missing from the payload | reverts `UnmatchedFeedID` |
+| TRX, caution | reverts `NotProceed` |
+
+Deploy: `npx tsx scripts/deploy-atlas.ts` (dry run, then `--yes`). Demo: `npx tsx scripts/demo-atlas.ts <token> <usd> [feedId] --yes`.
+
 ## How it works
 
 1. The agent asks CoinGraph to check a token before a trade (API, MCP, or x402 pay per check).
-2. CoinGraph reads BNB Chain data (NOWNodes BSC nodes, PancakeSwap pools, BscScan) and answers proceed, caution or avoid, sized to the order.
+2. CoinGraph reads BNB Chain data (BNB Smart Chain nodes, PancakeSwap pools, BscScan) and answers proceed, caution or avoid, sized to the order.
 3. CoinGraph signs the answer and records its hash on BNB Smart Chain.
 4. The guard contract wraps the PancakeSwap swap: a valid recent "proceed" lets it through; "avoid" makes the transaction revert.
 
 ## Known limits
 
 - **Trades go through PancakeSwap v2.** The honeypot simulation and the guarded buy use the PancakeSwap v2 router (largest BNB Chain DEX, handles taxed tokens). Liquidity is read across every DEX pool (PancakeSwap v2/v3, Uniswap v3 and others) through CoinMarketCap DEX data, so a token that mainly trades on v3 is judged on its real liquidity, but the guard still routes through v2. Next: PancakeSwap v3 and an aggregator route.
-- **Atlas is verified off-chain today.** Every Atlas price is signature-checked against Atlas's published signer (0x59eD…C600) before it is used, and the signed price is part of each answer's on-chain record. Verifying it inside the guard contract (Atlas pull mode) is next; Atlas's consumer library is BUSL-1.1 licensed, so we are confirming production use with the Atlas team first.
+- **Atlas inside the contract needs a free feed.** CoinGraphGuardAtlas checks the price on chain only when the token has an Atlas feed; for other tokens the answer carries feed 0 and the guard applies CoinGraph's verdict alone. Atlas's consumer library is BUSL-1.1; we use it unchanged for this hackathon build and will confirm production terms with the Atlas team.
 - **Free Atlas feeds** cover BTC, ADA, DOGE, TRX, AVAX, NEAR, SUI, HYPE, stablecoins and tokenized stocks, not BNB-native tokens like CAKE or ASTER.
 
 ## CoinMarketCap × Atlas
@@ -74,4 +99,4 @@ CoinGraph is not affiliated with Binance or BNB Chain. Answers are provable (rec
 
 ## Licence
 
-MIT, see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE). Exception: `contracts/vendor/atlas/` is Atlas Oracle's pull-oracle consumer SDK (@atlas-oracle/pull-oracle-consumer 1.0.0), BUSL-1.1, included unchanged with its licence headers.

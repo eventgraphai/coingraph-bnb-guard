@@ -46,9 +46,13 @@ Before a buy, the agent asks CoinGraph about the token and the order size. CoinG
 
 Each answer record costs about 26,000 gas, roughly $0.0007. The evidence for every demo answer is in `proofs/`, and its keccak256 hash matches the record on chain.
 
+## Atlas checked inside the contract (pull mode)
+
+`CoinGraphGuardAtlas` inherits Atlas's own `PullOracleConsumerStandard`. The agent appends Atlas's signed payload to the buy; in the same transaction the guard verifies Atlas's signature and freshness (under 180 seconds) on chain, compares the price the agent would pay on PancakeSwap with Atlas's price, and reverts with `OracleDeviation` when the gap exceeds the answer's limit (3% by default), before the verdict is applied. A signed "proceed" for the copycat BTCB still reverts: it would pay $0.000012 against Atlas's BTC price of $60,722. Tested 7/7 against live mainnet state and a live Atlas payload (`contracts/test-guard-atlas.ts`): pass with TRX/USD, and reverts for missing data, a tampered price byte, the wrong feed, the copycat and a missing feed.
+
 ## What we would build next
 
-1. **The guard verifies Atlas's signed price on chain** (pull mode) and reads Atlas push feeds on BNB Smart Chain: the swap reverts when the PancakeSwap price strays from Atlas's signed price, using Atlas's pull-oracle consumer.
+1. **Atlas push feeds on BNB Smart Chain** and paid feeds for BNB-native tokens (BNB, CAKE, ASTER), so the on-chain price check covers every token on the board.
 2. **CoinMarketCap DEX data** for brand-new BNB Chain pairs and holder data, so launches are checked minutes after they list.
 3. **x402 pay-per-check**, so agents pay per call without an account, and PancakeSwap v3 pools.
 4. **More chains** for the same check and proof, as part of CoinGraph, the trust layer for AI agents in crypto.

@@ -74,6 +74,21 @@ export async function atlasPrices(feedIds: string[]): Promise<AtlasPrice[]> {
   return prices;
 }
 
+/** Atlas's signed payload as raw bytes (packages + count + signature + marker), ready to append to a contract call. */
+export async function atlasExtraData(feedIds: string[]): Promise<`0x${string}`> {
+  const key = process.env.ATLAS_API_KEY;
+  if (!key) throw new Error("ATLAS_API_KEY is empty in .env");
+  const res = await fetch(`${BASE}/report/v1/price/latest`, { method: "POST", headers: { "Content-Type": "application/json", "X-API-KEY": key }, body: JSON.stringify({ signed: true, feedIds }), signal: AbortSignal.timeout(10_000) });
+  const json = (await res.json().catch(() => ({}))) as { data?: { payload: string; signature: string; magicMarker: string } };
+  try {
+    mkdirSync(LOG_DIR, { recursive: true });
+    appendFileSync(new URL("atlas-calls.jsonl", LOG_DIR), JSON.stringify({ at: new Date().toISOString(), feedIds, http: res.status, use: "onchain" }) + "\n");
+  } catch {}
+  if (!res.ok || !json.data) throw new Error(`Atlas API ${res.status}`);
+  const strip = (s: string) => (s.startsWith("0x") ? s.slice(2) : s);
+  return `0x${strip(json.data.payload)}${strip(json.data.signature)}${strip(json.data.magicMarker)}`;
+}
+
 export async function atlasQuality(feedIds: string[]): Promise<Map<string, AtlasQuality>> {
   const key = process.env.ATLAS_API_KEY;
   const out = new Map<string, AtlasQuality>();

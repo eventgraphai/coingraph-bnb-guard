@@ -38,7 +38,10 @@ async function attempt(label: string, a: Answer, sig: Hex, value: bigint, expect
     got = "swap went through";
   } catch (e) {
     // Public RPCs return the custom error as hex inside the message; pull it out and decode it with the guard's ABI.
-    const raw = (e as Error).message.match(/reason: (0x[0-9a-fA-F]+)/)?.[1] as Hex | undefined;
+    // Walk viem's error chain for the raw revert bytes (some RPCs only put them on the inner error).
+    let raw: Hex | undefined;
+    for (let c: any = e; c && !raw; c = c.cause) if (typeof c.data === "string" && c.data.startsWith("0x")) raw = c.data as Hex;
+    raw ??= (e as Error).message.match(/reason: (0x[0-9a-fA-F]+)/)?.[1] as Hex | undefined;
     try {
       got = raw ? `reverted: ${decodeErrorResult({ abi: CoinGraphGuard.abi, data: raw }).errorName}` : `reverted: ${(e as Error).message.split("\n")[0]}`;
     } catch {

@@ -6,7 +6,16 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const solc = require("solc");
 const dir = new URL(".", import.meta.url);
-const files = ["CoinGraphGuard.sol", "ProofLog.sol"];
+const files = ["CoinGraphGuard.sol", "ProofLog.sol", "CoinGraphGuardAtlas.sol"];
+// The vendored Atlas SDK imports "base/...", "libraries/...", "constants/...", "interfaces/..." (its src folder).
+const findImports = (path: string) => {
+  const p = /^(base|libraries|constants|interfaces)\//.test(path) ? `vendor/atlas/${path}` : path;
+  try {
+    return { contents: readFileSync(new URL(p, dir), "utf8") };
+  } catch {
+    return { error: `not found: ${path}` };
+  }
+};
 
 const out = JSON.parse(
   solc.compile(
@@ -15,6 +24,7 @@ const out = JSON.parse(
       sources: Object.fromEntries(files.map((f) => [f, { content: readFileSync(new URL(f, dir), "utf8") }])),
       settings: { optimizer: { enabled: true, runs: 200 }, evmVersion: "paris", outputSelection: { "*": { "*": ["abi", "evm.bytecode.object", "evm.deployedBytecode.object"] } } },
     }),
+    { import: findImports },
   ),
 );
 const errors = (out.errors ?? []).filter((e: { severity: string }) => e.severity === "error");
