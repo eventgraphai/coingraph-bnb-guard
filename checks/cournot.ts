@@ -4,7 +4,7 @@
 // Same endpoints as Cournot's official skill client (interface.cournot.ai/intelligence/v1). Resolve is free; each
 // probability call uses Cournot's free allowance (3 per IP) or a prepaid key (COURNOT_API_KEY). Results are cached,
 // and every call is logged to logs/cournot-calls.jsonl as proof of live usage.
-import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import "./env.js";
 
 const BASE = "https://interface.cournot.ai/intelligence/v1";
@@ -66,7 +66,19 @@ export async function resolveClaim(claim: string): Promise<CournotMarket | null>
 let lastNoAllowance = 0;
 
 function readCache(): Record<string, CournotAssessment> {
-  try { return JSON.parse(readFileSync(CACHE_FILE, "utf8")); } catch { return {}; }
+  try { return JSON.parse(readFileSync(CACHE_FILE, "utf8")); } catch {}
+  // Fresh server: start from the last real assessment saved in proofs/cournot (shown as cached, with its real time).
+  const seed: Record<string, CournotAssessment> = {};
+  try {
+    const dir = new URL("../proofs/cournot/", import.meta.url);
+    for (const f of readdirSync(dir).filter((x) => x.startsWith("live-check-") && x.endsWith(".json"))) {
+      const c = JSON.parse(readFileSync(new URL(f, dir), "utf8"))?.numbers?.cournot;
+      if (!c?.market?.id || !Number.isFinite(c.probability)) continue;
+      const { asset, sizeFactor, cached, ...a } = c;
+      if (!seed[a.market.id] || Date.parse(a.at) > Date.parse(seed[a.market.id].at)) seed[a.market.id] = a;
+    }
+  } catch {}
+  return seed;
 }
 
 /** Paid (free allowance or prepaid key): Cournot's probability for one market, cached for COURNOT_CACHE_HOURS. */
