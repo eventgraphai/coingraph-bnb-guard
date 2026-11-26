@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="stylesheet" href="/theme.css?v=32">
+<link rel="stylesheet" href="/theme.css?v=34">
 </head>
 <body>
 <div class="progress" id="progress"></div>
@@ -110,26 +110,29 @@
   </div>
 </section>
 
+
+
+
+<section id="reads">
+  <div class="center reveal"><div class="eyebrow">The data behind every answer</div><h2>Seven checks. One verdict.</h2><p class="lead">Before CoinGraph signs, it reads the token from every side. A real TRX check for a $1,000 buy:</p></div>
+  <div class="reader">
+    <div class="radial reveal spot"><svg id="radial" viewBox="0 48 640 382" aria-label="CoinGraph reading seven checks"></svg><div class="cap" id="radialCap">&nbsp;</div></div>
+    <div class="srcs" id="srcs">
+      <div class="src reveal d1"><i></i><b>PancakeSwap</b><span>· buy and sell simulated</span><em class="res"></em></div>
+      <div class="src reveal d2"><i></i><b>CoinMarketCap</b><span>· official contract, holders, DEX liquidity</span><em class="res"></em></div>
+      <div class="src reveal d3"><i></i><b>Atlas Oracle</b><span>· signed reference price</span><em class="res"></em></div>
+      <div class="src reveal d4"><i></i><b>Cournot</b><span>· market-risk probability</span><em class="res"></em></div>
+      <div class="src reveal d3"><i></i><b>BscScan</b><span>· contract source, owner powers</span><em class="res"></em></div>
+      <div class="src reveal d2"><i></i><b>BNB Smart Chain</b><span>· the record and the guard</span><em class="res"></em></div>
+    </div>
+  </div>
+</section>
+
 <p class="marquee-l">Built on and integrated with</p>
 <div class="marquee" aria-label="Data and infrastructure: BNB Smart Chain, PancakeSwap, CoinMarketCap, Atlas Oracle, Cournot, BscScan">
   <div class="marquee-t"><span>BNB Smart Chain</span><span>PancakeSwap</span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot Intelligence Oracle</span><span>BscScan</span><span>BNB Smart Chain</span><span>PancakeSwap</span><span>CoinMarketCap</span><span>Atlas Oracle</span><span>Cournot Intelligence Oracle</span><span>BscScan</span></div>
 </div>
 
-
-<section id="reads">
-  <div class="reveal"><div class="eyebrow">The data behind every answer</div><h2>Seven checks. One verdict.</h2><p class="lead">Before CoinGraph signs anything, it reads the token from every side. Here is a real TRX check, step by step.</p></div>
-  <div class="reader">
-    <div class="radial reveal spot"><svg id="radial" viewBox="0 48 640 382" aria-label="CoinGraph reading seven checks"></svg><div class="cap" id="radialCap">&nbsp;</div></div>
-    <div class="srcs" id="srcs">
-      <div class="src reveal d1"><i></i><b>PancakeSwap</b><span>· buy and sell simulated</span></div>
-      <div class="src reveal d2"><i></i><b>CoinMarketCap</b><span>· official contract, holders, DEX liquidity</span></div>
-      <div class="src reveal d3"><i></i><b>Atlas Oracle</b><span>· signed reference price</span></div>
-      <div class="src reveal d4"><i></i><b>Cournot</b><span>· market-risk probability</span></div>
-      <div class="src reveal d3"><i></i><b>BscScan</b><span>· contract source, owner powers</span></div>
-      <div class="src reveal d2"><i></i><b>BNB Smart Chain</b><span>· the record and the guard</span></div>
-    </div>
-  </div>
-</section>
 
 <section>
   <div class="center reveal"><div class="eyebrow">Every answer, on the record</div><h2>Proof you can check yourself.</h2><p class="lead">CoinGraph signs each answer and records its hash on BNB Smart Chain before the trade happens.</p></div>
@@ -196,7 +199,7 @@
 </footer>
 </main>
 
-<script src="/theme.js?v=32"></script>
+<script src="/theme.js?v=34"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -506,8 +509,8 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
   const svg = document.getElementById("radial"); if (!svg) return;
   const NS = "http://www.w3.org/2000/svg", mk = (t, a = {}, p = svg) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); p.append(e); return e; };
   const checks = [
-    ["Honeypot", "Buy and sell both work · 0% tax", 0], ["Copycat", "Official TRON contract, CoinMarketCap #8", 1], ["Liquidity", "$3.8M across 5+ DEX pools", 1],
-    ["Atlas price", "PancakeSwap $0.303 vs Atlas $0.302", 2], ["Owner", "Ownership renounced", 4], ["Holders", "109,680 wallets hold it", 1], ["Market risk", "Cournot: 55% chance BNB < $500, order sized down", 3, 1],
+    ["Honeypot", "Buy and sell both work · 0% tax", 0, 0, "0% tax"], ["Copycat", "Official TRON contract, CoinMarketCap #8", 1, 0, "official · #8"], ["Liquidity", "$3.8M across 5+ DEX pools", 1, 0, "$3.8M"],
+    ["Atlas price", "PancakeSwap $0.303 vs Atlas $0.303, 0.13% apart", 2, 0, "0.13% apart"], ["Owner", "Ownership renounced", 4, 0, "renounced"], ["Holders", "109,677 wallets hold it", 1, 0, "109,677 holders"], ["Market risk", "Cournot: 55% chance of a sharp BNB drop, so CoinGraph signs for 45% of the $1,000", 3, 1, "55% → signs 45%"],
   ];
   const cx = 320, cy = 300, R = 215;
   mk("circle", { cx, cy, r: 150, class: "ring" }); mk("circle", { cx, cy, r: 105, class: "ring" });
@@ -526,20 +529,22 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
   const ht = mk("text", { x: cx, y: cy - 2, "text-anchor": "middle", class: "hubt" }); ht.textContent = "CoinGraph";
   const hs = mk("text", { x: cx, y: cy + 22, "text-anchor": "middle", class: "hubs" }); hs.textContent = "READING…";
   const cap = document.getElementById("radialCap"), srcs = [...document.querySelectorAll("#srcs .src")];
-  let i = -1, timer;
+  let i = -1, timer, got = srcs.map(() => []);
   const step = () => {
     i++;
-    if (i === checks.length) { hs.textContent = "PROCEED · SIGNED"; srcs.forEach((s) => s.classList.remove("on")); srcs[5].classList.add("on");
-      cap.innerHTML = '<span class="t"><b>Verdict</b> · Proceed, sized to 45% of the order · <span>recorded on BNB Smart Chain</span></span>'; timer = setTimeout(reset, 3200); return; }
+    if (i === checks.length) { hs.textContent = "PROCEED · SIGNED"; nodes[i - 1].classList.add("warn"); lines[i - 1].classList.add("warn"); lines[i - 1].classList.remove("on"); nodes[i - 1].classList.remove("on");
+      srcs.forEach((s) => s.classList.remove("on")); srcs[5].classList.add("on", "got"); srcs[5].querySelector(".res").textContent = "recorded · proceed $450";
+      cap.innerHTML = '<span class="t"><b>Verdict</b> · Proceed for $450 of the $1,000 · <span>signed and recorded on BNB Smart Chain</span></span>'; timer = setTimeout(reset, 2600); return; }
     const c = checks[i];
     nodes.forEach((n, k) => { n.classList.toggle("on", k === i); });
     lines.forEach((l, k) => l.classList.toggle("on", k === i));
     if (i > 0) { const w = checks[i - 1][3]; nodes[i - 1].classList.add(w ? "warn" : "done"); lines[i - 1].classList.add(w ? "warn" : "done"); }
     srcs.forEach((s, k) => s.classList.toggle("on", k === c[2]));
+    { const sr = srcs[c[2]], res = sr.querySelector(".res"); setTimeout(() => { if (i < 0) return; got[c[2]].push(c[4]); res.textContent = c[4]; sr.classList.add("got"); if (c[3]) sr.classList.add("warnres"); }, 380); }
     cap.innerHTML = ""; const t = el("span", "t"); const b = el("b", c[3] ? "warn" : null, c[0]); t.append(b, " · " + c[1] + " ", el("span", null, "· coingraph check")); cap.append(t);
-    timer = setTimeout(step, 1300);
+    timer = setTimeout(step, 800);
   };
-  const reset = () => { i = -1; hs.textContent = "READING…"; nodes.forEach((n) => n.className.baseVal = "nd"); lines.forEach((l) => l.setAttribute("class", "ln")); step(); };
+  const reset = () => { i = -1; got = srcs.map(() => []); srcs.forEach((s) => { s.classList.remove("got", "warnres"); s.querySelector(".res").textContent = ""; }); hs.textContent = "READING…"; nodes.forEach((n) => n.className.baseVal = "nd"); lines.forEach((l) => l.setAttribute("class", "ln")); step(); };
   new IntersectionObserver((es) => { if (es[0].isIntersecting && i === -1 && !timer) step(); }, { threshold: 0.35 }).observe(svg);
 })();
 

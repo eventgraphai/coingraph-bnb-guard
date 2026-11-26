@@ -584,3 +584,21 @@ a.mk-go:hover{background:var(--bg2)}
 .demo .chain,.demo .guardrow a{font-size:13.5px}
 .demo .dm-cap{font-size:14px}
 .demo .app{max-width:none}
+
+/* ---- Seven checks: centered, readable in light mode, results on each source ---- */
+#reads{margin:110px 0 40px}
+#reads h2{font-size:clamp(26px,2.6vw,36px);margin:8px 0 6px}
+#reads .lead{font-size:15px;margin:0 auto 22px}
+#reads .reader{gap:32px;max-width:1140px;margin:0 auto}
+:root:not([data-theme="dark"]) #reads{--lime:#2f7d4f}
+:root:not([data-theme="dark"]) #reads .radial .hub{fill:#fff}
+#reads .radial{padding:4px 8px 16px}
+#reads .radial .cap{font-size:12.5px}
+#reads .srcs{gap:8px}
+#reads .src{padding:11px 14px;font-size:14px}
+#reads .src span{flex:1}
+#reads .src .res{font-style:normal;font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--okbg);color:var(--ok);opacity:0;transform:translateX(6px);transition:all .35s;white-space:nowrap}
+#reads .src.got .res{opacity:1;transform:none}
+#reads .src.warnres .res{background:var(--warnbg);color:var(--warn)}
+#reads + .marquee-l{margin-top:24px}
+#reads .src span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}#reads .src b{white-space:nowrap}#reads .src{margin-left:0!important}
