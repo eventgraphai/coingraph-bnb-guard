@@ -494,3 +494,28 @@ a.mk-go:hover{background:var(--bg2)}
 .dm-cap{text-align:center;max-width:640px;margin:18px auto 0;color:var(--ink2);font-size:15.5px;min-height:48px}
 .dm-cap.in{animation:word .5s cubic-bezier(.2,.7,.2,1)}
 @media (max-width:700px){.dm-step b{font-size:11.5px}.dm-step span{width:26px;height:26px}.dm-bar{top:17px}}
+
+/* ---- Walkthrough fits one screen: steps left, live card right ---- */
+.demo{margin:96px 0}
+.demo-grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:44px;align-items:center}
+.demo-l h2{font-size:clamp(28px,2.9vw,40px);margin:12px 0 10px}
+.demo-l .lead{font-size:15.5px;margin:0 0 18px}
+.demo .dm-tabs{justify-content:flex-start;margin:0 0 20px}
+.demo .dm-tab{padding:6px 8px 6px 12px;font-size:13px}
+.demo .dm-steps{display:flex;flex-direction:column;gap:2px;max-width:none;margin:0;padding:0;position:relative}
+.demo .dm-step{flex-direction:row;align-items:flex-start;text-align:left;gap:14px;padding:8px 0}
+.demo .dm-step span{flex:0 0 auto}
+.demo .dm-step b{font-size:15px;display:block;line-height:30px}
+.demo .dm-step p{margin:0;font-size:13.5px;color:var(--muted);max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .35s ease}
+.demo .dm-step.on p{max-height:60px;opacity:1}
+.demo .dm-bar{left:14px;right:auto;top:22px;bottom:22px;width:2px;height:auto}
+.demo .dm-bar u{width:100%!important;height:var(--prog,0%);bottom:auto;transition:height .6s cubic-bezier(.2,.7,.2,1)}
+.demo .stage{margin:0;padding:16px;min-height:0;border-radius:26px}
+.demo .app-body{min-height:0}
+.demo .app-l,.demo .app-r{padding:16px 18px}
+.demo .ck{padding:6px 0;font-size:13.5px}
+.demo .ask-line{min-height:38px;margin-bottom:8px}
+.demo .vcard{padding:12px 14px}.demo .vcard .v{font-size:32px}
+.demo .signed{font-size:11.5px;line-height:1.45;padding:10px 12px}
+@media (max-width:980px){.demo-grid{grid-template-columns:1fr}.demo .dm-step p{max-height:60px;opacity:1}}
+.demo .app-body{grid-template-columns:1fr 1fr}
