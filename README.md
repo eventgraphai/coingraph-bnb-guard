@@ -6,6 +6,16 @@ Built for BNB Hack at BNB Bangkok (25 to 27 Nov 2026). This repository was start
 
 > Status: the check engine, the web page and the API are live. The guard and proof contracts run on BNB Smart Chain mainnet; the demo uses small amounts.
 
+## Deployed on BNB Smart Chain mainnet
+
+| Contract | Address |
+| --- | --- |
+| CoinGraphGuard (refuses any buy without a recent signed "proceed") | [0x7f914975c2af57253a707fb2c2e44776dc45000b](https://bscscan.com/address/0x7f914975c2af57253a707fb2c2e44776dc45000b) |
+| ProofLog (every answer recorded before the trade) | [0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d](https://bscscan.com/address/0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d) |
+| CoinGraph answer signer | 0x5c514443a2e40F74960822851aF3fab75C44F4C6 |
+
+Live site: https://guard.coingraph.ai
+
 ## How it works
 
 1. The agent asks CoinGraph to check a token before a trade (API, MCP, or x402 pay per check).

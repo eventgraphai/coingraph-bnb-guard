@@ -1,0 +1,10 @@
+{
+  "chainId": 56,
+  "guard": "0x7f914975c2af57253a707fb2c2e44776dc45000b",
+  "proofLog": "0x186ef344dcd0dd74d292a5d2b4433d77e19f5f7d",
+  "signer": "0x5c514443a2e40F74960822851aF3fab75C44F4C6",
+  "recorder": "0xb15B6Ac4579179AeFC07998fd820ad9a5dBA6710",
+  "guardTx": "0x5236f20459a39eee7b5eed78556d0d353e697eb7020999d4104ad952d8af31f3",
+  "proofLogTx": "0xaa4b068830440c2d639c3ae535eedb31f9facd91dd7d2355952d1c5f982d2169",
+  "deployedAt": "2026-11-26T11:41:12.113Z"
+}
