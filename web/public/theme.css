@@ -430,3 +430,21 @@ a.mk-go .arr{color:inherit;font-size:18px;transition:transform .3s}a.mk-go:hover
 .gf-shield.scan .ring{border-color:var(--accent);animation:scanpulse .5s ease-in-out infinite alternate}
 @keyframes scanpulse{from{box-shadow:0 0 0 0 var(--okbg),var(--shadow2)}to{box-shadow:0 0 0 10px var(--okbg),var(--shadow2)}}
 @media (max-width:520px){.gf-srcs span{font-size:10px;padding:4px 6px}.gf-srcs span small{display:none}.gf-stage{height:320px}}
+
+/* ---- Hero type scale: two-line headline, quieter supporting lines ---- */
+.hero{padding-top:24px}
+.hero-grid{gap:56px}
+.hero-grid .kicker{margin-top:18px;font-size:12px}
+.hero-grid h1{font-size:clamp(36px,4.1vw,58px);line-height:1.06;margin:8px 0 14px}
+.hero-grid .h1b{font-size:clamp(17px,1.5vw,20px);margin:0 0 16px;gap:9px;color:var(--ink2)}
+.hero-grid .seal{width:26px;height:26px;border-radius:8px}.hero-grid .seal svg{width:14px;height:14px}
+.hero-grid .sub{font-size:16.5px;line-height:1.6;margin:0 0 24px;max-width:520px}
+.hero-grid .search input{font-size:15px}
+@media (max-width:980px){.hero-grid h1 br{display:none}.hero-grid .h1b{justify-content:center}}
+@media (min-width:981px){.hero-grid{grid-template-columns:1.08fr .92fr}}
+:root:not([data-theme="dark"]) .hero-grid h1{font-size:clamp(32px,3.5vw,52px)}
+@media (min-width:981px){.hero-grid h1{white-space:nowrap}}
+.gf-srcs{gap:4px}.gf-srcs span{font-size:10.5px;padding:4px 8px}.gf-srcs span small{display:none}
+@media (max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-grid h1{white-space:normal}}
+@media (max-width:640px){.mstrip{gap:8px}.mk{min-width:0;flex:1 1 calc(50% - 8px)}a.mk-go{flex-basis:100%}.mk b{font-size:15px}.gf-top{font-size:10px}}
+@media (max-width:520px){.gf-srcs{flex-wrap:wrap;justify-content:center;row-gap:6px}.gf-stage{height:360px}}

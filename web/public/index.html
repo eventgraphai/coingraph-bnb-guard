@@ -9,7 +9,7 @@
 <script>(()=>{const d=document.documentElement;let t=null;try{t=localStorage.getItem("cg-theme")}catch{}d.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=16">
+<link rel="stylesheet" href="/theme.css?v=21">
 </head>
 <body>
 <div class="progress" id="progress"></div>
@@ -32,7 +32,7 @@
 <div class="hero-copy">
   <a class="badge fade-up" href="#proof"><b>Live</b><span class="live"></span>Running on BNB Smart Chain mainnet</a>
   <div class="kicker fade-up" style="animation-delay:.1s">CoinGraph Guard</div>
-  <h1 data-words>Every AI agent trade, <em>checked first.</em></h1>
+  <h1 data-words>Every AI agent trade,<br> <em>checked first.</em></h1>
   <p class="h1b fade-up" style="animation-delay:.5s"><span class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span>Verifiable on-chain.</p>
   <p class="sub fade-up" style="animation-delay:.55s">Ask about any token. Get the sources, the verdict and the proof, recorded on BNB Smart Chain. A guard contract lets the trade through only on a signed "proceed".</p>
   <form class="search fade-up" id="searchForm" style="animation-delay:.7s">
@@ -171,7 +171,7 @@
 </footer>
 </main>
 
-<script src="/theme.js?v=16"></script>
+<script src="/theme.js?v=21"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
