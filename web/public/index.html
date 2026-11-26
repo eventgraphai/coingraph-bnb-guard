@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="/logo.png">
-<link rel="stylesheet" href="/theme.css?v=27">
+<link rel="stylesheet" href="/theme.css?v=29">
 </head>
 <body>
 <div class="progress" id="progress"></div>
@@ -75,7 +75,7 @@
     <div class="demo-l reveal">
       <div class="eyebrow">See one check, start to finish</div>
       <h2>From question to <span class="nw">on-chain</span> proof in seconds.</h2>
-      <p class="lead">Real mainnet runs, replayed. Every link opens the transaction on BscScan.</p>
+      <p class="lead">Real checks at real order sizes. Every link opens the mainnet transaction on BscScan.</p>
       <div class="dm-tabs" id="dmTabs" role="tablist"></div>
       <div class="dm-steps" id="dmSteps">
         <div class="dm-step" data-i="0"><span>1</span><div><b>Agent asks</b><p>The agent sends the token and the order size. No trade happens yet.</p></div></div>
@@ -84,7 +84,7 @@
         <div class="dm-step" data-i="3"><span>4</span><div><b>Recorded and enforced</b><p>Recorded on BNB Smart Chain. The guard contract lets the buy through only on a signed proceed.</p></div></div>
         <i class="dm-bar"><u id="dmBar"></u></i>
       </div>
-      <p class="dm-cap" id="dmCap" hidden></p>
+      
     </div>
     <div class="stage reveal">
     <div class="app" aria-label="A real check replayed step by step">
@@ -104,6 +104,9 @@
         </div>
       </div>
     </div>
+      <p class="dm-cap" id="dmCap"></p>
+    <p class="dm-note">The checks run at the order size shown. The linked mainnet transactions are the demo buys made through the guard with small test amounts.</p>
+</div>
   </div>
 </section>
 
@@ -148,9 +151,9 @@
   <div class="how">
     <div class="how-nav" id="howNav"><a href="#s1" class="on"><span>01</span>Ask</a><a href="#s2"><span>02</span>Check</a><a href="#s3"><span>03</span>Verdict</a><a href="#s4"><span>04</span>Proof and guard</a></div>
     <div class="how-panels">
-      <div class="panel reveal" id="s1"><div class="mini"><div><span class="muted">Agent</span><code>0xb15b…6710</code></div><div><span class="muted">Token</span><b>CAKE</b></div><div><span class="muted">Order</span><b>$50</b></div></div><h3>Ask</h3><p>The agent sends the token and the order size, by API, MCP or pay per check.</p></div>
+      <div class="panel reveal" id="s1"><div class="mini"><div><span class="muted">Agent</span><code>0xb15b…6710</code></div><div><span class="muted">Token</span><b>CAKE</b></div><div><span class="muted">Order</span><b>$1,000</b></div></div><h3>Ask</h3><p>The agent sends the token and the order size, by API, MCP or pay per check.</p></div>
       <div class="panel reveal" id="s2"><div class="mini"><div><span>Buy and sell simulated on PancakeSwap</span><b style="color:var(--ok)">✓</b></div><div><span>Official contract, per CoinMarketCap</span><b style="color:var(--ok)">✓</b></div><div><span>Price vs Atlas Oracle, signed</span><b style="color:var(--ok)">✓</b></div><div><span>BNB drop risk, Cournot</span><b>55%</b></div></div><h3>Check</h3><p>Honeypots, taxes, liquidity, owner powers, copycats, price against Atlas Oracle, and market risk from Cournot.</p></div>
-      <div class="panel reveal" id="s3"><div class="mini"><div><span class="muted">Verdict</span><span class="pill p-proceed">Proceed</span></div><div><span class="muted">Signed for</span><b>$22.50 of $50</b></div><div><span class="muted">Valid</span><b>5 minutes, one use</b></div></div><h3>Verdict</h3><p>Proceed, caution or avoid, sized to the order, with every reason written out.</p></div>
+      <div class="panel reveal" id="s3"><div class="mini"><div><span class="muted">Verdict</span><span class="pill p-proceed">Proceed</span></div><div><span class="muted">Signed for</span><b>$450 of $1,000</b></div><div><span class="muted">Valid</span><b>5 minutes, one use</b></div></div><h3>Verdict</h3><p>Proceed, caution or avoid, sized to the order, with every reason written out.</p></div>
       <div class="panel reveal" id="s4"><div class="mini"><div><span class="muted">Recorded</span><code>ProofLog 0x186e…7f5d</code></div><div><span class="muted">Proceed</span><b style="color:var(--ok)">trade goes through</b></div><div><span class="muted">Caution or avoid</span><b style="color:var(--bad)">guard reverts</b></div></div><h3>Proof and guard</h3><p>The answer's hash is recorded on BNB Smart Chain. The guard contract enforces it: no signed proceed, no trade.</p></div>
     </div>
   </div>
@@ -193,7 +196,7 @@
 </footer>
 </main>
 
-<script src="/theme.js?v=27"></script>
+<script src="/theme.js?v=29"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -446,24 +449,28 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
   const box = $("#mkChecks"); if (!box) return;
   const tick = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg>';
   const cross = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg>';
+  const bang = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2.5v4.2M6 9.2v.1"/></svg>';
   const runs = [
-    { tab: "ASTER", verdict: "proceed", ask: "Can I buy $1 of ASTER?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #45", 1, "CoinMarketCap"], ["Liquidity", "$3.3M across DEX pools", 1, "CoinMarketCap DEX data"], ["Holders", "255,067 wallets", 1, "CoinMarketCap DEX data"], ["Owner powers", "renounced", 1, "BscScan"]],
-      v: "Proceed", p: "Every check passed. Signed for this agent, this token and this amount, valid 5 minutes, one use.", signed: { verdict: "proceed", token: "ASTER", maxAmountIn: "$1 of BNB", validFor: "5 min, one use" },
-      proof: "0x96bab07f0d8dc7567995d8788a447c81e8f529a5e9b4206f6c7824a02cceb135", buy: "0x21f574b6aff2a2de746276b898339cd699bfa8be33e6d71eee4c918d45d82e65", guard: ["p-proceed", "Guard: trade went through"] },
-    { tab: "TRX", verdict: "proceed", ask: "Can I buy $0.50 of TRX?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #8", 1, "CoinMarketCap"], ["Liquidity", "$3.8M across DEX pools", 1, "CoinMarketCap DEX data"], ["Price vs Atlas Oracle", "0.15% apart", 1, "Atlas Oracle, signed"], ["Owner powers", "renounced", 1, "BscScan"]],
-      v: "Proceed", p: "Signed, and the guard re-checks Atlas Oracle's price inside the same transaction.", signed: { verdict: "proceed", token: "TRX", maxAmountIn: "0.000909 BNB", atlasFeed: "TRX/USD", evidenceHash: "0x1403…8db7" },
-      proof: "0x00d28a53c6b7711eb01e0abcb12b0deb23a99f64628bbf572b703af3404f6723", buy: "0xc1278e5ba8389cc7de019765394d8aa3e5d649e1c77b89f2bdf100caa2331cf8", guard: ["p-proceed", "Guard: trade went through"] },
-    { tab: "Copycat BTCB", verdict: "avoid", ask: "Can I buy $0.50 of BTCB?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "copies the name only", 0, "CoinMarketCap"], ["Liquidity", "$3.19", 0, "PancakeSwap pool"], ["Price vs Atlas Oracle", "99.99% apart", 0, "Atlas Oracle, signed"], ["Owner powers", "renounced", 1, "BscScan"]],
-      v: "Avoid", p: "Not the real BTCB. Even with a signed answer, the guard refuses the buy on chain.", signed: { verdict: "avoid", token: "BTCB (copycat)", atlasFeed: "BTC/USD", evidenceHash: "0x40b6…e12d" },
-      proof: "0x47172a1b27c76a1ebf3a2b5b02d8eac83e82b35b87963472d68f6f92503978ab", buy: "0x56a8e669729405756850de65d83af8dc3efab9f918f884ab169370d1a901b64e", guard: ["p-avoid", "Guard: refused (OracleDeviation)"] },
+    { tab: "ASTER", amt: "$500", verdict: "proceed", ask: "Can I buy $500 of ASTER?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #45", 1, "CoinMarketCap"], ["Liquidity", "$3.3M across DEX pools", 1, "CoinMarketCap DEX data"], ["Price impact", "1.55% for $500", 1, "simulated on PancakeSwap"], ["Owner powers", "renounced", 1, "BscScan"]],
+      v: "Proceed", p: "Every check passed. Signed for this agent, this token and $500, valid 5 minutes, one use.", signed: { verdict: "proceed", token: "ASTER", maxAmountIn: "$500 of BNB", validFor: "5 min, one use" },
+      proof: "0x96bab07f0d8dc7567995d8788a447c81e8f529a5e9b4206f6c7824a02cceb135", buy: "0x21f574b6aff2a2de746276b898339cd699bfa8be33e6d71eee4c918d45d82e65", guard: ["p-proceed", "Guard: trade goes through"], buyLabel: "See a guarded buy" },
+    { tab: "TRX", amt: "$1,000", verdict: "proceed", ask: "Can I buy $1,000 of TRX?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "CoinMarketCap #8", 1, "CoinMarketCap"], ["Liquidity", "$3.8M across DEX pools", 1, "CoinMarketCap DEX data"], ["Price vs Atlas Oracle", "0.13% apart", 1, "Atlas Oracle, signed"], ["Price impact", "0.73% for $1,000", 1, "simulated on PancakeSwap"]],
+      v: "Proceed", p: "Signed for $1,000, and the guard re-checks Atlas Oracle's price inside the same transaction.", signed: { verdict: "proceed", token: "TRX", maxAmountIn: "$1,000 of BNB", atlasFeed: "TRX/USD", validFor: "5 min, one use" },
+      proof: "0x00d28a53c6b7711eb01e0abcb12b0deb23a99f64628bbf572b703af3404f6723", buy: "0xc1278e5ba8389cc7de019765394d8aa3e5d649e1c77b89f2bdf100caa2331cf8", guard: ["p-proceed", "Guard: trade goes through"], buyLabel: "See a guarded buy" },
+    { tab: "NVDAB", amt: "$10K", verdict: "caution", ask: "Can I buy $10,000 of NVDAB?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official listing", "CoinMarketCap #225", 1, "CoinMarketCap"], ["Pool liquidity", "$20,788, thin", 2, "PancakeSwap pool"], ["Price impact", "48.9% for $10,000", 2, "simulated on PancakeSwap"], ["Atlas Oracle sources", "disagree (0.85)", 2, "Atlas Oracle, signed"]],
+      v: "Caution", p: "A real token, but $10,000 is too big for this pool. Size down or trade where its liquidity is. The guard holds the buy.", signed: { verdict: "caution", token: "NVDAB", order: "$10,000", reason: "thin pool, 48.9% price impact" },
+      proof: "0x46d06b40acafaa6b63d6a58f0c54b0f6b45eedee1016cc980ea8a4608f41e61b", buy: "0xbf1dcd51ef697e34fe27bf309d5ad8e6ed69d82dd25a284482cbbf917d0fa5c6", guard: ["p-caution", "Guard: buy held back"], buyLabel: "See the held buy" },
+    { tab: "Copycat BTCB", amt: "$10K", verdict: "avoid", ask: "Can I buy $10,000 of BTCB?", checks: [["Buy and sell work", "0% tax", 1, "simulated on PancakeSwap"], ["Official contract", "copies the name only", 0, "CoinMarketCap"], ["Holders", "9 wallets", 0, "CoinMarketCap DEX data"], ["Pool liquidity", "$3.20", 0, "PancakeSwap pool"], ["Price vs Atlas Oracle", "100% apart", 0, "Atlas Oracle, signed"]],
+      v: "Avoid", p: "Not the real BTCB. Even with a signed answer, the guard refuses the buy on chain.", signed: { verdict: "avoid", token: "BTCB (copycat)", order: "$10,000", atlasFeed: "BTC/USD" },
+      proof: "0x47172a1b27c76a1ebf3a2b5b02d8eac83e82b35b87963472d68f6f92503978ab", buy: "0x56a8e669729405756850de65d83af8dc3efab9f918f884ab169370d1a901b64e", guard: ["p-avoid", "Guard: refused (OracleDeviation)"], buyLabel: "See the refused buy" },
   ];
-  const caps = ["The agent sends the token and the order size. No trade happens yet.", "CoinGraph reads the token from every side: a simulated buy and sell, the official listing, liquidity, the signed Atlas price and owner powers.", "CoinGraph signs the verdict for this exact agent, token and amount. It expires in 5 minutes and works once.", "The answer is recorded on BNB Smart Chain, then the guard contract lets the buy through only on a signed proceed."];
+  const caps = ["The agent sends the token and the order size. No trade happens yet.", "CoinGraph reads the token from every side at this order size: a simulated buy and sell, the official listing, liquidity, price impact and the signed Atlas price.", "CoinGraph signs the verdict for this exact agent, token and amount. It expires in 5 minutes and works once.", "The answer is recorded on BNB Smart Chain, then the guard contract lets the buy through only on a signed proceed."];
   const tabs = $("#dmTabs"), steps = [...document.querySelectorAll(".dm-step")], bar = $("#dmBar"), cap = $("#dmCap");
   let cur = 0, timers = [], cycle = 0;
   const later = (ms, f) => timers.push(setTimeout(f, ms));
   const short = (h) => h.slice(0, 6) + "…" + h.slice(-4);
   const step = (i) => { steps.forEach((s, k) => { s.classList.toggle("on", k === i); s.classList.toggle("done", k < i); }); bar.style.width = (i / 3) * 100 + "%"; document.getElementById("dmSteps").style.setProperty("--prog", (i / 3) * 100 + "%"); cap.textContent = caps[i]; cap.classList.remove("in"); void cap.offsetWidth; cap.classList.add("in"); };
-  runs.forEach((r, i) => { const b = el("button", "dm-tab"); b.type = "button"; b.setAttribute("role", "tab"); const d = el("i"); b.append(d, r.tab, el("span", "pill p-" + r.verdict, r.verdict)); b.onclick = () => play(i, true); tabs.append(b); });
+  runs.forEach((r, i) => { const b = el("button", "dm-tab"); b.type = "button"; b.setAttribute("role", "tab"); const d = el("i"); b.append(d, r.tab, el("em", null, r.amt), el("span", "pill p-" + r.verdict, r.verdict)); b.onclick = () => play(i, true); tabs.append(b); });
   const play = (i, manual) => {
     timers.forEach(clearTimeout); timers = []; cur = i; const r = runs[i], my = ++cycle;
     [...tabs.children].forEach((t, k) => t.classList.toggle("on", k === i));
@@ -471,17 +478,17 @@ fetch("/api/agents").then((r) => r.json()).then((d) => {
     box.innerHTML = ""; $("#mkAsk").textContent = ""; $("#mkSigned").textContent = "";
     step(0);
     let t = 0; for (let c = 1; c <= r.ask.length; c++) later(t += 28, () => { $("#mkAsk").textContent = r.ask.slice(0, c); });
-    const rows = r.checks.map(([a, b, ok, src]) => { const d = el("div", "ck " + (ok ? "ok" : "bad")); d.innerHTML = `<span class="ic">${ok ? tick : cross}</span><span><span class="nm"></span><em></em></span><small></small>`; d.querySelector(".nm").textContent = a; d.querySelector("em").textContent = src; d.children[2].textContent = b; box.append(d); return d; });
+    const rows = r.checks.map(([a, b, ok, src]) => { const d = el("div", "ck " + (ok === 1 ? "ok" : ok === 2 ? "warn" : "bad")); d.innerHTML = `<span class="ic">${ok === 1 ? tick : ok === 2 ? bang : cross}</span><span><span class="nm"></span><em></em></span><small></small>`; d.querySelector(".nm").textContent = a; d.querySelector("em").textContent = src; d.children[2].textContent = b; box.append(d); return d; });
     t += 350; later(t, () => step(1));
     rows.forEach((d, k) => { later(t + 150 + k * 420, () => d.classList.add("busy")); later(t + 450 + k * 420, () => { d.classList.remove("busy"); d.classList.add("on"); }); });
     t += 450 + rows.length * 420 + 200;
-    later(t, () => { step(2); const v = $("#mkV"); v.textContent = r.v; v.className = "v " + (r.verdict === "proceed" ? "ok" : "bad"); $("#mkP").textContent = r.p; $("#mkCard").classList.add("show"); });
+    later(t, () => { step(2); const v = $("#mkV"); v.textContent = r.v; v.className = "v " + (r.verdict === "proceed" ? "ok" : r.verdict === "caution" ? "warn" : "bad"); $("#mkP").textContent = r.p; $("#mkCard").classList.add("show"); });
     const json = JSON.stringify(r.signed, null, 2); const sg = $("#mkSigned");
     later(t + 300, () => sg.classList.add("show"));
     for (let c = 1; c <= json.length; c += 3) later(t + 300 + c * 6, () => { sg.textContent = "Signed answer\n" + json.slice(0, c); });
     t += 300 + json.length * 6 + 400;
     later(t, () => { step(3); const ch = $("#mkChain"); ch.innerHTML = ""; ch.append("Recorded on chain ", link("https://bscscan.com/tx/" + r.proof, short(r.proof))); ch.classList.add("show"); });
-    later(t + 500, () => { const g = $("#mkGuard"); g.innerHTML = ""; g.append(el("span", "pill " + r.guard[0], r.guard[1]), link("https://bscscan.com/tx/" + r.buy, r.verdict === "proceed" ? "See the buy" : "See the refused buy")); g.classList.add("show"); });
+    later(t + 500, () => { const g = $("#mkGuard"); g.innerHTML = ""; g.append(el("span", "pill " + r.guard[0], r.guard[1]), link("https://bscscan.com/tx/" + r.buy, r.buyLabel)); g.classList.add("show"); });
     later(t + 4200, () => { if (my === cycle) play((cur + 1) % runs.length); });
   };
   const stage = document.querySelector("#demo .stage");

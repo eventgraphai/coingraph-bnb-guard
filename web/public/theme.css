@@ -526,3 +526,23 @@ a.mk-go:hover{background:var(--bg2)}
 .demo .dm-tab{font-size:12.5px;padding:5px 6px 5px 10px;gap:7px;white-space:nowrap}
 .demo .dm-tab .pill{font-size:9.5px;padding:2px 6px}
 @media (max-width:520px){.demo .dm-tabs{flex-wrap:wrap}}
+
+/* ---- Walkthrough: centered, the live card takes centre stage ---- */
+.demo .demo-grid{grid-template-columns:1fr;gap:0;justify-items:center}
+.demo .demo-l{text-align:center;max-width:860px}
+.demo .demo-l h2{font-size:clamp(28px,3vw,42px);margin:10px 0 8px}
+.demo .demo-l .lead{margin:0 auto 18px}
+.demo .dm-tabs{justify-content:center;flex-wrap:wrap}
+.demo .dm-tab em{font-style:normal;font-size:11.5px;color:var(--muted);font-weight:600}
+.demo .dm-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:720px;margin:4px auto 0;position:relative}
+.demo .dm-step{flex-direction:column;align-items:center;text-align:center;gap:6px;padding:0}
+.demo .dm-step span{width:28px;height:28px}
+.demo .dm-step b{font-size:13.5px;line-height:1.3}
+.demo .dm-step p{display:none}
+.demo .dm-bar{left:12.5%;right:12.5%;top:14px;bottom:auto;height:2px;width:auto}
+.demo .dm-bar u{height:100%!important;width:var(--prog,0%)!important;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.demo .stage{width:100%;max-width:1020px;margin:22px auto 0;padding:18px 18px 14px}
+.demo .dm-cap{min-height:24px;margin:12px auto 0;font-size:14.5px;text-align:center}
+.dm-note{text-align:center;font-size:12px;color:var(--muted);margin:4px auto 0;max-width:640px}
+.ck.warn .ic{border-color:var(--warn)}.ck.on.warn .ic{background:var(--warn);border-color:var(--warn);color:#fff}
+.vcard .v.warn{color:var(--warn)}
